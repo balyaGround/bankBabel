@@ -63,6 +63,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
 }
 
 function Videos({ mode, callId, setPage }) {
+  const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
 
