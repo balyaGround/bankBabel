@@ -93,7 +93,7 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const callDoc = firestore.collection("calls").doc();
+      const callDoc = firestore.collection("rooms").doc();
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
 
@@ -174,7 +174,7 @@ function Videos({ mode, callId, setPage }) {
     pc.close();
 
     if (roomId) {
-      let roomRef = firestore.collection("calls").doc(roomId);
+      let roomRef = firestore.collection("rooms").doc(roomId);
       await roomRef
         .collection("calleeCandidates")
         .get()
