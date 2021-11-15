@@ -6,6 +6,7 @@ import "firebase/firestore";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
+import ScreenRecording from './screenRecording'
 
 import "./App.css";
 
@@ -199,7 +200,18 @@ function Videos({ mode, callId, setPage }) {
   };
 
   return (
+    <div>
+      
+      {/* <ScreenRecording
+      screen = {true}
+      audio = {true}
+      downloadRecordingPath = 'Screen_Recording_Demo'
+      downloadRecordingType = 'mp4'
+      uploadToServer = 'upload'
+      /> */}
+
     <div className="videos">
+
       <video ref={localRef} autoPlay playsInline className="local" muted />
       <video ref={remoteRef} autoPlay playsInline className="remote" />
 
@@ -234,6 +246,7 @@ function Videos({ mode, callId, setPage }) {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
