@@ -35,7 +35,7 @@ const servers = {
       urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
     },
   ],
-  iceCandidatePoolSize: 10,
+  iceCandidatePoolSize: 2,
 };
 
 const pc = new RTCPeerConnection(servers);
@@ -94,8 +94,8 @@ function Videos({ mode, callId, setPage }) {
 
     if (mode === "create") {
       const callDoc = firestore.collection("calls").doc();
-      const offerCandidates = callDoc.collection("offerCandidates");
-      const answerCandidates = callDoc.collection("answerCandidates");
+      const offerCandidates = callDoc.collection("callerCandidates");
+      const answerCandidates = callDoc.collection("calleeCandidates");
 
       setRoomId(callDoc.id);
 
@@ -130,9 +130,9 @@ function Videos({ mode, callId, setPage }) {
         });
       });
     } else if (mode === "join") {
-      const callDoc = firestore.collection("calls").doc(callId);
-      const answerCandidates = callDoc.collection("answerCandidates");
-      const offerCandidates = callDoc.collection("offerCandidates");
+      const callDoc = firestore.collection("rooms").doc(callId);
+      const answerCandidates = callDoc.collection("calleeCandidates");
+      const offerCandidates = callDoc.collection("callerCandidates");
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -176,7 +176,7 @@ function Videos({ mode, callId, setPage }) {
     if (roomId) {
       let roomRef = firestore.collection("calls").doc(roomId);
       await roomRef
-        .collection("answerCandidates")
+        .collection("calleeCandidates")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -184,7 +184,7 @@ function Videos({ mode, callId, setPage }) {
           });
         });
       await roomRef
-        .collection("offerCandidates")
+        .collection("callerCandidates")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
