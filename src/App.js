@@ -38,7 +38,7 @@ const servers = {
   iceCandidatePoolSize: 2,
 };
 
-const pc = new RTCPeerConnection(servers);
+// const pc = new RTCPeerConnection(servers);
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");

@@ -49,6 +49,7 @@ video {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 10vw;
   padding: 30vh 20vw;
+  background-color: linear-gradient(to left top, rgb(171, 191, 247), red);
 }
 
 .home .box {
@@ -102,22 +103,27 @@ video {
 
 .videos .local {
   position: absolute;
-  bottom: 40px;
-  left: 100px;
-  width: 50vw;
-  height: 50vh;
+  top: 1rem;
+  right: 15rem;
+  width: 40rem;
+  height: 20rem;
   border-radius: 8px;
   z-index: 10;
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
 }
 
 .videos .remote {
   position: absolute;
-  top: 400px;
-  left: 90px;
-  width: 50vw;
-  height: 50vh;
+  top: 1rem;
+  left: 15rem;
+  right: 0;
+  width: 40rem;
+  height: 20rem;
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
 }
 
 .videos .buttonsContainer {
@@ -145,8 +151,7 @@ video {
 }
 
 .videos .buttonsContainer .hangup {
-  margin-right: 130px;
-  margin-top: 700px;
+  margin-right: 50px;
   background-color: #ff694f;
   color: #ffffff;
 }
