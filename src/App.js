@@ -5,7 +5,7 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import "./index.scss";
+import "./index.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -203,10 +203,7 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
-  const [show, SetShow] = useState(false);
-  const handleOpen = () => {
-    SetShow(true);
-  };
+  const [show, setShow] = useState(false);
 
   return (
     <div>
@@ -235,10 +232,10 @@ function Videos({ mode, callId, setPage }) {
               >
                 <CopyIcon /> Copy joining code
               </button>
-              <button onClick={handleOpen}>
+              <button onClick={() => setShow(true)}>
                 <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
                 <Modal show={show}>
-                  <ModalForm showModal={show} closeModal={show} />
+                  <ModalForm showModal={show} closeModal={setShow} />
                 </Modal>
               </button>
             </div>
