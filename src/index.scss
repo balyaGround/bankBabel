@@ -73,7 +73,7 @@ video {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-.modal {
+.modalBawaan {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -103,9 +103,9 @@ video {
 
 .videos .local {
   position: absolute;
-  top: 1rem;
-  right: 19rem;
-  width: 40rem;
+  top: 3rem;
+  right: 28rem;
+  width: 30rem;
   height: 20rem;
   border-radius: 8px;
   z-index: 10;
@@ -117,10 +117,10 @@ video {
 .videos .remote {
   position: absolute;
   border-radius: 8px;
-  top: 1rem;
-  left: 20rem;
+  top: 3rem;
+  left: 30rem;
   right: 0;
-  width: 40rem;
+  width: 30rem;
   height: 20rem;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);

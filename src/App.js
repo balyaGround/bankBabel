@@ -3,16 +3,15 @@ import ModalForm from "./component/Modal";
 import { Modal } from "react-bootstrap";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
-
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-
+import "./index.scss";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import FormIcon from "./icons/form-icon.jpg";
-
-import "./App.css";
+import noimage from "./img/noimage.jpg";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -212,6 +211,11 @@ function Videos({ mode, callId, setPage }) {
       <video ref={localRef} autoPlay playsInline className="local" muted />
       <video ref={remoteRef} autoPlay playsInline className="remote" />
 
+      <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
+        <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
+        <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
+      </div>
+
       <div className="buttonsContainer">
         <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
           <HangupIcon />
@@ -227,9 +231,9 @@ function Videos({ mode, callId, setPage }) {
               <CopyIcon /> Copy joining code
             </button>
             <button onClick={handleOpen}>
-              <img src={FormIcon} style={{ width: "60px", height: "60px" }} /> Form Validation
+              <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
               <Modal show={show}>
-                <ModalForm showModal={show} closeModal={SetShow} />
+                <ModalForm showModal={show} />
               </Modal>
             </button>
           </div>
@@ -238,7 +242,7 @@ function Videos({ mode, callId, setPage }) {
 
       {!webcamActive && (
         <div className="modalContainer">
-          <div className="modal">
+          <div className="modalBawaan">
             <h3>Turn on your camera and microphone and start the call</h3>
             <div className="container">
               <button onClick={() => setPage("home")} className="secondary">

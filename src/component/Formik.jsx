@@ -66,31 +66,31 @@ function Form() {
   return (
     <div id="wrapper">
       <form id="centered" onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
-        <label htmlFor="fullname">Full Name: </label>
-        <input type="text" id="fullname" name="fullname" required onChange={formik.handleChange} value={formik.values.fullname} />
+        <label htmlFor="fullname" style={{ marginRight: "5px" }}>
+          Full Name:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="text" id="fullname" name="fullname" required onChange={formik.handleChange} value={formik.values.fullname} />
         <br />
+        <label htmlFor="nik" style={{ marginRight: "5px" }}>
+          NIK:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="number" id="nik" name="nik" required minLength="16" maxLength="16" onChange={formik.handleChange} value={formik.values.nik} />
         <br />
-
-        <label htmlFor="nik">NIK: </label>
-        <input type="number" id="nik" name="nik" required minLength="16" maxLength="16" onChange={formik.handleChange} value={formik.values.nik} />
+        <label htmlFor="address" style={{ marginRight: "5px" }}>
+          Address:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="text" id="address" name="address" required onChange={formik.handleChange} value={formik.values.address} />
         <br />
+        <label htmlFor="email" style={{ marginRight: "5px" }}>
+          Email:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="email" id="email" name="email" required onChange={formik.handleChange} value={formik.values.email} />
         <br />
-
-        <label htmlFor="address">Address: </label>
-        <input type="text" id="address" name="address" required onChange={formik.handleChange} value={formik.values.address} />
+        <label htmlFor="mobile" style={{ marginRight: "5px" }}>
+          Mobile:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
         <br />
-        <br />
-
-        <label htmlFor="email">Email: </label>
-        <input type="email" id="email" name="email" required onChange={formik.handleChange} value={formik.values.email} />
-        <br />
-        <br />
-
-        <label htmlFor="mobile">Mobile: </label>
-        <input type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
-        <br />
-        <br />
-
         {/* <label htmlFor = 'gender'>Gender: </label>
                 <select 
                 id = 'gender' 
@@ -104,18 +104,20 @@ function Form() {
                 <br/>
                 <br/> */}
 
-        <label htmlFor="pob">Place of Birth: </label>
-        <input type="text" id="pob" name="pob" required onChange={formik.handleChange} value={formik.values.pob} />
+        <label htmlFor="pob" style={{ marginRight: "5px" }}>
+          Place of Birth:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="text" id="pob" name="pob" required onChange={formik.handleChange} value={formik.values.pob} />
         <br />
+        <label htmlFor="dob" style={{ marginRight: "5px" }}>
+          Date of Birth:{" "}
+        </label>
+        <input style={{ border: "2px solid black" }} type="date" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
         <br />
-
-        <label htmlFor="dob">Date of Birth: </label>
-        <input type="date" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
-        <br />
-        <br />
-
-        <button type="submit">Submit</button>
-        <button type="button" onClick={retrieve}>
+        <button type="submit" style={{ marginRight: "2px" }}>
+          Submit
+        </button>
+        <button type="button" onClick={retrieve} style={{ marginRight: "2px" }}>
           Retrieve
         </button>
         <button type="reset">Reset</button>
