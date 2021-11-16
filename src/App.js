@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useRef, useState } from "react";
 import ModalForm from "./component/Modal";
 import { Modal } from "react-bootstrap";
