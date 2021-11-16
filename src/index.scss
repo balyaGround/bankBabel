@@ -163,11 +163,10 @@ video {
   cursor: pointer;
 }
 
-.videos .buttonsContainer .more .popover {
+.videos .buttonsContainer .more .popoverAwal {
   visibility: hidden;
   position: absolute;
-  bottom: 100%;
-  left: 100%;
+
   padding: 20px 0px;
   font-size: 1rem;
   background-color: white;
@@ -175,11 +174,11 @@ video {
   box-shadow: 0px 5px 10px #0000001a;
 }
 
-.videos .buttonsContainer .more:focus-within .popover {
+.videos .buttonsContainer .more:focus-within .popoverAwal {
   visibility: visible;
 }
 
-.videos .buttonsContainer .more .popover button {
+.videos .buttonsContainer .more .popoverAwal button {
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -187,6 +186,6 @@ video {
   color: black;
 }
 
-.videos .buttonsContainer .more .popover button svg {
+.videos .buttonsContainer .more .popoverAwal button svg {
   margin-right: 20px;
 }

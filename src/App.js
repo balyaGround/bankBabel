@@ -206,6 +206,7 @@ function Videos({ mode, callId, setPage }) {
   const handleOpen = () => {
     SetShow(true);
   };
+
   return (
     <div className="videos">
       <video ref={localRef} autoPlay playsInline className="local" muted />
@@ -233,7 +234,7 @@ function Videos({ mode, callId, setPage }) {
             <button onClick={handleOpen}>
               <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
               <Modal show={show}>
-                <ModalForm showModal={show} />
+                <ModalForm showModal={show} closeModal={show} />
               </Modal>
             </button>
           </div>
