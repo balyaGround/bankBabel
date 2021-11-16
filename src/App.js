@@ -202,13 +202,13 @@ function Videos({ mode, callId, setPage }) {
   return (
     <div>
       
-      {/* <ScreenRecording
+      <ScreenRecording
       screen = {true}
       audio = {true}
       downloadRecordingPath = 'Screen_Recording_Demo'
       downloadRecordingType = 'mp4'
       uploadToServer = 'upload'
-      /> */}
+      />
 
     <div className="videos">
 
