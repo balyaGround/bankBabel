@@ -12,6 +12,7 @@ import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import FormIcon from "./icons/form-icon.jpg";
 import noimage from "./img/noimage.jpg";
+import ScreenRecording from "./screenRecording";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -208,52 +209,56 @@ function Videos({ mode, callId, setPage }) {
   };
 
   return (
-    <div className="videos">
-      <video ref={localRef} autoPlay playsInline className="local" muted />
-      <video ref={remoteRef} autoPlay playsInline className="remote" />
+    <div>
+      <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
-      <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-        <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
-        <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
-      </div>
+      <div className="videos">
+        <video ref={localRef} autoPlay playsInline className="local" muted />
+        <video ref={remoteRef} autoPlay playsInline className="remote" />
 
-      <div className="buttonsContainer">
-        <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
-          <HangupIcon />
-        </button>
-        <div tabIndex={0} role="button" className="more button">
-          <MoreIcon />
-          <div className="popover">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(roomId);
-              }}
-            >
-              <CopyIcon /> Copy joining code
-            </button>
-            <button onClick={handleOpen}>
-              <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
-              <Modal show={show}>
-                <ModalForm showModal={show} closeModal={show} />
-              </Modal>
-            </button>
-          </div>
+        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
+          <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
+          <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
         </div>
-      </div>
 
-      {!webcamActive && (
-        <div className="modalContainer">
-          <div className="modalBawaan">
-            <h3>Turn on your camera and microphone and start the call</h3>
-            <div className="container">
-              <button onClick={() => setPage("home")} className="secondary">
-                Cancel
+        <div className="buttonsContainer">
+          <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
+            <HangupIcon />
+          </button>
+          <div tabIndex={0} role="button" className="more button">
+            <MoreIcon />
+            <div className="popoverAwal">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(roomId);
+                }}
+              >
+                <CopyIcon /> Copy joining code
               </button>
-              <button onClick={setupSources}>Start</button>
+              <button onClick={handleOpen}>
+                <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
+                <Modal show={show}>
+                  <ModalForm showModal={show} closeModal={show} />
+                </Modal>
+              </button>
             </div>
           </div>
         </div>
-      )}
+
+        {!webcamActive && (
+          <div className="modalContainer">
+            <div className="modalBawaan">
+              <h3>Turn on your camera and microphone and start the call</h3>
+              <div className="container">
+                <button onClick={() => setPage("home")} className="secondary">
+                  Cancel
+                </button>
+                <button onClick={setupSources}>Start</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

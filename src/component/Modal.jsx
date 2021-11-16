@@ -13,9 +13,7 @@ function ModalForm({ closeModal }) {
         <Modal.Body>
           <Form />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary">Save</Button>
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </div>
     </div>
   );
