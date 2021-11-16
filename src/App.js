@@ -1,11 +1,16 @@
 import { useRef, useState } from "react";
-
-import firebase from "firebase/app";
+import ModalForm from "./component/Modal";
+import { Modal } from "react-bootstrap";
+import firebase from "firebase/compat/app";
 import "firebase/firestore";
+
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
+import FormIcon from "./icons/form-icon.jpg";
 
 import "./App.css";
 
@@ -198,6 +203,10 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
+  const [show, SetShow] = useState(false);
+  const handleOpen = () => {
+    SetShow(true);
+  };
   return (
     <div className="videos">
       <video ref={localRef} autoPlay playsInline className="local" muted />
@@ -216,6 +225,12 @@ function Videos({ mode, callId, setPage }) {
               }}
             >
               <CopyIcon /> Copy joining code
+            </button>
+            <button onClick={handleOpen}>
+              <img src={FormIcon} style={{ width: "60px", height: "60px" }} /> Form Validation
+              <Modal show={show}>
+                <ModalForm showModal={show} closeModal={SetShow} />
+              </Modal>
             </button>
           </div>
         </div>

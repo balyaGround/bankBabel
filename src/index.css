@@ -104,7 +104,7 @@ video {
 .videos .local {
   position: absolute;
   top: 1rem;
-  right: 15rem;
+  right: 19rem;
   width: 40rem;
   height: 20rem;
   border-radius: 8px;
@@ -116,8 +116,9 @@ video {
 
 .videos .remote {
   position: absolute;
+  border-radius: 8px;
   top: 1rem;
-  left: 15rem;
+  left: 20rem;
   right: 0;
   width: 40rem;
   height: 20rem;
