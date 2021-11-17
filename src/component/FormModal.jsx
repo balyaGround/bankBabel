@@ -17,7 +17,7 @@ function FormModal() {
         Form Validation
       </button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onClick={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Form Data Nasabah</Modal.Title>
         </Modal.Header>
