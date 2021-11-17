@@ -211,7 +211,7 @@ function Videos({ mode, callId, setPage }) {
         <video ref={localRef} autoPlay playsInline className="local" muted />
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
-        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
+        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "10rem", marginTop: "30rem" }}>
           <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
           <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
