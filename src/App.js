@@ -243,7 +243,7 @@ function Videos({ mode, callId, setPage }) {
         </div>
 
         {!webcamActive && (
-          <div className="modalContainer">
+          <div className="modalContainerBawaan">
             <div className="modalBawaan">
               <h3>Turn on your camera and microphone and start the call</h3>
               <div className="container">
