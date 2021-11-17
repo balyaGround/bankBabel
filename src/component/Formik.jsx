@@ -112,7 +112,7 @@ function Form() {
         <label htmlFor="dob" style={{ marginRight: "5px" }}>
           Date of Birth:{" "}
         </label>
-        <input style={{ border: "2px solid black" }} type="date" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
+        <input style={{ border: "2px solid black" }} type="dd-mm-yyyy" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
         <br />
         <button type="submit" style={{ marginRight: "2px" }}>
           Submit
