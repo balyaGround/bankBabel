@@ -1,20 +1,18 @@
 import { useRef, useState } from "react";
-// import ModalForm from "./component/Modal";
-// import { Modal } from "react-bootstrap";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "./index.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
-// import FormIcon from "./icons/form-icon.jpg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 
-import FormModal from "./component/FormModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import FormModal from "./component/FormModal.jsx";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -214,8 +212,8 @@ function Videos({ mode, callId, setPage }) {
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
         <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
-          <img src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">
@@ -232,13 +230,13 @@ function Videos({ mode, callId, setPage }) {
               >
                 <CopyIcon /> Copy joining code
               </button>
-              <FormModal/>
+              <FormModal />
             </div>
           </div>
         </div>
 
         {!webcamActive && (
-          <div className="modalContainer">
+          <div className="modalContainerBawaan">
             <div className="modalBawaan">
               <h3>Turn on your camera and microphone and start the call</h3>
               <div className="container">

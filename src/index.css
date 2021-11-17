@@ -63,7 +63,7 @@ video {
   padding: 40px 20px;
 }
 
-.modalContainer {
+.modalContainerBawaan {
   position: absolute;
   top: 0;
   left: 0;
@@ -84,17 +84,17 @@ video {
   background-color: white;
 }
 
-.modal h3 {
+.modalBawaan h3 {
   margin: 0;
   font-weight: normal;
 }
 
-.modal .container {
+.modalBawaan .container {
   display: flex;
   margin-top: 40px;
 }
 
-.modal button.secondary {
+.modalBawaan button.secondary {
   margin-left: auto;
   background-color: var(--color-primary-light);
   color: var(--color-primary);

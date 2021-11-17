@@ -4,7 +4,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import config from "../config";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./formik.css";
 function Form() {
   firebase.initializeApp(config);
   const db = firebase.firestore();
