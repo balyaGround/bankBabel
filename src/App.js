@@ -5,6 +5,7 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import {getStorage, getDownloadURL, ref} from 'firebase/storage'
 import "./index.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
@@ -205,6 +206,24 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
+  const photos = () => {
+    const storage = getStorage()
+    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+      const imgEktp = document.getElementById('ektp')
+      imgEktp.setAttribute('src', url)
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+      const imgSelfieEktp = document.getElementById('selfieEktp')
+      imgSelfieEktp.setAttribute('src', url)
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  }
+
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
@@ -214,8 +233,8 @@ function Videos({ mode, callId, setPage }) {
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
         <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
-          <img src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img id = 'ektp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img id = 'selfieEktp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">

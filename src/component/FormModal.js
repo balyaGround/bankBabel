@@ -17,14 +17,16 @@ function FormModal() {
          Form Validation
         </button>
   
+        <div className = 'bungkos'>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Form Data Nasabah</Modal.Title>
+            <Modal.Title className = 'modal-title'> Form Data Nasabah</Modal.Title>
           </Modal.Header>
           <Modal.Body>
               <Form/>
           </Modal.Body>
         </Modal>
+        </div>
       </>
     );
   }
