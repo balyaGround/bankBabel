@@ -1,21 +1,20 @@
 import { useRef, useState } from "react";
-// import ModalForm from "./component/Modal";
-// import { Modal } from "react-bootstrap";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import {query} from 'firebase/firestore'
 import {getStorage, getDownloadURL, ref} from 'firebase/storage'
 import "./index.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
-// import FormIcon from "./icons/form-icon.jpg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 
-import FormModal from "./component/FormModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import FormModal from "./component/FormModal.jsx";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -56,6 +55,19 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+
+  const AutoJoin = () => {
+    
+    while(joinCode === ''){
+      const firebaseid = firestore.collection('rooms').orderBy('time', 'desc').limit(1).get()
+    
+      firebaseid.forEach(doc => {
+        console.log(doc.id)
+        setJoinCode(doc.id)
+      }).then(setPage('join'))
+  }
+}
+
   return (
     <div className="home">
       <div className="create box">
@@ -65,6 +77,11 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       <div className="answer box">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
         <button onClick={() => setPage("join")}>Answer</button>
+      </div>
+      
+      <div className = 'auto connect'>
+      <input type = 'hidden' value={joinCode} onChange={(e) => setJoinCode(e.target.value)}/>
+        <button onClick = {AutoJoin}>Auto Connect</button>
       </div>
     </div>
   );
@@ -101,9 +118,15 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const callDoc = firestore.collection("rooms").doc();
+      const roomId = Date.now().toString()
+      const callDoc = firestore.collection("rooms").doc(roomId);
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
+      const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: false
+      })
 
       setRoomId(callDoc.id);
 
@@ -119,7 +142,11 @@ function Videos({ mode, callId, setPage }) {
         type: offerDescription.type,
       };
 
-      await callDoc.set({ offer });
+      const time = {
+        time: Date.now()
+      }
+
+      await callDoc.set({ offer, time });
 
       callDoc.onSnapshot((snapshot) => {
         const data = snapshot.data();
@@ -141,6 +168,11 @@ function Videos({ mode, callId, setPage }) {
       const callDoc = firestore.collection("rooms").doc(callId);
       const answerCandidates = callDoc.collection("calleeCandidates");
       const offerCandidates = callDoc.collection("callerCandidates");
+      const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: false
+      })
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -171,7 +203,8 @@ function Videos({ mode, callId, setPage }) {
       });
     }
 
-    pc.onconnectionstatechange = (event) => {
+    pc.onconnectionstatechange = () => {
+      console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
       }
@@ -202,6 +235,12 @@ function Videos({ mode, callId, setPage }) {
 
       await roomRef.delete();
     }
+
+    const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: true
+      })
 
     window.location.reload();
   };
@@ -251,13 +290,13 @@ function Videos({ mode, callId, setPage }) {
               >
                 <CopyIcon /> Copy joining code
               </button>
-              <FormModal/>
+              <FormModal />
             </div>
           </div>
         </div>
 
         {!webcamActive && (
-          <div className="modalContainer">
+          <div className="modalContainerBawaan">
             <div className="modalBawaan">
               <h3>Turn on your camera and microphone and start the call</h3>
               <div className="container">

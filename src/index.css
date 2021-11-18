@@ -63,7 +63,7 @@ video {
   padding: 40px 20px;
 }
 
-.modalContainer {
+.modalContainerBawaan {
   position: absolute;
   top: 0;
   left: 0;
@@ -84,17 +84,17 @@ video {
   background-color: white;
 }
 
-.modal h3 {
+.modalBawaan h3 {
   margin: 0;
   font-weight: normal;
 }
 
-.modal .container {
+.modalBawaan .container {
   display: flex;
   margin-top: 40px;
 }
 
-.modal button.secondary {
+.modalBawaan button.secondary {
   margin-left: auto;
   background-color: var(--color-primary-light);
   color: var(--color-primary);
@@ -104,7 +104,7 @@ video {
 .videos .local {
   position: absolute;
   top: 6rem;
-  right: 28rem;
+  right: 10rem;
   width: 30rem;
   height: 20rem;
   border-radius: 8px;
@@ -118,7 +118,7 @@ video {
   position: absolute;
   border-radius: 8px;
   top: 6rem;
-  left: 30rem;
+  left: 10rem;
   right: 0;
   width: 30rem;
   height: 20rem;
