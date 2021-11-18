@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "./Formik";
-import './modal.css'
 
 function ModalForm({ closeModal }) {
   return (
