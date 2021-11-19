@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
@@ -54,22 +54,41 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
-  const [buttonClicked, setButtonClicked] = useState(false)
-  const [joinID, setJoinID] = useState('')
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const getID = () => {
+    firestore
+      .collection("rooms")
+      .get()
+      .then((doc) => {
+        doc.forEach((doc) => {
+          console.log(doc.id);
+          setJoinCode(doc.id.toString());
+        });
+      });
+  };
+
+  // useEffect(() => {
+  //   getID();
+  // }, []);
+  // console.log(joinCode);
 
   const handleClick = () => {
-    if(buttonClicked(true)){
-      while(joinCode === ''){
-        firestore.collection('rooms').get().then((doc) => {
-          doc.forEach((doc) => {
-            console.log(doc.id);
-            setJoinID(doc.id.toString())
-          })
-        })
+    if (buttonClicked(false)) {
+      while (joinCode === "") {
+        firestore
+          .collection("rooms")
+          .get()
+          .then((doc) => {
+            doc.forEach((doc) => {
+              console.log(doc.id);
+              setJoinCode(doc.id.toString());
+            });
+          });
+        console.log(joinCode);
       }
-      setPage('join')
+      setPage("join");
     }
-  }
+  };
 
   return (
     <div className="home">
@@ -81,10 +100,17 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
         <button onClick={() => setPage("join")}>Answer</button>
       </div>
-      
-      <div className = 'auto connect'>
-      <input value={joinID} onChange = {(e) => setJoinID(e.target.value)}/>
-        <button onClick = {() => {setButtonClicked(true); handleClick()}}>Auto Connect</button>
+
+      <div className="auto connect">
+        <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
+        <button
+          onClick={() => {
+            getID();
+            setPage("join");
+          }}
+        >
+          Auto Connect
+        </button>
       </div>
     </div>
   );
@@ -125,12 +151,12 @@ function Videos({ mode, callId, setPage }) {
       const callDoc = firestore.collection("rooms").doc();
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
-      const isActive = firestore.collection('isActive').doc('agentActive')
+      const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
-        Agent1: false
-      })
-    
+        Agent1: false,
+      });
+
       // firebaseid.forEach(doc => {
       //   console.log(doc.id)
       // })
@@ -150,8 +176,8 @@ function Videos({ mode, callId, setPage }) {
       };
 
       const time = {
-        time: Date.now()
-      }
+        time: Date.now(),
+      };
 
       await callDoc.set({ offer, time });
 
@@ -175,11 +201,11 @@ function Videos({ mode, callId, setPage }) {
       const callDoc = firestore.collection("rooms").doc(callId);
       const answerCandidates = callDoc.collection("calleeCandidates");
       const offerCandidates = callDoc.collection("callerCandidates");
-      const isActive = firestore.collection('isActive').doc('agentActive')
+      const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
-        Agent1: false
-      })
+        Agent1: false,
+      });
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -243,11 +269,11 @@ function Videos({ mode, callId, setPage }) {
       await roomRef.delete();
     }
 
-    const isActive = firestore.collection('isActive').doc('agentActive')
+    const isActive = firestore.collection("isActive").doc("agentActive");
 
-      isActive.set({
-        Agent1: true
-      })
+    isActive.set({
+      Agent1: true,
+    });
 
     window.location.reload();
   };
@@ -279,8 +305,8 @@ function Videos({ mode, callId, setPage }) {
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
         <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img id = 'ektp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
-          <img id = 'selfieEktp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+          <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">
