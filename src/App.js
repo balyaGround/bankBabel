@@ -4,8 +4,7 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import {query} from 'firebase/firestore'
-import {getStorage, getDownloadURL, ref} from 'firebase/storage'
+// import {getStorage, getDownloadURL, ref} from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -56,18 +55,41 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const getID = () => {
+    firestore
+      .collection("rooms")
+      .get()
+      .then((doc) => {
+        doc.forEach((doc) => {
+          console.log(doc.id);
+          setJoinCode(doc.id.toString());
+        });
+      });
+  };
 
-  const AutoJoin = () => {
-    
-    while(joinCode === ''){
-      const firebaseid = firestore.collection('rooms').orderBy('time', 'desc').limit(1).get()
-    
-      firebaseid.forEach(doc => {
-        console.log(doc.id)
-        setJoinCode(doc.id)
-      }).then(setPage('join'))
-  }
-}
+  // useEffect(() => {
+  //   getID();
+  // }, []);
+  // console.log(joinCode);
+
+  const handleClick = () => {
+    if (buttonClicked(false)) {
+      while (joinCode === "") {
+        firestore
+          .collection("rooms")
+          .get()
+          .then((doc) => {
+            doc.forEach((doc) => {
+              console.log(doc.id);
+              setJoinCode(doc.id.toString());
+            });
+          });
+        console.log(joinCode);
+      }
+      setPage("join");
+    }
+  };
 
   return (
     <div className="home">
@@ -79,10 +101,17 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
         <button onClick={() => setPage("join")}>Answer</button>
       </div>
-      
-      <div className = 'auto connect'>
-      <input type = 'hidden' value={joinCode} onChange={(e) => setJoinCode(e.target.value)}/>
-        <button onClick = {AutoJoin}>Auto Connect</button>
+
+      <div className="auto connect">
+        <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
+        <button
+          onClick={() => {
+            getID();
+            setPage("join");
+          }}
+        >
+          Auto Connect
+        </button>
       </div>
     </div>
   );
@@ -119,15 +148,19 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const roomId = Date.now().toString()
-      const callDoc = firestore.collection("rooms").doc(roomId);
+      // const roomId = Date.now().toString()
+      const callDoc = firestore.collection("rooms").doc();
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
-      const isActive = firestore.collection('isActive').doc('agentActive')
+      const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
-        Agent1: false
-      })
+        Agent1: false,
+      });
+
+      // firebaseid.forEach(doc => {
+      //   console.log(doc.id)
+      // })
 
       setRoomId(callDoc.id);
 
@@ -144,8 +177,8 @@ function Videos({ mode, callId, setPage }) {
       };
 
       const time = {
-        time: Date.now()
-      }
+        time: Date.now(),
+      };
 
       await callDoc.set({ offer, time });
 
@@ -169,11 +202,11 @@ function Videos({ mode, callId, setPage }) {
       const callDoc = firestore.collection("rooms").doc(callId);
       const answerCandidates = callDoc.collection("calleeCandidates");
       const offerCandidates = callDoc.collection("callerCandidates");
-      const isActive = firestore.collection('isActive').doc('agentActive')
+      const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
-        Agent1: false
-      })
+        Agent1: false,
+      });
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -237,32 +270,32 @@ function Videos({ mode, callId, setPage }) {
       await roomRef.delete();
     }
 
-    const isActive = firestore.collection('isActive').doc('agentActive')
+    const isActive = firestore.collection("isActive").doc("agentActive");
 
-      isActive.set({
-        Agent1: true
-      })
+    isActive.set({
+      Agent1: true,
+    });
 
     window.location.reload();
   };
 
-  const photos = () => {
-    const storage = getStorage()
-    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
-      const imgEktp = document.getElementById('ektp')
-      imgEktp.setAttribute('src', url)
-    })
-    .catch((e) => {
-      console.log(e);
-    })
-    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
-      const imgSelfieEktp = document.getElementById('selfieEktp')
-      imgSelfieEktp.setAttribute('src', url)
-    })
-    .catch((e) => {
-      console.log(e);
-    })
-  }
+  // const photos = () => {
+  //   const storage = getStorage()
+  //   getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+  //     const imgEktp = document.getElementById('ektp')
+  //     imgEktp.setAttribute('src', url)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   })
+  //   getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+  //     const imgSelfieEktp = document.getElementById('selfieEktp')
+  //     imgSelfieEktp.setAttribute('src', url)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   })
+  // }
 
   return (
     <div>
@@ -273,8 +306,8 @@ function Videos({ mode, callId, setPage }) {
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
         <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img id = 'ektp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
-          <img id = 'selfieEktp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+          <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">
