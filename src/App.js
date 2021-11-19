@@ -68,28 +68,30 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       });
   };
 
-  // useEffect(() => {
-  //   getID();
-  // }, []);
-  // console.log(joinCode);
+  const roomloop = () => {
+    // const myVar = setInterval(getID(), 15000)
+    const myVar = setInterval(() => {
+      firestore
+      .collection("rooms")
+      .get()
+      .then((doc) => {
+        doc.forEach((doc) => {
+          console.log(doc.id);
+          const docID = doc.id
+          if (docID != null){
+            clearInterval(roomloop)
+          }
+        });
+      });
+    })
+  }
 
-  const handleClick = () => {
-    if (buttonClicked(false)) {
-      while (joinCode === "") {
-        firestore
-          .collection("rooms")
-          .get()
-          .then((doc) => {
-            doc.forEach((doc) => {
-              console.log(doc.id);
-              setJoinCode(doc.id.toString());
-            });
-          });
-        console.log(joinCode);
-      }
-      setPage("join");
-    }
-  };
+  useEffect(() => {
+    getID()
+    roomloop()
+
+
+  }, []);
 
   return (
     <div className="home">
@@ -98,11 +100,17 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       </div>
 
       <div className="answer box">
-        <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
-        <button onClick={() => setPage("join")}>Answer</button>
+        {/* <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" /> */}
+        {/* <button onClick={() => setPage("join")}>Answer</button> */}
+        <button
+          onClick={() => {
+            getID();
+            setPage("join");
+          }}>
+          Auto</button>
       </div>
 
-      <div className="auto connect">
+      {/* <div className="auto connect">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
         <button
           onClick={() => {
@@ -112,7 +120,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         >
           Auto Connect
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -241,6 +249,7 @@ function Videos({ mode, callId, setPage }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
+        firestore.collection('rooms').doc(roomId).delete()
       }
     };
   };
