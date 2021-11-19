@@ -48,7 +48,6 @@ function Form() {
       .get()
       .then((doc) => {
         const jsonData = doc.data();
-        // console.log(JSON.parse(jsonData.toString()));
         const jsonString = JSON.stringify(jsonData);
         console.log(jsonString);
         const json = JSON.parse(jsonString);
