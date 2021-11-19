@@ -3,8 +3,7 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import {query} from 'firebase/firestore'
-import {getStorage, getDownloadURL, ref} from 'firebase/storage'
+// import {getStorage, getDownloadURL, ref} from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -55,18 +54,22 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+  const [buttonClicked, setButtonClicked] = useState(false)
+  const [joinID, setJoinID] = useState('')
 
-  const AutoJoin = () => {
-    
-    while(joinCode === ''){
-      const firebaseid = firestore.collection('rooms').orderBy('time', 'desc').limit(1).get()
-    
-      firebaseid.forEach(doc => {
-        console.log(doc.id)
-        setJoinCode(doc.id)
-      }).then(setPage('join'))
+  const handleClick = () => {
+    if(buttonClicked(true)){
+      while(joinCode === ''){
+        firestore.collection('rooms').get().then((doc) => {
+          doc.forEach((doc) => {
+            console.log(doc.id);
+            setJoinID(doc.id.toString())
+          })
+        })
+      }
+      setPage('join')
+    }
   }
-}
 
   return (
     <div className="home">
@@ -80,8 +83,8 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       </div>
       
       <div className = 'auto connect'>
-      <input type = 'hidden' value={joinCode} onChange={(e) => setJoinCode(e.target.value)}/>
-        <button onClick = {AutoJoin}>Auto Connect</button>
+      <input value={joinID} onChange = {(e) => setJoinID(e.target.value)}/>
+        <button onClick = {() => {setButtonClicked(true); handleClick()}}>Auto Connect</button>
       </div>
     </div>
   );
@@ -118,8 +121,8 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const roomId = Date.now().toString()
-      const callDoc = firestore.collection("rooms").doc(roomId);
+      // const roomId = Date.now().toString()
+      const callDoc = firestore.collection("rooms").doc();
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
       const isActive = firestore.collection('isActive').doc('agentActive')
@@ -127,6 +130,10 @@ function Videos({ mode, callId, setPage }) {
       isActive.set({
         Agent1: false
       })
+    
+      // firebaseid.forEach(doc => {
+      //   console.log(doc.id)
+      // })
 
       setRoomId(callDoc.id);
 
@@ -245,23 +252,23 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
-  const photos = () => {
-    const storage = getStorage()
-    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
-      const imgEktp = document.getElementById('ektp')
-      imgEktp.setAttribute('src', url)
-    })
-    .catch((e) => {
-      console.log(e);
-    })
-    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
-      const imgSelfieEktp = document.getElementById('selfieEktp')
-      imgSelfieEktp.setAttribute('src', url)
-    })
-    .catch((e) => {
-      console.log(e);
-    })
-  }
+  // const photos = () => {
+  //   const storage = getStorage()
+  //   getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+  //     const imgEktp = document.getElementById('ektp')
+  //     imgEktp.setAttribute('src', url)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   })
+  //   getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+  //     const imgSelfieEktp = document.getElementById('selfieEktp')
+  //     imgSelfieEktp.setAttribute('src', url)
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   })
+  // }
 
   return (
     <div>
