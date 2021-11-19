@@ -1,19 +1,19 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useRef, useState } from "react";
-import ModalForm from "./component/Modal";
-import { Modal } from "react-bootstrap";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "./index.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { ReactComponent as CopyIcon } from "./icons/copy.svg";
-import FormIcon from "./icons/form-icon.jpg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import FormModal from "./component/FormModal.jsx";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -204,8 +204,6 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
-  const [show, setShow] = useState(false);
-
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
@@ -214,9 +212,9 @@ function Videos({ mode, callId, setPage }) {
         <video ref={localRef} autoPlay playsInline className="local" muted />
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
-        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
-          <img src={noimage} style={{ width: "30rem", height: "10rem" }} />
+        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "10rem", marginTop: "30rem" }}>
+          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">
@@ -233,18 +231,13 @@ function Videos({ mode, callId, setPage }) {
               >
                 <CopyIcon /> Copy joining code
               </button>
-              <button onClick={() => setShow(true)}>
-                <img src={FormIcon} alt="form" style={{ width: "60px", height: "60px" }} /> Form Validation
-                <Modal show={show}>
-                  <ModalForm showModal={show} closeModal={setShow} />
-                </Modal>
-              </button>
+              <FormModal />
             </div>
           </div>
         </div>
 
         {!webcamActive && (
-          <div className="modalContainer">
+          <div className="modalContainerBawaan">
             <div className="modalBawaan">
               <h3>Turn on your camera and microphone and start the call</h3>
               <div className="container">
