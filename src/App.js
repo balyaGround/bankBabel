@@ -4,6 +4,8 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import {query} from 'firebase/firestore'
+import {getStorage, getDownloadURL, ref} from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -54,6 +56,19 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+
+  const AutoJoin = () => {
+    
+    while(joinCode === ''){
+      const firebaseid = firestore.collection('rooms').orderBy('time', 'desc').limit(1).get()
+    
+      firebaseid.forEach(doc => {
+        console.log(doc.id)
+        setJoinCode(doc.id)
+      }).then(setPage('join'))
+  }
+}
+
   return (
     <div className="home">
       <div className="create box">
@@ -63,6 +78,11 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       <div className="answer box">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
         <button onClick={() => setPage("join")}>Answer</button>
+      </div>
+      
+      <div className = 'auto connect'>
+      <input type = 'hidden' value={joinCode} onChange={(e) => setJoinCode(e.target.value)}/>
+        <button onClick = {AutoJoin}>Auto Connect</button>
       </div>
     </div>
   );
@@ -99,9 +119,15 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const callDoc = firestore.collection("rooms").doc();
+      const roomId = Date.now().toString()
+      const callDoc = firestore.collection("rooms").doc(roomId);
       const offerCandidates = callDoc.collection("callerCandidates");
       const answerCandidates = callDoc.collection("calleeCandidates");
+      const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: false
+      })
 
       setRoomId(callDoc.id);
 
@@ -117,7 +143,11 @@ function Videos({ mode, callId, setPage }) {
         type: offerDescription.type,
       };
 
-      await callDoc.set({ offer });
+      const time = {
+        time: Date.now()
+      }
+
+      await callDoc.set({ offer, time });
 
       callDoc.onSnapshot((snapshot) => {
         const data = snapshot.data();
@@ -139,6 +169,11 @@ function Videos({ mode, callId, setPage }) {
       const callDoc = firestore.collection("rooms").doc(callId);
       const answerCandidates = callDoc.collection("calleeCandidates");
       const offerCandidates = callDoc.collection("callerCandidates");
+      const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: false
+      })
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -169,7 +204,8 @@ function Videos({ mode, callId, setPage }) {
       });
     }
 
-    pc.onconnectionstatechange = (event) => {
+    pc.onconnectionstatechange = () => {
+      console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
       }
@@ -201,8 +237,32 @@ function Videos({ mode, callId, setPage }) {
       await roomRef.delete();
     }
 
+    const isActive = firestore.collection('isActive').doc('agentActive')
+
+      isActive.set({
+        Agent1: true
+      })
+
     window.location.reload();
   };
+
+  const photos = () => {
+    const storage = getStorage()
+    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+      const imgEktp = document.getElementById('ektp')
+      imgEktp.setAttribute('src', url)
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+      const imgSelfieEktp = document.getElementById('selfieEktp')
+      imgSelfieEktp.setAttribute('src', url)
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  }
 
   return (
     <div>
@@ -212,9 +272,9 @@ function Videos({ mode, callId, setPage }) {
         <video ref={localRef} autoPlay playsInline className="local" muted />
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
-        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "10rem", marginTop: "30rem" }}>
-          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
-          <img src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
+          <img id = 'ektp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
+          <img id = 'selfieEktp' src={noimage} alt = '' style={{ width: "30rem", height: "10rem" }} />
         </div>
 
         <div className="buttonsContainer">
