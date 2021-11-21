@@ -240,13 +240,14 @@ function Videos({ mode, callId, setPage }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
+
+        pc.close();
       }
     };
   };
 
   const hangUp = async () => {
     pc.close();
-
     if (roomId) {
       let roomRef = firestore.collection("rooms").doc(roomId);
       await roomRef
@@ -265,8 +266,8 @@ function Videos({ mode, callId, setPage }) {
             doc.ref.delete();
           });
         });
-
-      await roomRef.delete();
+      roomRef.delete();
+      //   console.log("aloooooooooooooooo");
     }
 
     const isActive = firestore.collection("isActive").doc("agentActive");
