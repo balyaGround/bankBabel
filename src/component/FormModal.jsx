@@ -17,13 +17,14 @@ function FormModal() {
         Form Validation
       </button>
 
-      <Modal show={show} onClick={handleClose}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Form Data Nasabah</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body scrollable>
           <Form />
         </Modal.Body>
+        <Modal.Footer />
       </Modal>
     </>
   );
