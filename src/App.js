@@ -55,7 +55,7 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
-  const [buttonClicked, setButtonClicked] = useState(false);
+  const [docID, setDocID] = useState(false)
   const getID = () => {
     firestore
       .collection("rooms")
@@ -77,19 +77,30 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       .then((doc) => {
         doc.forEach((doc) => {
           console.log(doc.id);
-          const docID = doc.id
-          if (docID != null){
-            clearInterval(roomloop)
-          }
+          
         });
       });
     })
   }
 
   useEffect(() => {
-    getID()
-    roomloop()
-
+    // getID()
+    // roomloop()
+    while (joinCode == ''){
+      setInterval(() => {
+        firestore
+      .collection("rooms")
+      .get()
+      .then((doc) => {
+        doc.forEach((doc) => {
+          console.log(doc.id);
+          if(doc.id != null){
+            setJoinCode(doc.id)
+          }
+        });
+      });
+      }, 15000);
+    }
 
   }, []);
 
