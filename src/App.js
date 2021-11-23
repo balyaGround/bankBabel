@@ -310,27 +310,31 @@ function Videos({ mode, callId, setPage }) {
           <div className="row ">
             <div className="col ms-5">
               <video ref={localRef} autoPlay playsInline className="local d-block" muted />
-              <h4 className="ms-5">Agent Video</h4>
+              <h4 className=" text-white">Agent Video</h4>
             </div>
-            <div className="col ms-5">
+            <div className="col ms-5 text-white poto-bawah">
               <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
-              <h4>Video Client Mobile</h4>
+              <h4 style={{ marginLeft: "16rem" }}>Video Client Mobile</h4>
             </div>
           </div>
         </div>
 
-        <div className="container  ">
-          <div className="row ms-5">
-            <div className="col ">
-              <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+        <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
+          <div className="row ">
+            <div className="col d-flex justify-content-center ">
+              <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
+                <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+              </div>
             </div>
-            <div className="col ">
-              <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+            <div className="col d-flex justify-content-center">
+              <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
+                <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="container buttonsContainer " style={{ marginTop: "6rem" }}>
+        <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
           <div className="row">
             <div className="col">
               <button onClick={hangUp} disabled={!webcamActive} className="hangup button">

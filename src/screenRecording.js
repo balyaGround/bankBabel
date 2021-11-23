@@ -91,7 +91,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
             <Button
               size="small"
               onClick={startRecording}
-              type="primary"
+              color="rgba(0, 0, 255, 0.192"
               // icon="play-circle"
               className="margin-left-sm"
               ghost
