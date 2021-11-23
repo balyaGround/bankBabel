@@ -198,8 +198,8 @@ video {
   .videos .buttonsContainer .more .popoverAwal {
     bottom: 2rem;
   }
-  .row .col.poto-bawah {
-    margin-left: 6rem !important;
+  .row .col.poto-bawah h4 {
+    margin-left: 7rem !important;
   }
   .container.poto {
     margin-top: 7rem !important;

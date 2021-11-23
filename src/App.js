@@ -13,6 +13,7 @@ import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import FormModal from "./component/FormModal.js";
+import AnswerModal from "./component/AnswerModal";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -53,7 +54,6 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
-  const [docID, setDocID] = useState(false);
   const getID = () => {
     firestore
       .collection("rooms")
@@ -68,25 +68,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
 
   useEffect(() => {
     getID();
-  }, []);
-  // const roomloop = () => {
-  //   // const myVar = setInterval(getID(), 15000)
-  // const myVar = setInterval(() => {
-  //   firestore
-  // // roomloop()
-  // while (joinCode == ''){
-  //   setInterval(() => {
-  //     firestore
-  //   .collection("rooms")
-  //   .get()
-  //     doc.forEach((doc) => {
-  //       console.log(doc.id);
-  //       if(doc.id != null){
-  //         setJoinCode(doc.id)
-  //       }
-  //     })
-  //   });
-  //   }15000;
+  }, [joinCode]);
 
   return (
     <div className="home">
@@ -103,10 +85,10 @@ function Menu({ joinCode, setJoinCode, setPage }) {
             setPage("join");
           }}
         >
-          Auto
+          Answer
         </button>
       </div>
-
+      <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
       {/* <div className="auto connect">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
         <button
