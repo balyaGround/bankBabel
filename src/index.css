@@ -102,9 +102,6 @@ video {
 }
 
 .videos .local {
-  position: absolute;
-  top: 6rem;
-  right: 10rem;
   width: 30rem;
   height: 20rem;
   border-radius: 8px;
@@ -115,11 +112,7 @@ video {
 }
 
 .videos .remote {
-  position: absolute;
   border-radius: 8px;
-  top: 6rem;
-  left: 10rem;
-  right: 0;
   width: 30rem;
   height: 20rem;
   transform: rotateY(180deg);
@@ -128,12 +121,8 @@ video {
 }
 
 .videos .buttonsContainer {
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  transform: translateX(-50%);
   display: flex;
-  z-index: 1;
+  justify-content: center;
 }
 
 .videos .buttonsContainer .button {
@@ -188,4 +177,38 @@ video {
 
 .videos .buttonsContainer .more .popoverAwal button svg {
   margin-right: 20px;
+}
+
+.videos-bungkus {
+  display: flex;
+}
+.wrapper-poto {
+  width: 60rem;
+  height: 20rem;
+  display: flex;
+  flex-direction: row;
+  margin-top: 30rem;
+  justify-content: center;
+}
+@media (max-width: 1024px) {
+  .videos .local {
+    top: 6rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 8px;
+    z-index: 10;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+  }
+
+  .videos .remote {
+    border-radius: 8px;
+    top: 6rem;
+    width: 20rem;
+    height: 20rem;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+  }
 }
