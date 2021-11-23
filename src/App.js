@@ -14,7 +14,12 @@ import ScreenRecording from "./screenRecording";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+<<<<<<< HEAD
 import FormModal from "./component/FormModal.jsx";
+=======
+import FormModal from "./component/FormModal.js";
+import AnswerModal from "./component/AnswerModal";
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -55,8 +60,11 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+<<<<<<< HEAD
   const [docGet, setDocGet] = useState(false)
 
+=======
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
   const getID = () => {
     firestore
       .collection("rooms")
@@ -74,6 +82,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     const auto = setInterval(() => {
       getID()
     }, 15000);
@@ -85,6 +94,10 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       }
     }
   }, []);
+=======
+    getID();
+  }, [joinCode]);
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
 
   return (
     <div className="home">
@@ -99,10 +112,17 @@ function Menu({ joinCode, setJoinCode, setPage }) {
           onClick={() => {
             getID();
             setPage("join");
+<<<<<<< HEAD
           }}>
           Auto</button>
+=======
+          }}
+        >
+          Answer
+        </button>
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
       </div>
-
+      <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
       {/* <div className="auto connect">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
         <button
@@ -304,6 +324,7 @@ function Videos({ mode, callId, setPage }) {
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
+<<<<<<< HEAD
         <video ref={localRef} autoPlay playsInline className="local" muted />
         <video ref={remoteRef} autoPlay playsInline className="remote" />
 
@@ -327,10 +348,37 @@ function Videos({ mode, callId, setPage }) {
                 <CopyIcon /> Copy joining code
               </button>
               <FormModal />
+=======
+        <div className="container " style={{ marginBottom: "5rem" }}>
+          <div className="row ">
+            <div className="col ms-5">
+              <video ref={localRef} autoPlay playsInline className="local d-block" muted />
+              <h4 className=" text-white">Agent Video</h4>
+            </div>
+            <div className="col ms-5 text-white poto-bawah">
+              <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
+              <h4 style={{ marginLeft: "16rem" }}>Video Client Mobile</h4>
             </div>
           </div>
         </div>
 
+        <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
+          <div className="row ">
+            <div className="col d-flex justify-content-center ">
+              <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
+                <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+              </div>
+            </div>
+            <div className="col d-flex justify-content-center">
+              <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
+                <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+              </div>
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
+            </div>
+          </div>
+        </div>
+
+<<<<<<< HEAD
         {!webcamActive && (
           <div className="modalContainerBawaan">
             <div className="modalBawaan">
@@ -338,6 +386,20 @@ function Videos({ mode, callId, setPage }) {
               <div className="container">
                 <button onClick={() => setPage("home")} className="secondary">
                   Cancel
+=======
+        <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
+          <div className="row">
+            <div className="col">
+              <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
+                <HangupIcon />
+              </button>
+            </div>
+            <div className="col more button" tabIndex={0} role="button">
+              <MoreIcon />
+              <div className="popoverAwal">
+                <button>
+                  <FormModal />
+>>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
                 </button>
                 <button onClick={setupSources}>Start</button>
               </div>
