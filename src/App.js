@@ -8,12 +8,13 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
+import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import FormModal from "./component/FormModal.js";
+import FormModal from "./component/FormModal.jsx";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -54,7 +55,8 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
-  const [docID, setDocID] = useState(false);
+  const [docGet, setDocGet] = useState(false)
+
   const getID = () => {
     firestore
       .collection("rooms")
@@ -63,31 +65,26 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         doc.forEach((doc) => {
           console.log(doc.id);
           setJoinCode(doc.id.toString());
+          if (doc.id !== '') {
+            console.log('ada isi');
+            setDocGet(true)
+          }
         });
-      });
+      })
   };
 
   useEffect(() => {
-    getID();
+    const auto = setInterval(() => {
+      getID()
+    }, 15000);
+    return () => {
+      if (docGet) {
+        console.log(docGet.toString());
+        setPage('join')
+        clearInterval(auto)
+      }
+    }
   }, []);
-  // const roomloop = () => {
-  //   // const myVar = setInterval(getID(), 15000)
-  // const myVar = setInterval(() => {
-  //   firestore
-  // // roomloop()
-  // while (joinCode == ''){
-  //   setInterval(() => {
-  //     firestore
-  //   .collection("rooms")
-  //   .get()
-  //     doc.forEach((doc) => {
-  //       console.log(doc.id);
-  //       if(doc.id != null){
-  //         setJoinCode(doc.id)
-  //       }
-  //     })
-  //   });
-  //   }15000;
 
   return (
     <div className="home">
@@ -102,10 +99,8 @@ function Menu({ joinCode, setJoinCode, setPage }) {
           onClick={() => {
             getID();
             setPage("join");
-          }}
-        >
-          Auto
-        </button>
+          }}>
+          Auto</button>
       </div>
 
       {/* <div className="auto connect">
@@ -122,6 +117,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
     </div>
   );
 }
+
 function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
@@ -246,13 +242,14 @@ function Videos({ mode, callId, setPage }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        firestore.collection("rooms").doc(roomId).delete();
+        firestore.collection('rooms').doc(roomId).delete()
       }
     };
   };
 
   const hangUp = async () => {
     pc.close();
+
     if (roomId) {
       let roomRef = firestore.collection("rooms").doc(roomId);
       await roomRef
@@ -271,8 +268,8 @@ function Videos({ mode, callId, setPage }) {
             doc.ref.delete();
           });
         });
-      roomRef.delete();
-      //   console.log("aloooooooooooooooo");
+
+      await roomRef.delete();
     }
 
     const isActive = firestore.collection("isActive").doc("agentActive");
@@ -307,62 +304,47 @@ function Videos({ mode, callId, setPage }) {
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
-        <div className="container " style={{ marginBottom: "5rem" }}>
-          <div className="row ">
-            <div className="col ms-5">
-              <video ref={localRef} autoPlay playsInline className="local d-block" muted />
-              <h4 className="ms-5">Agent Video</h4>
-            </div>
-            <div className="col ms-5">
-              <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
-              <h4>Video Client Mobile</h4>
-            </div>
-          </div>
+        <video ref={localRef} autoPlay playsInline className="local" muted />
+        <video ref={remoteRef} autoPlay playsInline className="remote" />
+
+        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
+          <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
+          <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
         </div>
 
-        <div className="container  ">
-          <div className="row ms-5">
-            <div className="col ">
-              <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
-            </div>
-            <div className="col ">
-              <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
-            </div>
-          </div>
-        </div>
-
-        <div className="container buttonsContainer " style={{ marginTop: "6rem" }}>
-          <div className="row">
-            <div className="col">
-              <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
-                <HangupIcon />
+        <div className="buttonsContainer">
+          <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
+            <HangupIcon />
+          </button>
+          <div tabIndex={0} role="button" className="more button">
+            <MoreIcon />
+            <div className="popoverAwal">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(roomId);
+                }}
+              >
+                <CopyIcon /> Copy joining code
               </button>
+              <FormModal />
             </div>
-            <div className="col more button" tabIndex={0} role="button">
-              <MoreIcon />
-              <div className="popoverAwal">
-                <button>
-                  <FormModal />
+          </div>
+        </div>
+
+        {!webcamActive && (
+          <div className="modalContainerBawaan">
+            <div className="modalBawaan">
+              <h3>Turn on your camera and microphone and start the call</h3>
+              <div className="container">
+                <button onClick={() => setPage("home")} className="secondary">
+                  Cancel
                 </button>
+                <button onClick={setupSources}>Start</button>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
-
-      {!webcamActive && (
-        <div className="modalContainerBawaan">
-          <div className="modalBawaan">
-            <h3>Turn on your camera and microphone and start the call</h3>
-            <div className="container">
-              <button onClick={() => setPage("home")} className="secondary">
-                Cancel
-              </button>
-              <button onClick={setupSources}>Start</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
