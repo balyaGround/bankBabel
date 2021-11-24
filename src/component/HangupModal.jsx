@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 
-function HangupModal(open) {
+function HangupModal({open}) {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleOpen = () => {
@@ -11,12 +11,8 @@ function HangupModal(open) {
         }
     }
 
-    useEffect(() => {
-        handleOpen()
-    })
-
     return (
-        <>
+        <div>
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -32,10 +28,10 @@ function HangupModal(open) {
                     blablablabalbla
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant='primary' onClick={handleClose}>Complete</Button>
+                    <Button variant='secondary' onClick={handleClose}>Complete</Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </div>
     )
 }
 

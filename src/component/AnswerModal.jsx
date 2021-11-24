@@ -43,7 +43,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode }) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Reject
           </Button>
           <Button
             variant="primary"
@@ -52,7 +52,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode }) {
               setHalaman("join");
             }}
           >
-            Yes
+            Accept
           </Button>
         </Modal.Footer>
       </Modal>
