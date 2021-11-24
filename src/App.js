@@ -4,22 +4,21 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-// import {getStorage, getDownloadURL, ref} from 'firebase/storage'
+import { getStorage, getDownloadURL, ref } from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
-import { ReactComponent as CopyIcon } from "./icons/copy.svg";
+// import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-<<<<<<< HEAD
-import FormModal from "./component/FormModal.jsx";
-=======
 import FormModal from "./component/FormModal.js";
 import AnswerModal from "./component/AnswerModal";
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
+import HangupModal from "./component/HangupModal";
+
+import { CgImage } from 'react-icons/cg'
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -60,11 +59,6 @@ function App() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
-<<<<<<< HEAD
-  const [docGet, setDocGet] = useState(false)
-
-=======
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
   const getID = () => {
     firestore
       .collection("rooms")
@@ -73,31 +67,15 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         doc.forEach((doc) => {
           console.log(doc.id);
           setJoinCode(doc.id.toString());
-          if (doc.id !== '') {
-            console.log('ada isi');
-            setDocGet(true)
-          }
         });
       })
   };
 
   useEffect(() => {
-<<<<<<< HEAD
-    const auto = setInterval(() => {
-      getID()
+    setInterval(() => {
+      getID();
     }, 15000);
-    return () => {
-      if (docGet) {
-        console.log(docGet.toString());
-        setPage('join')
-        clearInterval(auto)
-      }
-    }
-  }, []);
-=======
-    getID();
   }, [joinCode]);
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
 
   return (
     <div className="home">
@@ -112,15 +90,10 @@ function Menu({ joinCode, setJoinCode, setPage }) {
           onClick={() => {
             getID();
             setPage("join");
-<<<<<<< HEAD
-          }}>
-          Auto</button>
-=======
           }}
         >
           Answer
         </button>
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
       </div>
       <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
       {/* <div className="auto connect">
@@ -142,6 +115,7 @@ function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
+  const [openModal, setOpenModal] = useState(false)
 
   const localRef = useRef();
   const remoteRef = useRef();
@@ -301,54 +275,29 @@ function Videos({ mode, callId, setPage }) {
     window.location.reload();
   };
 
-  // const photos = () => {
-  //   const storage = getStorage()
-  //   getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
-  //     const imgEktp = document.getElementById('ektp')
-  //     imgEktp.setAttribute('src', url)
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   })
-  //   getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
-  //     const imgSelfieEktp = document.getElementById('selfieEktp')
-  //     imgSelfieEktp.setAttribute('src', url)
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   })
-  // }
+  const photos = () => {
+    const storage = getStorage()
+    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+      const imgEktp = document.getElementById('ektp')
+      imgEktp.setAttribute('src', url)
+    })
+      .catch((e) => {
+        console.log(e);
+      })
+    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+      const imgSelfieEktp = document.getElementById('selfieEktp')
+      imgSelfieEktp.setAttribute('src', url)
+    })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
 
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
-<<<<<<< HEAD
-        <video ref={localRef} autoPlay playsInline className="local" muted />
-        <video ref={remoteRef} autoPlay playsInline className="remote" />
-
-        <div className="Wrapper-poto" style={{ width: "60rem", height: "20rem", display: "flex", flexDirection: "row", marginLeft: "30rem", marginTop: "30rem" }}>
-          <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
-          <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "10rem" }} />
-        </div>
-
-        <div className="buttonsContainer">
-          <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
-            <HangupIcon />
-          </button>
-          <div tabIndex={0} role="button" className="more button">
-            <MoreIcon />
-            <div className="popoverAwal">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(roomId);
-                }}
-              >
-                <CopyIcon /> Copy joining code
-              </button>
-              <FormModal />
-=======
         <div className="container " style={{ marginBottom: "5rem" }}>
           <div className="row ">
             <div className="col ms-5">
@@ -373,24 +322,14 @@ function Videos({ mode, callId, setPage }) {
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
                 <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
               </div>
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
             </div>
           </div>
         </div>
 
-<<<<<<< HEAD
-        {!webcamActive && (
-          <div className="modalContainerBawaan">
-            <div className="modalBawaan">
-              <h3>Turn on your camera and microphone and start the call</h3>
-              <div className="container">
-                <button onClick={() => setPage("home")} className="secondary">
-                  Cancel
-=======
         <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
           <div className="row">
             <div className="col">
-              <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
+              <button onClick={() => { hangUp(); setOpenModal(true) }} disabled={!webcamActive} className="hangup button">
                 <HangupIcon />
               </button>
             </div>
@@ -399,13 +338,17 @@ function Videos({ mode, callId, setPage }) {
               <div className="popoverAwal">
                 <button>
                   <FormModal />
->>>>>>> dc08e869a64f4d76d4a607867b75b55461c85e9d
+                </button>
+                <button>
+                  <CgImage onClick={photos} style={{ width: "45px", height: "45px" }} />
+                  Retrieve Image
                 </button>
                 <button onClick={setupSources}>Start</button>
+                {/* <HangupModal open={openModal} /> */}
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
