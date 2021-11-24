@@ -67,7 +67,9 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   };
 
   useEffect(() => {
-    getID();
+    setInterval(() => {
+      getID()
+    }, 15000);
   }, [joinCode]);
 
   return (

@@ -29,6 +29,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode }) {
     handleOpen();
     getId();
   }, [joinId]);
+
   return (
     <div>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
