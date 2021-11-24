@@ -83,9 +83,9 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         <button onClick={() => setPage("create")}>Create Call</button>
       </div>
 
-      <div className="answer box">
-        {/* <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" /> */}
-        {/* <button onClick={() => setPage("join")}>Answer</button> */}
+      {/* <div className="answer box">
+        <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" />
+        <button onClick={() => setPage("join")}>Answer</button>
         <button
           onClick={() => {
             getID();
@@ -94,7 +94,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         >
           Answer
         </button>
-      </div>
+      </div> */}
       <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
       {/* <div className="auto connect">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
@@ -291,6 +291,7 @@ function Videos({ mode, callId, setPage }) {
       .catch((e) => {
         console.log(e);
       })
+    console.log('loading');
   }
 
   return (
@@ -331,6 +332,7 @@ function Videos({ mode, callId, setPage }) {
             <div className="col">
               <button onClick={() => { hangUp(); setOpenModal(true) }} disabled={!webcamActive} className="hangup button">
                 <HangupIcon />
+                {/* <HangupModal open={openModal} /> */}
               </button>
             </div>
             <div className="col more button" tabIndex={0} role="button">
@@ -343,13 +345,24 @@ function Videos({ mode, callId, setPage }) {
                   <CgImage onClick={photos} style={{ width: "45px", height: "45px" }} />
                   Retrieve Image
                 </button>
-                <button onClick={setupSources}>Start</button>
-                {/* <HangupModal open={openModal} /> */}
               </div>
             </div>
           </div>
         </div>
       </div>
+      {!webcamActive && (
+        <div className="modalContainerBawaan">
+          <div className="modalBawaan">
+            <h3>Turn on your camera and microphone and start the call</h3>
+            <div className="container">
+              <button onClick={() => setPage("home")} className="secondary">
+                Cancel
+              </button>
+              <button onClick={setupSources}>Start</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
