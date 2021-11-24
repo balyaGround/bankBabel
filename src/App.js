@@ -11,7 +11,7 @@ import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 // import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
-
+import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import FormModal from "./component/FormModal.js";
@@ -103,8 +103,12 @@ function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
+<<<<<<< HEAD
   const [openModal, setOpenModal] = useState(false)
 
+=======
+  const Swal = require("sweetalert2");
+>>>>>>> e4bcfe64586ad8e7f2f29e131f8f35645189cd84
   const localRef = useRef();
   const remoteRef = useRef();
 
@@ -231,7 +235,20 @@ function Videos({ mode, callId, setPage }) {
 
   const hangUp = async () => {
     pc.close();
+<<<<<<< HEAD
 
+=======
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+      footer: '<a href="">Why do I have this issue?</a>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
+>>>>>>> e4bcfe64586ad8e7f2f29e131f8f35645189cd84
     if (roomId) {
       let roomRef = firestore.collection("rooms").doc(roomId);
       await roomRef
@@ -302,12 +319,12 @@ function Videos({ mode, callId, setPage }) {
           <div className="row ">
             <div className="col d-flex justify-content-center ">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
             <div className="col d-flex justify-content-center">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
           </div>

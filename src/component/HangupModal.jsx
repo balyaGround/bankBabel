@@ -11,6 +11,10 @@ function HangupModal({open}) {
         }
     }
 
+    useEffect(() => {
+        handleOpen()
+    })
+
     return (
         <div>
             <Modal
