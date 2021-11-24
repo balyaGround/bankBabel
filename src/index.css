@@ -49,23 +49,20 @@ video {
 
 .home {
   height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 10vw;
-  align-content: space-between;
-  padding: 30vh 20vw;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 30vh;
   background-color: linear-gradient(to left top, rgb(171, 191, 247), red);
 }
 
 .home .box {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 255, 0.192);
-  color: var(--color-primary);
   border-radius: 8px;
-  padding: 40px 20px;
+  padding: 10rem 30rem;
 }
 
 .modalContainerBawaan {
