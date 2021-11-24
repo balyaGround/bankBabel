@@ -11,7 +11,6 @@ import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 // import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
-import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import FormModal from "./component/FormModal.js";
@@ -19,6 +18,8 @@ import AnswerModal from "./component/AnswerModal";
 import HangupModal from "./component/HangupModal";
 
 import { CgImage } from 'react-icons/cg'
+
+import Swal from "sweetalert2";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -103,12 +104,7 @@ function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
-<<<<<<< HEAD
-  const [openModal, setOpenModal] = useState(false)
-
-=======
   const Swal = require("sweetalert2");
->>>>>>> e4bcfe64586ad8e7f2f29e131f8f35645189cd84
   const localRef = useRef();
   const remoteRef = useRef();
 
@@ -235,46 +231,44 @@ function Videos({ mode, callId, setPage }) {
 
   const hangUp = async () => {
     pc.close();
-<<<<<<< HEAD
-
-=======
     Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Something went wrong!",
-      footer: '<a href="">Why do I have this issue?</a>',
-    }).then((result) => {
+      icon: "info",
+      title: "Video Call Complete",
+      text: "Make sure you have done the mandatory procedures and gave your best services",
+      confirmButtonText: 'Complete',
+      cancelButtonText: 'Back to call',
+      showCancelButton: true
+    }).then(async(result) => {
       if (result.isConfirmed) {
+        if (roomId) {
+          let roomRef = firestore.collection("rooms").doc(roomId);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+    
+          await roomRef.delete();
+        }
+    
+        const isActive = firestore.collection("isActive").doc("agentActive");
+    
+        isActive.set({
+          Agent1: true,
+        });
         window.location.reload();
       }
-    });
->>>>>>> e4bcfe64586ad8e7f2f29e131f8f35645189cd84
-    if (roomId) {
-      let roomRef = firestore.collection("rooms").doc(roomId);
-      await roomRef
-        .collection("calleeCandidates")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            doc.ref.delete();
-          });
-        });
-      await roomRef
-        .collection("callerCandidates")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            doc.ref.delete();
-          });
-        });
-
-      await roomRef.delete();
-    }
-
-    const isActive = firestore.collection("isActive").doc("agentActive");
-
-    isActive.set({
-      Agent1: true,
     });
   };
 
@@ -333,9 +327,9 @@ function Videos({ mode, callId, setPage }) {
         <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
           <div className="row">
             <div className="col">
-              <button onClick={() => { hangUp(); setOpenModal(true) }} disabled={!webcamActive} className="hangup button">
+              <button onClick={() => { hangUp() }} disabled={!webcamActive} className="hangup button">
                 <HangupIcon />
-                <HangupModal open={openModal} />
+                {/* <HangupModal open={openModal} /> */}
               </button>
             </div>
             <div className="col more button" tabIndex={0} role="button">
