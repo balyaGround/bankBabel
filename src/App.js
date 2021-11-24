@@ -9,7 +9,7 @@ import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
-
+import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import FormModal from "./component/FormModal.js";
@@ -95,7 +95,7 @@ function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
-
+  const Swal = require("sweetalert2");
   const localRef = useRef();
   const remoteRef = useRef();
 
@@ -222,6 +222,16 @@ function Videos({ mode, callId, setPage }) {
 
   const hangUp = async () => {
     pc.close();
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+      footer: '<a href="">Why do I have this issue?</a>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
     if (roomId) {
       let roomRef = firestore.collection("rooms").doc(roomId);
       await roomRef
@@ -249,8 +259,6 @@ function Videos({ mode, callId, setPage }) {
     isActive.set({
       Agent1: true,
     });
-
-    window.location.reload();
   };
 
   // const photos = () => {
@@ -293,12 +301,12 @@ function Videos({ mode, callId, setPage }) {
           <div className="row ">
             <div className="col d-flex justify-content-center ">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
             <div className="col d-flex justify-content-center">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
           </div>
