@@ -1,7 +1,18 @@
 form label {
   margin-bottom: 2rem;
+  width: 8rem;
 }
 
 form input {
   margin-bottom: 2rem;
+  align-content: right;
+}
+
+.bungkus .modal-header {
+  background-color: rgba(78, 211, 216, 0.705);
+  box-shadow: 5px 5px 5px black;
+}
+.bungkus .modal-body {
+  background-color: rgba(78, 211, 216, 0.363);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
 }

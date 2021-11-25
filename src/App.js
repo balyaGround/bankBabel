@@ -4,7 +4,6 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { getStorage, getDownloadURL, ref } from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -15,13 +14,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import Col from 'react-bootstrap/Col'
 // import Row from 'react-bootstrap/Row'
 
-import FormModal from "./component/FormModal.js";
+import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
 // import HangupModal from "./component/HangupModal";
 
-import { CgImage } from 'react-icons/cg'
-
-import Swal from "sweetalert2";
 import { Container, Col, Row } from "react-bootstrap";
 
 // Initialize Firebase
@@ -72,7 +68,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
           console.log(doc.id);
           setJoinCode(doc.id.toString());
         });
-      })
+      });
   };
 
   useEffect(() => {
@@ -110,7 +106,6 @@ function Videos({ mode, callId, setPage }) {
   const Swal = require("sweetalert2");
   const localRef = useRef();
   const remoteRef = useRef();
-
   const setupSources = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -227,11 +222,10 @@ function Videos({ mode, callId, setPage }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        firestore.collection('rooms').doc(roomId).delete()
-      }
-      else if(pc.connectionState === 'failed'){
-        hangUpFail()
-        firestore.collection('rooms').doc(roomId).delete()
+        firestore.collection("rooms").doc(roomId).delete();
+      } else if (pc.connectionState === "failed") {
+        hangUpFail();
+        firestore.collection("rooms").doc(roomId).delete();
       }
     };
   };
@@ -242,10 +236,10 @@ function Videos({ mode, callId, setPage }) {
       icon: "info",
       title: "Video Call Complete",
       text: "Make sure you have done the mandatory procedures and gave your best services",
-      confirmButtonText: 'Complete',
-      cancelButtonText: 'Back to call',
-      showCancelButton: true
-    }).then(async(result) => {
+      confirmButtonText: "Complete",
+      cancelButtonText: "Back to call",
+      showCancelButton: true,
+    }).then(async (result) => {
       if (result.isConfirmed) {
         if (roomId) {
           let roomRef = firestore.collection("rooms").doc(roomId);
@@ -265,12 +259,12 @@ function Videos({ mode, callId, setPage }) {
                 doc.ref.delete();
               });
             });
-    
+
           await roomRef.delete();
         }
-    
+
         const isActive = firestore.collection("isActive").doc("agentActive");
-    
+
         isActive.set({
           Agent1: true,
         });
@@ -285,10 +279,10 @@ function Videos({ mode, callId, setPage }) {
       icon: "info",
       title: "Video Call Connection Failed",
       text: "Your connection to the customer has failed, please try again.",
-      confirmButtonText: 'Complete',
+      confirmButtonText: "Complete",
       // cancelButtonText: 'Back to call',
       // showCancelButton: true
-    }).then(async(result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         if (roomId) {
           let roomRef = firestore.collection("rooms").doc(roomId);
@@ -308,12 +302,12 @@ function Videos({ mode, callId, setPage }) {
                 doc.ref.delete();
               });
             });
-    
+
           await roomRef.delete();
         }
-    
+
         const isActive = firestore.collection("isActive").doc("agentActive");
-    
+
         isActive.set({
           Agent1: true,
         });
@@ -322,60 +316,41 @@ function Videos({ mode, callId, setPage }) {
     });
   };
 
-  const photos = () => {
-    const storage = getStorage()
-    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
-      const imgEktp = document.getElementById('ektp')
-      imgEktp.setAttribute('src', url)
-    })
-      .catch((e) => {
-        console.log(e);
-      })
-    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
-      const imgSelfieEktp = document.getElementById('selfieEktp')
-      imgSelfieEktp.setAttribute('src', url)
-    })
-      .catch((e) => {
-        console.log(e);
-      })
-    console.log('loading');
-  }
-
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
         {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
-          {/* <div className="row "> */}
-          <Container>
-            <Row className = 'justify-content-center'>
-            <Col xs lg = {5}>
+        {/* <div className="row "> */}
+        <Container>
+          <Row className="justify-content-center">
+            <Col xs lg={5}>
               <video ref={localRef} autoPlay playsInline className="local d-block" muted />
-              <h5 style = {{marginLeft: '40%'}}>Agent</h5>
-              </Col>
-            <Col md = 'auto'></Col>
-            <Col xs lg = {4}>
+              <h5 style={{ marginLeft: "40%" }}>Agent</h5>
+            </Col>
+            <Col md="auto"></Col>
+            <Col xs lg={4}>
               <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
               <h5 style={{ marginLeft: "50%" }}>Client</h5>
-              </Col>
-            </Row>
-            </Container>
-          {/* </div> */}
+            </Col>
+          </Row>
+        </Container>
+        {/* </div> */}
         {/* </div> */}
 
         <Container>
-          <Row className = 'justify-content-center'>
-            <Col xs lg = {5}>
+          <Row className="justify-content-center ">
+            <Col xs lg={5} className="poto-ktp">
               <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style = {{marginLeft: '40%'}}>Ektp</h5>
+              <h5 style={{ marginLeft: "40%" }}>Ektp</h5>
             </Col>
-            
-            <Col md = 'auto'></Col>
-            
-            <Col xs lg = {4}>
+
+            <Col md="auto"></Col>
+
+            <Col xs lg={4} className="frame-ktp">
               <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style = {{marginLeft: '40%'}}>Selfie + Ektp</h5>
+              <h5 style={{ marginLeft: "40%" }}>Selfie + Ektp</h5>
             </Col>
           </Row>
         </Container>
@@ -398,7 +373,13 @@ function Videos({ mode, callId, setPage }) {
         <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
           <div className="row">
             <div className="col">
-              <button onClick={() => { hangUp() }} disabled={!webcamActive} className="hangup button">
+              <button
+                onClick={() => {
+                  hangUp();
+                }}
+                disabled={!webcamActive}
+                className="hangup button"
+              >
                 <HangupIcon />
                 {/* <HangupModal open={openModal} /> */}
               </button>
@@ -407,11 +388,9 @@ function Videos({ mode, callId, setPage }) {
               <MoreIcon />
               <div className="popoverAwal">
                 <button>
-                  <FormModal />
-                </button>
-                <button onClick={photos}>
-                  <CgImage style={{ width: "45px", height: "45px" }}/>
-                  Retrieve Image
+                  <div>
+                    <FormModal />
+                  </div>
                 </button>
               </div>
             </div>

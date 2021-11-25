@@ -72,7 +72,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     //     };
     return (
       <Row>
-        <Col span="12" style={{ lineHeight: "24px" }}>
+        <Col span="6" style={{ lineHeight: "24px", marginBottom: "-2rem" }}>
           {status && status !== "stopped" && <Text>Screen Recording Status: {status && status.toUpperCase()}</Text>}
           {status && status === "recording" && (
             <Badge
@@ -86,7 +86,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
             />
           )}
         </Col>
-        <Col span="12" style={{ textAlign: "right" }}>
+        <Col span="6" style={{ textAlign: "right" }}>
           {status && status !== "recording" && (
             <Button
               size="small"
@@ -95,6 +95,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
               // icon="play-circle"
               className="margin-left-sm"
               ghost
+              tea
             >
               {mediaBlobUrl ? "Start Recording" : "Start Recording"}
             </Button>
@@ -127,17 +128,6 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
               Download
             </Button>
           )}
-          {/* {uploadToServer && mediaBlobUrl && status && status === "stopped" && (
-            <Button
-              size="small"
-              onClick={uploadRecording}
-              type="primary"
-              // icon="mail"
-              className="mailRecording margin-left-sm"
-            >
-              Upload to server
-            </Button>
-          )} */}
         </Col>
       </Row>
     );
