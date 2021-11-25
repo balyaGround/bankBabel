@@ -1,19 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable jsx-a11y/alt-text */
+import { useRef, useState, useEffect } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-// import {getStorage, getDownloadURL, ref} from 'firebase/storage'
+import { getStorage, getDownloadURL, ref } from 'firebase/storage'
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
+// import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
-
 import "bootstrap/dist/css/bootstrap.min.css";
+// import Col from 'react-bootstrap/Col'
+// import Row from 'react-bootstrap/Row'
 
 import FormModal from "./component/FormModal.js";
 import AnswerModal from "./component/AnswerModal";
+// import HangupModal from "./component/HangupModal";
+
+import { CgImage } from 'react-icons/cg'
+
+import Swal from "sweetalert2";
+import { Container, Col, Row } from "react-bootstrap";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -63,12 +72,12 @@ function Menu({ joinCode, setJoinCode, setPage }) {
           console.log(doc.id);
           setJoinCode(doc.id.toString());
         });
-      });
+      })
   };
 
   useEffect(() => {
     setInterval(() => {
-      getID()
+      getID();
     }, 15000);
   }, [joinCode]);
 
@@ -78,18 +87,6 @@ function Menu({ joinCode, setJoinCode, setPage }) {
         <button onClick={() => setPage("create")}>Create Call</button>
       </div>
 
-      <div className="answer box">
-        {/* <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} placeholder="Join with code" /> */}
-        {/* <button onClick={() => setPage("join")}>Answer</button> */}
-        <button
-          onClick={() => {
-            getID();
-            setPage("join");
-          }}
-        >
-          Answer
-        </button>
-      </div>
       <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
       {/* <div className="auto connect">
         <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
@@ -105,11 +102,12 @@ function Menu({ joinCode, setJoinCode, setPage }) {
     </div>
   );
 }
+
 function Videos({ mode, callId, setPage }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
-
+  const Swal = require("sweetalert2");
   const localRef = useRef();
   const remoteRef = useRef();
 
@@ -229,100 +227,180 @@ function Videos({ mode, callId, setPage }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        firestore.collection("rooms").doc(roomId).delete();
+        firestore.collection('rooms').doc(roomId).delete()
+      }
+      else if(pc.connectionState === 'failed'){
+        hangUpFail()
+        firestore.collection('rooms').doc(roomId).delete()
       }
     };
   };
 
   const hangUp = async () => {
     pc.close();
-    if (roomId) {
-      let roomRef = firestore.collection("rooms").doc(roomId);
-      await roomRef
-        .collection("calleeCandidates")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            doc.ref.delete();
-          });
+    Swal.fire({
+      icon: "info",
+      title: "Video Call Complete",
+      text: "Make sure you have done the mandatory procedures and gave your best services",
+      confirmButtonText: 'Complete',
+      cancelButtonText: 'Back to call',
+      showCancelButton: true
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        if (roomId) {
+          let roomRef = firestore.collection("rooms").doc(roomId);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+    
+          await roomRef.delete();
+        }
+    
+        const isActive = firestore.collection("isActive").doc("agentActive");
+    
+        isActive.set({
+          Agent1: true,
         });
-      await roomRef
-        .collection("callerCandidates")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            doc.ref.delete();
-          });
-        });
-      roomRef.delete();
-      //   console.log("aloooooooooooooooo");
-    }
-
-    const isActive = firestore.collection("isActive").doc("agentActive");
-
-    isActive.set({
-      Agent1: true,
+        window.location.reload();
+      }
     });
-
-    window.location.reload();
   };
 
-  // const photos = () => {
-  //   const storage = getStorage()
-  //   getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
-  //     const imgEktp = document.getElementById('ektp')
-  //     imgEktp.setAttribute('src', url)
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   })
-  //   getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
-  //     const imgSelfieEktp = document.getElementById('selfieEktp')
-  //     imgSelfieEktp.setAttribute('src', url)
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   })
-  // }
+  const hangUpFail = async () => {
+    pc.close();
+    Swal.fire({
+      icon: "info",
+      title: "Video Call Connection Failed",
+      text: "Your connection to the customer has failed, please try again.",
+      confirmButtonText: 'Complete',
+      // cancelButtonText: 'Back to call',
+      // showCancelButton: true
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        if (roomId) {
+          let roomRef = firestore.collection("rooms").doc(roomId);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+    
+          await roomRef.delete();
+        }
+    
+        const isActive = firestore.collection("isActive").doc("agentActive");
+    
+        isActive.set({
+          Agent1: true,
+        });
+        window.location.reload();
+      }
+    });
+  };
+
+  const photos = () => {
+    const storage = getStorage()
+    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+      const imgEktp = document.getElementById('ektp')
+      imgEktp.setAttribute('src', url)
+    })
+      .catch((e) => {
+        console.log(e);
+      })
+    getDownloadURL(ref(storage, 'selfieEktp.jpg')).then((url) => {
+      const imgSelfieEktp = document.getElementById('selfieEktp')
+      imgSelfieEktp.setAttribute('src', url)
+    })
+      .catch((e) => {
+        console.log(e);
+      })
+    console.log('loading');
+  }
 
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
-        <div className="container " style={{ marginBottom: "5rem" }}>
-          <div className="row ">
-            <div className="col ms-5">
+        {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
+          {/* <div className="row "> */}
+          <Container>
+            <Row className = 'justify-content-center'>
+            <Col xs lg = {5}>
               <video ref={localRef} autoPlay playsInline className="local d-block" muted />
-              <h4 className=" text-white">Agent Video</h4>
-            </div>
-            <div className="col ms-5 text-white poto-bawah">
+              <h5 style = {{marginLeft: '40%'}}>Agent</h5>
+              </Col>
+            <Col md = 'auto'></Col>
+            <Col xs lg = {4}>
               <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
-              <h4 style={{ marginLeft: "16rem" }}>Video Client Mobile</h4>
-            </div>
-          </div>
-        </div>
+              <h5 style={{ marginLeft: "50%" }}>Client</h5>
+              </Col>
+            </Row>
+            </Container>
+          {/* </div> */}
+        {/* </div> */}
 
-        <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
+        <Container>
+          <Row className = 'justify-content-center'>
+            <Col xs lg = {5}>
+              <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <h5 style = {{marginLeft: '40%'}}>Ektp</h5>
+            </Col>
+            
+            <Col md = 'auto'></Col>
+            
+            <Col xs lg = {4}>
+              <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <h5 style = {{marginLeft: '40%'}}>Selfie + Ektp</h5>
+            </Col>
+          </Row>
+        </Container>
+
+        {/* <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
           <div className="row ">
             <div className="col d-flex justify-content-center ">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="ektp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
             <div className="col d-flex justify-content-center">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
-                <img id="selfieEktp" src={noimage} alt="" style={{ width: "20rem", height: "10rem" }} />
+                <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
           <div className="row">
             <div className="col">
-              <button onClick={hangUp} disabled={!webcamActive} className="hangup button">
+              <button onClick={() => { hangUp() }} disabled={!webcamActive} className="hangup button">
                 <HangupIcon />
+                {/* <HangupModal open={openModal} /> */}
               </button>
             </div>
             <div className="col more button" tabIndex={0} role="button">
@@ -331,12 +409,15 @@ function Videos({ mode, callId, setPage }) {
                 <button>
                   <FormModal />
                 </button>
+                <button onClick={photos}>
+                  <CgImage style={{ width: "45px", height: "45px" }}/>
+                  Retrieve Image
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
       {!webcamActive && (
         <div className="modalContainerBawaan">
           <div className="modalBawaan">
