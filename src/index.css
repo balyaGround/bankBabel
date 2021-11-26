@@ -196,7 +196,7 @@ video {
 .poto-ktp img {
   object-fit: cover;
 }
-@media (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
   .poto-ktp img {
     width: 100% !important;
     height: 20rem !important;

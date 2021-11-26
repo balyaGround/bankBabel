@@ -7,6 +7,7 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
+import { getStorage, getDownloadURL, ref } from "firebase/storage";
 // import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
@@ -106,6 +107,7 @@ function Videos({ mode, callId, setPage }) {
   const Swal = require("sweetalert2");
   const localRef = useRef();
   const remoteRef = useRef();
+  const storage = getStorage();
   const setupSources = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -335,6 +337,28 @@ function Videos({ mode, callId, setPage }) {
     });
   };
 
+  const popupImgKtp = () => {
+    const Swal = require('sweetalert2')
+
+    getDownloadURL(ref(storage, "ektp.jpg"))
+    .then((url) => {
+      Swal.fire({
+        imageUrl: url,
+      })
+    })
+  }
+
+  const popupSelfieKtp = () => {
+    const Swal = require('sweetalert2')
+
+    getDownloadURL(ref(storage, "selfieEktp.jpg"))
+    .then((url) => {
+      Swal.fire({
+        imageUrl: url,
+      })
+    })
+  }
+
   return (
     <div>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
@@ -361,14 +385,14 @@ function Videos({ mode, callId, setPage }) {
         <Container>
           <Row className="justify-content-center ">
             <Col xs lg={5} className="poto-ktp">
-              <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <img id="ektp" onClick = {popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               <h5 style={{ marginLeft: "40%" }}>e-KTP</h5>
             </Col>
 
             <Col md="auto"></Col>
 
             <Col xs lg={4} className="frame-ktp">
-              <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <img id="selfieEktp" onClick = {popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
               <h5 style={{ marginLeft: "40%" }}>Selfie + e-KTP</h5>
             </Col>
           </Row>
