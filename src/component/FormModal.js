@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "./Formik";
 import FormIcon from '../icons/form-icon.jpg'
+import { FaWpforms } from "react-icons/fa";
 
 function FormModal() {
     const [show, setShow] = useState(false);
@@ -13,7 +14,8 @@ function FormModal() {
     return (
       <>
         <button onClick={handleShow}>
-        <img src={FormIcon} alt="form" style={{ width: "45px", height: "45px" }} />
+        {/* <img src={FormIcon} alt="form" style={{ width: "45px", height: "45px" }} /> */}
+        <FaWpforms style = {{ width: "45px", height: "45px" }}/>
          Form Validation
         </button>
   

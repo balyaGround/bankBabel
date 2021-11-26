@@ -324,7 +324,7 @@ function Videos({ mode, callId, setPage }) {
 
   const photos = () => {
     const storage = getStorage()
-    getDownloadURL(ref(storage, 'ektp.jpg')).then((url) => {
+    getDownloadURL(ref(storage, 'ktptest.jpg')).then((url) => {
       const imgEktp = document.getElementById('ektp')
       imgEktp.setAttribute('src', url)
     })
