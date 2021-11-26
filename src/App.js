@@ -251,6 +251,10 @@ function Videos({ mode, callId, setPage }) {
     };
   };
 
+  useEffect(() => {
+    setupSources()
+  }, [])
+
   const hangUp = async () => {
     pc.close();
     Swal.fire({
@@ -440,7 +444,7 @@ function Videos({ mode, callId, setPage }) {
           </div>
         </div>
       </div>
-      {!webcamActive && (
+      {/* {!webcamActive && (
         <div className="modalContainerBawaan">
           <div className="modalBawaan">
             <h3>Turn on your camera and microphone and start the call</h3>
@@ -452,7 +456,7 @@ function Videos({ mode, callId, setPage }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
