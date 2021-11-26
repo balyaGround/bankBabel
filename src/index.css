@@ -48,7 +48,7 @@ video {
 }
 
 .home {
-  height: 30vh;
+  height: 100vh;
   width: 33% 33%;
   display: flex;
   align-content: center;
@@ -192,7 +192,20 @@ video {
   margin-top: 30rem;
   justify-content: center;
 }
+.poto-ktp img {
+  object-fit: cover;
+}
 @media (max-width: 1024px) {
+  .poto-ktp img {
+    width: 100% !important;
+    height: 20rem !important;
+    object-fit: cover;
+  }
+  .frame-ktp img {
+    width: 100% !important;
+    height: 20rem !important;
+  }
+
   .videos .buttonsContainer .more .popoverAwal {
     bottom: 2rem;
   }
