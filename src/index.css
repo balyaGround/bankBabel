@@ -121,7 +121,7 @@ video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .videos .buttonsContainer {
