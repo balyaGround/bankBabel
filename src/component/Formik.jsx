@@ -6,8 +6,11 @@ import "firebase/compat/firestore";
 import config from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./formik.css";
+import Swal from 'sweetalert2'
 
 function Form() {
+  const Swal = require('sweetalert2')
+
   firebase.initializeApp(config);
   const db = firebase.firestore();
   const formik = useFormik({
@@ -56,7 +59,11 @@ function Form() {
         expiry: values.expiry,
         maritalstatus: values.maritalstatus
       });
-      alert("Form submitted");
+      // alert("Form submitted");
+      Swal.fire({
+        icon: 'success',
+        title: 'Submitted',
+      })
     },
   });
 
