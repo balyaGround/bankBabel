@@ -121,6 +121,7 @@ video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
+  object-fit: contain;
 }
 
 .videos .buttonsContainer {
@@ -195,7 +196,7 @@ video {
 .poto-ktp img {
   object-fit: cover;
 }
-@media (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
   .poto-ktp img {
     width: 100% !important;
     height: 20rem !important;
@@ -230,6 +231,49 @@ video {
     border-radius: 8px;
     top: 6rem;
     width: 20rem;
+    height: 20rem;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .poto-ktp img {
+    width: 25rem !important;
+    height: 20rem !important;
+    /* object-fit: cover; */
+  }
+  .frame-ktp img {
+    width: 25rem !important;
+    height: 20rem !important;
+  }
+
+  .videos .buttonsContainer .more .popoverAwal {
+    /* bottom: 1rem; */
+    top: 95vh;
+  }
+  .row .col.poto-bawah h4 {
+    margin-left: 7rem !important;
+  }
+  .container.poto {
+    margin-top: 7rem !important;
+  }
+  .videos .local {
+    top: 6rem;
+    width: 25rem;
+    height: 20rem;
+    /* border-radius: 8px; */
+    z-index: 10;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+  }
+
+  .videos .remote {
+    /* border-radius: 8px; */
+    top: 6rem;
+    width: 25rem;
     height: 20rem;
     transform: rotateY(180deg);
     -webkit-transform: rotateY(180deg);

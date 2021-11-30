@@ -7,6 +7,7 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
+import { getStorage, getDownloadURL, ref } from "firebase/storage";
 // import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
@@ -74,8 +75,9 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   useEffect(() => {
     setInterval(() => {
       getID();
+      console.log(window.innerWidth.toString());
     }, 15000);
-  }, [joinCode]);
+  }, [joinCode]);  
 
   return (
     <div className="home">
@@ -106,16 +108,30 @@ function Videos({ mode, callId, setPage }) {
   const Swal = require("sweetalert2");
   const localRef = useRef();
   const remoteRef = useRef();
+  const storage = getStorage();
   const setupSources = async () => {
-    const localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    const remoteStream = new MediaStream();
+    let localStream
+    const Swal = require('sweetalert2')
+    try{
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      }).then(() => {
+        localStream.getTracks().forEach((track) => {
+          pc.addTrack(track, localStream);
+        });
+      })
+    }
+    catch(e){
+      console.log(e);
+      noCamera()
+      if(roomId){
+        firestore.collection("rooms").doc(roomId).delete();
+      }
+    }
 
-    localStream.getTracks().forEach((track) => {
-      pc.addTrack(track, localStream);
-    });
+
+    const remoteStream = new MediaStream();
 
     pc.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
@@ -227,8 +243,31 @@ function Videos({ mode, callId, setPage }) {
         hangUpFail();
         firestore.collection("rooms").doc(roomId).delete();
       }
+      else if (pc.connectionState === 'connecting'){
+        let timerInterval
+        Swal.fire({
+          icon: 'info',
+          title: pc.connectionState,
+          text: 'You are currently connecting to a customer, please wait',
+          timerProgressBar: true,
+          timer: 3500,
+          didOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft()
+            }, 100)
+          },
+          willClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+      }
     };
   };
+
+  useEffect(() => {
+    setupSources()
+  }, [])
 
   const hangUp = async () => {
     pc.close();
@@ -273,10 +312,36 @@ function Videos({ mode, callId, setPage }) {
     });
   };
 
+  const noCamera = async () => {
+    // pc.close();
+    Swal.fire({
+      icon: "error",
+      title: "No Camera Detected",
+      text: "Please turn on your camera",
+      // confirmButtonText: "Complete",
+      // cancelButtonText: 'Back to call',
+      // showCancelButton: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(roomId);
+        if (roomId) {
+          // let roomRef = firestore.collection("rooms").doc(roomId);
+          // await roomRef.delete();
+          const isActive = firestore.collection("isActive").doc("agentActive");
+
+        isActive.set({
+          Agent1: true,
+        });
+        }
+        window.location.reload();
+      }
+    });
+  }
+
   const hangUpFail = async () => {
     pc.close();
     Swal.fire({
-      icon: "info",
+      icon: "error",
       title: "Video Call Connection Failed",
       text: "Your connection to the customer has failed, please try again.",
       confirmButtonText: "Complete",
@@ -316,8 +381,74 @@ function Videos({ mode, callId, setPage }) {
     });
   };
 
+  const popupImgKtp = () => {
+    const Swal = require('sweetalert2')    
+
+    getDownloadURL(ref(storage, "ektp.jpg"))
+    .then((url) => {
+      const imgEktp = document.getElementById("ektp");
+      let timerInterval
+      if(imgEktp.src === url){
+        Swal.fire({
+          imageUrl: url,
+        })
+      }
+      else{
+        Swal.fire({
+          icon: 'error',
+          title: 'No Image Available',
+          text: 'Please retrieve image first!',
+          timerProgressBar: true,
+          timer: 1500,
+          didOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft()
+            }, 100)
+          },
+          willClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+      }
+    })
+  }
+
+  const popupSelfieKtp = () => {
+    const Swal = require('sweetalert2')
+
+    getDownloadURL(ref(storage, "selfieEktp.jpg"))
+    .then((url) => {
+      const imgSelfieEktp = document.getElementById("selfieEktp");
+      let timerInterval
+      if(imgSelfieEktp.src === url){
+        Swal.fire({
+          imageUrl: url,
+      })}
+      else{
+        Swal.fire({
+          icon: 'error',
+          title: 'No Image Available',
+          text: 'Please retrieve image first!',
+          timerProgressBar: true,
+          timer: 1500,
+          didOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft()
+            }, 100)
+          },
+          willClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+      }
+    })
+  }
+
   return (
     <div>
+      <Container fluid>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
       <div className="videos">
@@ -325,14 +456,14 @@ function Videos({ mode, callId, setPage }) {
         {/* <div className="row "> */}
         <Container>
           <Row className="justify-content-center">
-            <Col xs lg={5}>
-              <video ref={localRef} autoPlay playsInline className="local d-block" muted />
-              <h5 style={{ marginLeft: "40%" }}>Agent</h5>
+            <Col xs lg = {4}>
+              <video ref={localRef} autoPlay playsInline className="local" muted />
+              <h5 style={{  textAlign: 'center' }}>Agent Video</h5>
             </Col>
-            <Col md="auto"></Col>
-            <Col xs lg={4}>
-              <video ref={remoteRef} autoPlay playsInline className="remote d-block" />
-              <h5 style={{ marginLeft: "50%" }}>Client</h5>
+            <Col xs lg = {2}></Col>
+            <Col xs lg = {4}>
+              <video ref={remoteRef} autoPlay playsInline className="remote" />
+              <h5 style={{ textAlign: 'center' }}>Client Video</h5>
             </Col>
           </Row>
         </Container>
@@ -341,16 +472,16 @@ function Videos({ mode, callId, setPage }) {
 
         <Container>
           <Row className="justify-content-center ">
-            <Col xs lg={5} className="poto-ktp">
-              <img id="ektp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style={{ marginLeft: "40%" }}>Ektp</h5>
+            <Col xs lg={4} className="poto-ktp">
+              <img id="ektp" onClick = {popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <h5 style={{ textAlign: 'center' }}>e-KTP</h5>
             </Col>
 
-            <Col md="auto"></Col>
+            <Col xs lg = {2} ></Col>
 
             <Col xs lg={4} className="frame-ktp">
-              <img id="selfieEktp" src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style={{ marginLeft: "40%" }}>Selfie + Ektp</h5>
+              <img id="selfieEktp" onClick = {popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+              <h5 style={{ textAlign: 'center' }}>Selfie + e-KTP</h5>
             </Col>
           </Row>
         </Container>
@@ -397,7 +528,7 @@ function Videos({ mode, callId, setPage }) {
           </div>
         </div>
       </div>
-      {!webcamActive && (
+      {/* {!webcamActive && (
         <div className="modalContainerBawaan">
           <div className="modalBawaan">
             <h3>Turn on your camera and microphone and start the call</h3>
@@ -409,7 +540,8 @@ function Videos({ mode, callId, setPage }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+      </Container>
     </div>
   );
 }

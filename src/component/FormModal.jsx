@@ -7,7 +7,9 @@ import Draggable from "react-draggable";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import FormIcon from "../icons/form-icon.jpg";
 import { CgImage } from "react-icons/cg";
+
 function FormModal() {
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
