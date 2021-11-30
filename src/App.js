@@ -19,8 +19,8 @@ import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
 // import HangupModal from "./component/HangupModal";
 
-import emailjs from 'emailjs-com'
-import {init} from 'emailjs-com'
+// import emailjs from 'emailjs-com'
+// import {init} from 'emailjs-com'
 
 import { Container, Col, Row } from "react-bootstrap";
 
@@ -78,9 +78,8 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   useEffect(() => {
     setInterval(() => {
       getID();
-      console.log(window.innerWidth.toString());
     }, 15000);
-  }, [joinCode]);
+  }, []);
 
   return (
     <div className="home">
@@ -112,7 +111,7 @@ function Videos({ mode, callId, setPage }) {
   const localRef = useRef();
   const remoteRef = useRef();
   const storage = getStorage();
-  init('user_h6uRyZievx8s1s6rPU7mz')
+  // init('user_h6uRyZievx8s1s6rPU7mz')
   const setupSources = async () => {
     let localStream
 
@@ -261,7 +260,7 @@ function Videos({ mode, callId, setPage }) {
 
   useEffect(() => {
     setupSources()
-  })
+  }, [])
 
   const hangUp = async () => {
     pc.close();
@@ -295,22 +294,22 @@ function Videos({ mode, callId, setPage }) {
           await roomRef.delete();
         }
 
-        await firestore.collection('form').doc('user').get().then((doc) => {
-          const jsonData = doc.data();
-          const jsonString = JSON.stringify(jsonData);
-          console.log(jsonString);
-          const json = JSON.parse(jsonString);
-          const param = {
-            name: json.name
-          }
+        // await firestore.collection('form').doc('user').get().then((doc) => {
+        //   const jsonData = doc.data();
+        //   const jsonString = JSON.stringify(jsonData);
+        //   console.log(jsonString);
+        //   const json = JSON.parse(jsonString);
+        //   const param = {
+        //     name: json.name
+        //   }
           
-          emailjs.send("service_8wp3jqi","template_xo34yaw", param)
-          .then((res) => {
-            console.log(res.status, res.text);
-          }, (e) => {
-            console.log(e);
-          })
-        })
+        //   emailjs.send("service_8wp3jqi","template_xo34yaw", param)
+        //   .then((res) => {
+        //     console.log(res.status, res.text);
+        //   }, (e) => {
+        //     console.log(e);
+        //   })
+        // })
 
         const isActive = firestore.collection("isActive").doc("agentActive");
 
@@ -321,28 +320,6 @@ function Videos({ mode, callId, setPage }) {
       }
     });
   };
-
-  // const noCamera = async () => {
-  //   Swal.fire({
-  //     icon: "error",
-  //     title: "No Camera Detected",
-  //     text: "Please turn on your camera",
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       console.log(roomId);
-  //       if (roomId) {
-  //         let roomRef = firestore.collection("rooms").doc(roomId);
-  //         await roomRef.delete();
-  //         const isActive = firestore.collection("isActive").doc("agentActive");
-
-  //       isActive.set({
-  //         Agent1: true,
-  //       });
-  //       }
-  //       window.location.reload();
-  //     }
-  //   });
-  // }
 
   const hangUpFail = async () => {
     pc.close();
