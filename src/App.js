@@ -19,8 +19,8 @@ import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
 // import HangupModal from "./component/HangupModal";
 
-import emailjs from 'emailjs-com'
-import {init} from 'emailjs-com'
+import emailjs from "emailjs-com";
+import { init } from "emailjs-com";
 
 import { Container, Col, Row } from "react-bootstrap";
 
@@ -111,14 +111,14 @@ function Videos({ mode, callId, setPage }) {
   const localRef = useRef();
   const remoteRef = useRef();
   const storage = getStorage();
-  init('user_h6uRyZievx8s1s6rPU7mz')
+  init("user_h6uRyZievx8s1s6rPU7mz");
   const setupSources = async () => {
-    let localStream
+    let localStream;
 
     localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
-    })
+    });
 
     localStream.getTracks().forEach((track) => {
       pc.addTrack(track, localStream);
@@ -234,34 +234,33 @@ function Videos({ mode, callId, setPage }) {
         firestore.collection("rooms").doc(roomId).delete();
       } else if (pc.connectionState === "failed") {
         hangUpFail();
-        pc.restartIce()
+        pc.restartIce();
         firestore.collection("rooms").doc(roomId).delete();
-      }
-      else if (pc.connectionState === 'connecting'){
-        let timerInterval
+      } else if (pc.connectionState === "connecting") {
+        let timerInterval;
         Swal.fire({
-          icon: 'info',
+          icon: "info",
           title: pc.connectionState,
-          text: 'You are currently connecting to a customer, please wait',
+          text: "You are currently connecting to a customer, please wait",
           timerProgressBar: true,
           timer: 3500,
           didOpen: () => {
-            Swal.showLoading()
+            Swal.showLoading();
             timerInterval = setInterval(() => {
-              Swal.getTimerLeft()
-            }, 100)
+              Swal.getTimerLeft();
+            }, 100);
           },
           willClose: () => {
-            clearInterval(timerInterval)
-          }
-        })
+            clearInterval(timerInterval);
+          },
+        });
       }
     };
   };
 
   useEffect(() => {
-    setupSources()
-  }, [])
+    setupSources();
+  }, []);
 
   const hangUp = async () => {
     pc.close();
@@ -295,23 +294,29 @@ function Videos({ mode, callId, setPage }) {
           await roomRef.delete();
         }
 
-        await firestore.collection('form').doc('user').get().then((doc) => {
-          const jsonData = doc.data();
-          const jsonString = JSON.stringify(jsonData);
-          console.log(jsonString);
-          const json = JSON.parse(jsonString);
-          const param = {
-            name: json.name,
-            email: json.email
-          }
-          
-          emailjs.send("service_8wp3jqi","template_xo34yaw", param)
-          .then((res) => {
-            console.log(res.status, res.text);
-          }, (e) => {
-            console.log(e);
-          })
-        })
+        await firestore
+          .collection("form")
+          .doc("user")
+          .get()
+          .then((doc) => {
+            const jsonData = doc.data();
+            const jsonString = JSON.stringify(jsonData);
+            console.log(jsonString);
+            const json = JSON.parse(jsonString);
+            const param = {
+              name: json.name,
+              email: json.email,
+            };
+
+            emailjs.send("service_8wp3jqi", "template_xo34yaw", param).then(
+              (res) => {
+                console.log(res.status, res.text);
+              },
+              (e) => {
+                console.log(e);
+              }
+            );
+          });
 
         const isActive = firestore.collection("isActive").doc("agentActive");
 
@@ -365,111 +370,108 @@ function Videos({ mode, callId, setPage }) {
   };
 
   const popupImgKtp = () => {
-    const Swal = require('sweetalert2')    
+    const Swal = require("sweetalert2");
 
-    getDownloadURL(ref(storage, "ektp.jpg"))
-    .then((url) => {
+    getDownloadURL(ref(storage, "ektp.jpg")).then((url) => {
       const imgEktp = document.getElementById("ektp");
-      let timerInterval
-      if(imgEktp.src === url){
+      let timerInterval;
+      if (imgEktp.src === url) {
         Swal.fire({
           imageUrl: url,
-        })
-      }
-      else{
+        });
+      } else {
         Swal.fire({
-          icon: 'error',
-          title: 'No Image Available',
-          text: 'Please retrieve image first!',
+          icon: "error",
+          title: "No Image Available",
+          text: "Please retrieve image first!",
           timerProgressBar: true,
           timer: 1500,
           didOpen: () => {
-            Swal.showLoading()
+            Swal.showLoading();
             timerInterval = setInterval(() => {
-              Swal.getTimerLeft()
-            }, 100)
+              Swal.getTimerLeft();
+            }, 100);
           },
           willClose: () => {
-            clearInterval(timerInterval)
-          }
-        })
+            clearInterval(timerInterval);
+          },
+        });
       }
-    })
-  }
+    });
+  };
 
   const popupSelfieKtp = () => {
-    const Swal = require('sweetalert2')
+    const Swal = require("sweetalert2");
 
-    getDownloadURL(ref(storage, "selfieEktp.jpg"))
-    .then((url) => {
+    getDownloadURL(ref(storage, "selfieEktp.jpg")).then((url) => {
       const imgSelfieEktp = document.getElementById("selfieEktp");
-      let timerInterval
-      if(imgSelfieEktp.src === url){
+      let timerInterval;
+      if (imgSelfieEktp.src === url) {
         Swal.fire({
           imageUrl: url,
-      })}
-      else{
+        });
+      } else {
         Swal.fire({
-          icon: 'error',
-          title: 'No Image Available',
-          text: 'Please retrieve image first!',
+          icon: "error",
+          title: "No Image Available",
+          text: "Please retrieve image first!",
           timerProgressBar: true,
           timer: 1500,
           didOpen: () => {
-            Swal.showLoading()
+            Swal.showLoading();
             timerInterval = setInterval(() => {
-              Swal.getTimerLeft()
-            }, 100)
+              Swal.getTimerLeft();
+            }, 100);
           },
           willClose: () => {
-            clearInterval(timerInterval)
-          }
-        })
+            clearInterval(timerInterval);
+          },
+        });
       }
-    })
-  }
+    });
+  };
 
   return (
     <div>
       <Container fluid>
-      <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
+        <ScreenRecording style={{ marginTop: "10rem" }} screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
 
-      <div className="videos">
-        {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
-        {/* <div className="row "> */}
-        <Container>
-          <Row className="justify-content-center">
-            <Col xs lg = {4}>
-              <video ref={localRef} autoPlay playsInline className="local" muted />
-              <h5 style={{  textAlign: 'center' }}>Agent Video</h5>
-            </Col>
-            <Col xs lg = {2}></Col>
-            <Col xs lg = {4}>
-              <video ref={remoteRef} autoPlay playsInline className="remote" />
-              <h5 style={{ textAlign: 'center' }}>Client Video</h5>
-            </Col>
-          </Row>
-        </Container>
-        {/* </div> */}
-        {/* </div> */}
+        <div className="videos">
+          {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
+          {/* <div className="row "> */}
+          <Container>
+            <Row className="justify-content-center">
+              <Col xs lg={4}>
+                <video ref={localRef} autoPlay playsInline className="local" muted />
+                <h5 style={{ textAlign: "center" }}>Agent Video</h5>
+              </Col>
+              <Col xs lg={2}></Col>
+              <Col xs lg={4}>
+                <video ref={remoteRef} autoPlay playsInline className="remote" />
+                <h5 style={{ textAlign: "center" }}>Client Video</h5>
+              </Col>
+            </Row>
+          </Container>
+          {/* </div> */}
+          {/* </div> */}
 
-        <Container>
-          <Row className="justify-content-center ">
-            <Col xs lg={4} className="poto-ktp">
-              <img id="ektp" onClick = {popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style={{ textAlign: 'center' }}>e-KTP</h5>
-            </Col>
+          <Container>
+            <Row className="justify-content-center ">
+              <Col xs lg={4} className="poto-ktp">
+                <img id="ektp" onClick={popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+                <h5 style={{ textAlign: "center" }}>e-KTP</h5>
+              </Col>
 
-            <Col xs lg = {2} ></Col>
+              <Col xs lg={2}></Col>
 
-            <Col xs lg={4} className="frame-ktp">
-              <img id="selfieEktp" onClick = {popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-              <h5 style={{ textAlign: 'center' }}>Selfie + e-KTP</h5>
-            </Col>
-          </Row>
-        </Container>
+              <Col xs lg={4} className="frame-ktp">
+                <img id="selfieEktp" onClick={popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+                <h5 style={{ textAlign: "center" }}>Selfie + e-KTP</h5>
+              </Col>
+            </Row>
+          </Container>
 
-        {/* <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
+          {/* <div className="container d-block poto  " style={{ marginTop: "13rem" }}>
           <div className="row ">
             <div className="col d-flex justify-content-center ">
               <div style={{ backgroundColor: " rgba(0, 0, 255, 0.192)", padding: "1rem" }}>
@@ -484,34 +486,34 @@ function Videos({ mode, callId, setPage }) {
           </div>
         </div> */}
 
-        <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
-          <div className="row">
-            <div className="col">
-              <button
-                onClick={() => {
-                  hangUp();
-                }}
-                disabled={!webcamActive}
-                className="hangup button"
-              >
-                <HangupIcon />
-                {/* <HangupModal open={openModal} /> */}
-              </button>
-            </div>
-            <div className="col more button" tabIndex={0} role="button">
-              <MoreIcon />
-              <div className="popoverAwal">
-                <button>
-                  <div>
-                    <FormModal />
-                  </div>
+          <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
+            <div className="row">
+              <div className="col">
+                <button
+                  onClick={() => {
+                    hangUp();
+                  }}
+                  disabled={!webcamActive}
+                  className="hangup button"
+                >
+                  <HangupIcon />
+                  {/* <HangupModal open={openModal} /> */}
                 </button>
+              </div>
+              <div className="col more button" tabIndex={0} role="button">
+                <MoreIcon />
+                <div className="popoverAwal">
+                  <button>
+                    <div>
+                      <FormModal />
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* {!webcamActive && (
+        {/* {!webcamActive && (
         <div className="modalContainerBawaan">
           <div className="modalBawaan">
             <h3>Turn on your camera and microphone and start the call</h3>

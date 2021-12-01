@@ -45,7 +45,7 @@ function FormModal() {
         Retrieve Image
       </button>
       <Draggable>
-        <Modal show={show} className="bungkus">
+        <Modal show={show} className="bungkus modal" id="wrapper">
           <Modal.Body>
             <Modal.Title className="mb-3">
               Form Data Nasabah
