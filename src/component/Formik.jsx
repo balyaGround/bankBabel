@@ -6,10 +6,9 @@ import "firebase/compat/firestore";
 import config from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./formik.css";
-import Swal from "sweetalert2";
 
 function Form() {
-  const Swal = require('sweetalert2')
+  const Swal = require("sweetalert2");
   firebase.initializeApp(config);
   const db = firebase.firestore();
   const formik = useFormik({
@@ -59,9 +58,9 @@ function Form() {
         maritalstatus: values.maritalstatus,
       });
       Swal.fire({
-        icon: 'success',
-        title: 'Data Submitted'
-      })
+        icon: "success",
+        title: "Data Submitted",
+      });
     },
   });
 
@@ -209,13 +208,15 @@ function Form() {
         <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 3px black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
         <br />
 
-        <button type="submit" style={{ marginRight: "2px" }}>
+        <button type="submit" style={{ marginRight: "15px", borderRadius: "5%", marginLeft: "40px" }}>
           Submit
         </button>
-        <button type="button" onClick={retrieve} style={{ marginRight: "2px" }}>
+        <button type="button" onClick={retrieve} style={{ marginRight: "15px", borderRadius: "5%" }}>
           Retrieve
         </button>
-        <button type="reset">Reset</button>
+        <button type="reset" style={{ borderRadius: "5%" }}>
+          Reset
+        </button>
       </form>
     </div>
   );

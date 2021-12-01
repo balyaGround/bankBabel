@@ -7,12 +7,18 @@ form input {
   margin-bottom: 2rem;
   align-content: right;
 }
-
-.bungkus .modal-header {
-  background-color: rgba(78, 211, 216, 0.705);
-  box-shadow: 5px 5px 5px black;
+form input:focus {
+  outline-color: #03e9f4;
 }
+
 .bungkus .modal-body {
-  background-color: rgba(78, 211, 216, 0.363);
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 0 2px #f8f8f8, 0 0 10px #059499f1, 0 0 10px #059499f1, 0 0 20px #059499f1;
+  background: linear-gradient(160deg, #ffffff77, #b3b1b1b4) !important;
+
+  border-radius: 30px !important;
+}
+
+.modal-content {
+  border-radius: 30px !important;
 }
