@@ -6,9 +6,10 @@ form label {
 form input {
   margin-bottom: 2rem;
   align-content: right;
+  box-shadow: 0 2px 2px #000000;
 }
 form input:focus {
-  outline-color: #03e9f4;
+  outline-color: #059499f1;
 }
 
 .bungkus .modal-body {
