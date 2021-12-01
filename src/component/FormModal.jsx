@@ -49,7 +49,7 @@ function FormModal() {
           <Modal.Body>
             <Modal.Title className="mb-3">
               Form Data Nasabah
-              <Button onClick={handleClose} variant="outline-info" style={{ marginLeft: "12rem" }}>
+              <Button onClick={handleClose} variant="info" style={{ marginLeft: "12rem" }}>
                 X
               </Button>
             </Modal.Title>
