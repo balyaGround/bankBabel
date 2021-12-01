@@ -300,6 +300,7 @@ function Videos({ mode, callId, setPage }) {
           const jsonString = JSON.stringify(jsonData);
           console.log(jsonString);
           const json = JSON.parse(jsonString);
+          
           const param = {
             name: json.name,
             email: json.email
@@ -431,8 +432,8 @@ function Videos({ mode, callId, setPage }) {
 
   return (
     <div>
-      <Container fluid>
       <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
+      <Container fluid>
 
       <div className="videos">
         {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
