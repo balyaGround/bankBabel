@@ -84,6 +84,10 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   return (
     <div className="home">
       <div className="create box">
+        <div className="tulisan">
+          <h4>You can wait for an incoming call pop up</h4>
+          <h3>OR</h3>
+        </div>
         <button onClick={() => setPage("create")}>Create Call</button>
       </div>
 

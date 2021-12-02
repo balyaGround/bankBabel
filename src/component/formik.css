@@ -1,5 +1,8 @@
 form label {
-  margin-bottom: 2rem;
+  color: whitesmoke;
+  font-size: 20px;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 form input {
