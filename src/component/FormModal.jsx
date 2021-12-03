@@ -1,5 +1,5 @@
-import React, { useState} from "react";
-import { Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "./Formik";
 
@@ -9,7 +9,6 @@ import FormIcon from "../icons/form-icon.jpg";
 import { CgImage } from "react-icons/cg";
 
 function FormModal() {
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,11 +45,15 @@ function FormModal() {
         Retrieve Image
       </button>
       <Draggable>
-        <Modal show={show} onHide={handleClose} className="bungkus">
-          <Modal.Header closeButton>
-            <Modal.Title>Form Data Nasabah</Modal.Title>
-          </Modal.Header>
-          <Modal.Body scrollable>
+        <Modal show={show} onHide = {handleClose} className="bungkus modal" id="wrapper">
+          <Modal.Body>
+            <Modal.Title className="mb-3">
+              Form Data Nasabah
+              <Button onClick={handleClose} variant="info" style={{ marginLeft: "12rem" }}>
+                X
+              </Button>
+            </Modal.Title>
+
             <Form />
           </Modal.Body>
         </Modal>

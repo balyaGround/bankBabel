@@ -1,18 +1,34 @@
 form label {
   margin-bottom: 2rem;
-  width: 8rem;
 }
 
 form input {
   margin-bottom: 2rem;
   align-content: right;
+  box-shadow: 0 2px 2px #000000;
+}
+form input:focus {
+  outline-color: #059499f1;
 }
 
-.bungkus .modal-header {
-  background-color: rgba(78, 211, 216, 0.705);
-  box-shadow: 5px 5px 5px black;
-}
 .bungkus .modal-body {
-  background-color: rgba(78, 211, 216, 0.363);
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 0 2px #f8f8f8, 0 0 10px #059499f1, 0 0 10px #059499f1, 0 0 20px #059499f1;
+  background: linear-gradient(160deg, #ffffff77, #b3b1b1b4) !important;
+
+  border-radius: 30px !important;
+}
+
+.bungkus .modal-content {
+  border-radius: 30px !important;
+  background: none !important;
+}
+
+.Scren-Record-Wrapper {
+  margin-top: 35px;
+}
+
+.wrapper-luar {
+  display: flex;
+  justify-content: space-around;
 }

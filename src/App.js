@@ -8,16 +8,14 @@ import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
-// import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import Col from 'react-bootstrap/Col'
-// import Row from 'react-bootstrap/Row'
+
 
 import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
-// import HangupModal from "./component/HangupModal";
+
 
 import emailjs from 'emailjs-com'
 import {init} from 'emailjs-com'
@@ -84,7 +82,13 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   return (
     <div className="home">
       <div className="create box">
+        <Row>
+          <Col>
+          <p style = {{textAlign: 'center'}}>You can wait for an incoming call pop up</p>
+          </Col>
+          <p style = {{textAlign: 'center'}}>OR</p>    
         <button onClick={() => setPage("create")}>Create Call</button>
+        </Row>
       </div>
 
       <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
@@ -263,6 +267,7 @@ function Videos({ mode, callId, setPage }) {
     setupSources()
   }, [])
 
+
   const hangUp = async () => {
     pc.close();
     Swal.fire({
@@ -295,10 +300,16 @@ function Videos({ mode, callId, setPage }) {
           await roomRef.delete();
         }
 
+        const isActive = firestore.collection("isActive").doc("agentActive");
+
+        isActive.set({
+          Agent1: true,
+        });
+
+
         await firestore.collection('form').doc('user').get().then((doc) => {
           const jsonData = doc.data();
           const jsonString = JSON.stringify(jsonData);
-          console.log(jsonString);
           const json = JSON.parse(jsonString);
           
           const param = {
@@ -312,14 +323,8 @@ function Videos({ mode, callId, setPage }) {
           }, (e) => {
             console.log(e);
           })
+          window.location.reload();
         })
-
-        const isActive = firestore.collection("isActive").doc("agentActive");
-
-        isActive.set({
-          Agent1: true,
-        });
-        window.location.reload();
       }
     });
   };
@@ -432,10 +437,9 @@ function Videos({ mode, callId, setPage }) {
 
   return (
     <div>
-      <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
-      <Container fluid>
-
+    <Container fluid>
       <div className="videos">
+      <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
         {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
         {/* <div className="row "> */}
         <Container>
@@ -525,7 +529,7 @@ function Videos({ mode, callId, setPage }) {
           </div>
         </div>
       )} */}
-      </Container>
+     </Container>
     </div>
   );
 }
