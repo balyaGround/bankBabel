@@ -8,16 +8,12 @@ import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
-// import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import Col from 'react-bootstrap/Col'
-// import Row from 'react-bootstrap/Row'
 
 import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
-// import HangupModal from "./component/HangupModal";
 
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
@@ -79,7 +75,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
     setInterval(() => {
       getID();
     }, 15000);
-  }, []);
+  });
 
   return (
     <div className="home">
@@ -107,7 +103,7 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   );
 }
 
-function Videos({ mode, callId, setPage }) {
+function Videos({ mode, callId }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
@@ -277,6 +273,7 @@ function Videos({ mode, callId, setPage }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
+        sendEmail();
         if (roomId) {
           let roomRef = firestore.collection("rooms").doc(roomId);
           await roomRef
@@ -298,30 +295,6 @@ function Videos({ mode, callId, setPage }) {
           await roomRef.delete();
         }
 
-        await firestore
-          .collection("form")
-          .doc("user")
-          .get()
-          .then((doc) => {
-            const jsonData = doc.data();
-            const jsonString = JSON.stringify(jsonData);
-            console.log(jsonString);
-            const json = JSON.parse(jsonString);
-            const param = {
-              name: json.name,
-              email: json.email,
-            };
-
-            emailjs.send("service_8wp3jqi", "template_xo34yaw", param).then(
-              (res) => {
-                console.log(res.status, res.text);
-              },
-              (e) => {
-                console.log(e);
-              }
-            );
-          });
-
         const isActive = firestore.collection("isActive").doc("agentActive");
 
         isActive.set({
@@ -331,7 +304,31 @@ function Videos({ mode, callId, setPage }) {
       }
     });
   };
+  const sendEmail = async () => {
+    await firestore
+      .collection("form")
+      .doc("user")
+      .get()
+      .then((doc) => {
+        const jsonData = doc.data();
+        const jsonString = JSON.stringify(jsonData);
+        console.log(jsonString);
+        const json = JSON.parse(jsonString);
+        const param = {
+          name: json.name,
+          email: json.email,
+        };
 
+        emailjs.send("service_2nlsg79", "template_czaa0or", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+          (res) => {
+            console.log(res.status, res.text);
+          },
+          (e) => {
+            console.log(e);
+          }
+        );
+      });
+  };
   const hangUpFail = async () => {
     pc.close();
     Swal.fire({
