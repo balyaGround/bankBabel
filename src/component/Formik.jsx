@@ -39,7 +39,7 @@ function Form() {
       db.collection("form").doc("user").set({
         name: values.name,
         nik: values.nik,
-        email: values.user_email,
+        email: values.email,
         mobile: values.mobile,
         gender: values.gender,
         dob: values.dob,
@@ -161,7 +161,7 @@ function Form() {
             <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="expiry" name="expiry" required onChange={formik.handleChange} value={formik.values.expiry} />
 
             <label htmlFor="email">Email</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="email" id="email" name="user_email" required onChange={formik.handleChange} value={formik.values.user_email} />
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="email" id="email" name="email" required onChange={formik.handleChange} value={formik.values.email} />
 
             <label htmlFor="mobile">Mobile</label>
             <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 3px black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />

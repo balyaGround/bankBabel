@@ -72,7 +72,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     //     };
     return (
       <Row>
-        <Col span="6" style={{ lineHeight: "24px", marginBottom: "-2rem" }}>
+        <Col span="6" style={{ lineHeight: "24px", marginBottom: "-2rem" }} className="text-white">
           {status && status !== "stopped" && <Text>Screen Recording Status: {status && status.toUpperCase()}</Text>}
           {status && status === "recording" && (
             <Badge

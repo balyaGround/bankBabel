@@ -12,10 +12,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url(./img/bluebg.jpg);
+  background-image: linear-gradient(to bottom right, rgb(60, 149, 238), rgb(0, 204, 255));
   box-sizing: border-box;
   background-repeat: no-repeat;
-  background-position: center center;
+  height: 100vh;
 }
 
 button {
@@ -24,9 +24,9 @@ button {
   font: inherit;
   padding: 0.8rem 2rem;
   border-radius: 6px;
-  background-color: var(--color-primary);
   color: white;
   cursor: pointer;
+  background: rgba(0, 68, 255, 0.678);
 }
 
 input {
@@ -64,6 +64,7 @@ video {
   background-color: rgba(0, 0, 255, 0.192);
   border-radius: 8px;
   padding: 5rem 15rem;
+  box-shadow: 0px 0px 5px 5px rgba(255 255 255 / 60%);
 }
 
 .create.box .tulisan {
@@ -121,6 +122,7 @@ video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
+  box-shadow: 0px 0px 2px 2px rgba(255 255 255 / 60%);
 }
 
 .videos .remote {
@@ -131,6 +133,7 @@ video {
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   object-fit: contain;
+  box-shadow: 0px 0px 2px 2px rgba(255 255 255 / 60%);
 }
 
 .videos .buttonsContainer {
@@ -149,8 +152,8 @@ video {
 }
 
 .videos .buttonsContainer .button:hover {
-  box-shadow: 0px 5px 10px #0000001a;
-  border-color: transparent;
+  box-shadow: 0px 5px 10px #049ff8;
+  border-color: rgba(255, 255, 255, 0.705);
 }
 
 .videos .buttonsContainer .hangup {
@@ -161,7 +164,6 @@ video {
 
 .videos .buttonsContainer .more {
   background-color: #4485ff;
-  border-color: rgba(0, 0, 255, 0.192);
   cursor: pointer;
 }
 
@@ -204,8 +206,17 @@ video {
 }
 .poto-ktp img {
   object-fit: cover;
+  box-shadow: 0px 0px 5px 5px rgba(250, 247, 247, 0.6);
+}
+.frame-ktp img {
+  width: 100% !important;
+  height: 20rem !important;
+  box-shadow: 0px 0px 5px 5px rgba(252, 252, 252, 0.6);
 }
 @media screen and (max-width: 1024px) {
+  .create.box .tulisan {
+    width: 28rem;
+  }
   .poto-ktp img {
     width: 100% !important;
     height: 20rem !important;

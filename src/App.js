@@ -227,28 +227,28 @@ function Videos({ mode, callId }) {
       });
     }
 
-    pc.onconnectionstatechange = () => {
+    pc.onconnectionstatechange = async () => {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        firestore.collection("rooms").doc(roomId).delete();
+        await firestore.collection("rooms").doc(roomId).delete();
       } else if (pc.connectionState === "failed") {
         hangUpFail();
         pc.restartIce();
-        firestore.collection("rooms").doc(roomId).delete();
-      } else if (pc.connectionState === "connecting") {
+        await firestore.collection("rooms").doc(roomId).delete();
+      } else if (pc.connectionState === "connected") {
         let timerInterval;
         Swal.fire({
           icon: "info",
           title: pc.connectionState,
           text: "You are currently connecting to a customer, please wait",
           timerProgressBar: true,
-          timer: 3500,
+          timer: 1500,
           didOpen: () => {
             Swal.showLoading();
             timerInterval = setInterval(() => {
               Swal.getTimerLeft();
-            }, 100);
+            }, 1500);
           },
           willClose: () => {
             clearInterval(timerInterval);
@@ -273,7 +273,7 @@ function Videos({ mode, callId }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        sendEmail();
+        await sendEmail();
         if (roomId) {
           let roomRef = firestore.collection("rooms").doc(roomId);
           await roomRef
@@ -441,15 +441,15 @@ function Videos({ mode, callId }) {
           {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
           {/* <div className="row "> */}
           <Container>
-            <Row className="justify-content-center">
+            <Row className="justify-content-center text-white">
               <Col xs lg={4}>
                 <video ref={localRef} autoPlay playsInline className="local" muted />
-                <h5 style={{ textAlign: "center" }}>Agent Video</h5>
+                <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Agent Video</h5>
               </Col>
               <Col xs lg={2}></Col>
               <Col xs lg={4}>
                 <video ref={remoteRef} autoPlay playsInline className="remote" />
-                <h5 style={{ textAlign: "center" }}>Client Video</h5>
+                <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Client Video</h5>
               </Col>
             </Row>
           </Container>
@@ -457,17 +457,17 @@ function Videos({ mode, callId }) {
           {/* </div> */}
 
           <Container>
-            <Row className="justify-content-center ">
+            <Row className="justify-content-center text-white">
               <Col xs lg={4} className="poto-ktp">
                 <img id="ektp" onClick={popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-                <h5 style={{ textAlign: "center" }}>e-KTP</h5>
+                <h5 style={{ textAlign: "center", marginTop: "1rem" }}>e-KTP</h5>
               </Col>
 
               <Col xs lg={2}></Col>
 
               <Col xs lg={4} className="frame-ktp">
                 <img id="selfieEktp" onClick={popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
-                <h5 style={{ textAlign: "center" }}>Selfie + e-KTP</h5>
+                <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Selfie + e-KTP</h5>
               </Col>
             </Row>
           </Container>
@@ -487,7 +487,7 @@ function Videos({ mode, callId }) {
           </div>
         </div> */}
 
-          <div className="container buttonsContainer " style={{ marginTop: "2rem" }}>
+          <div className="container buttonsContainer ">
             <div className="row">
               <div className="col">
                 <button
