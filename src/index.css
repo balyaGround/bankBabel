@@ -54,16 +54,25 @@ video {
   align-content: center;
   justify-content: center;
   padding: 25vh;
-  background-color: linear-gradient(to left top, rgb(171, 191, 247), red);
 }
 
 .home .box {
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   background-color: rgba(0, 0, 255, 0.192);
   border-radius: 8px;
-  padding: 10rem 30rem;
+  padding: 5rem 15rem;
+}
+
+.create.box .tulisan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px;
+  color: #ebf5ff;
+  margin-bottom: 2rem;
 }
 
 .modalContainerBawaan {

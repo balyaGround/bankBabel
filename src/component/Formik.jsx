@@ -102,60 +102,70 @@ function Form() {
       <form id="centered" onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
         <div className="wrapper-luar">
           <div>
-            <label htmlFor="nik">NIK:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="number" id="nik" name="nik" required minLength="16" maxLength="16" onChange={formik.handleChange} value={formik.values.nik} />
+            <label htmlFor="nik">NIK</label>
+            <input
+              style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black", marginRight: "2px" }}
+              type="number"
+              id="nik"
+              name="nik"
+              required
+              minLength="16"
+              maxLength="16"
+              onChange={formik.handleChange}
+              value={formik.values.nik}
+            />
 
-            <label htmlFor="province">Provinsi: {""}</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="province" name="province" required onChange={formik.handleChange} value={formik.values.province} />
+            <label htmlFor="province">Provinsi</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="province" name="province" required onChange={formik.handleChange} value={formik.values.province} />
 
-            <label htmlFor="name">Full Name:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="name" name="name" required onChange={formik.handleChange} value={formik.values.name} />
+            <label htmlFor="name">Full Name</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="name" name="name" required onChange={formik.handleChange} value={formik.values.name} />
 
-            <label htmlFor="pob">Place of Birth:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="pob" name="pob" required onChange={formik.handleChange} value={formik.values.pob} />
+            <label htmlFor="pob">Place of Birth</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="pob" name="pob" required onChange={formik.handleChange} value={formik.values.pob} />
 
-            <label htmlFor="dob">Date of Birth:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="dd-mm-yyyy" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
+            <label htmlFor="dob">Date of Birth</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="dd-mm-yyyy" id="dob" name="dob" required onChange={formik.handleChange} value={formik.values.dob} />
 
-            <label htmlFor="gender">Gender: {""}</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="gender" name="gender" required onChange={formik.handleChange} value={formik.values.gender} />
+            <label htmlFor="gender">Gender</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="gender" name="gender" required onChange={formik.handleChange} value={formik.values.gender} />
 
-            <label htmlFor="bloodtype">Golongan Darah: {""}</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="bloodtype" name="bloodtype" required onChange={formik.handleChange} value={formik.values.bloodtype} />
+            <label htmlFor="bloodtype">Golongan Darah</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="bloodtype" name="bloodtype" required onChange={formik.handleChange} value={formik.values.bloodtype} />
 
-            <label htmlFor="address">Address:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="address" name="address" required onChange={formik.handleChange} value={formik.values.address} />
+            <label htmlFor="address">Address</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="address" name="address" required onChange={formik.handleChange} value={formik.values.address} />
 
-            <label htmlFor="rtrw">RT/RW:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="rtrw" name="rtrw" required onChange={formik.handleChange} value={formik.values.rtrw} />
+            <label htmlFor="rtrw">RT/RW</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="rtrw" name="rtrw" required onChange={formik.handleChange} value={formik.values.rtrw} />
           </div>
           <div>
-            <label htmlFor="kelurahandesa">Kel/Desa:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="kelurahandesa" name="kelurahandesa" required onChange={formik.handleChange} value={formik.values.kelurahandesa} />
+            <label htmlFor="kelurahandesa">Kel/Desa</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="kelurahandesa" name="kelurahandesa" required onChange={formik.handleChange} value={formik.values.kelurahandesa} />
 
-            <label htmlFor="kecamatan">Kecamatan:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="kecamatan" name="kecamatan" required onChange={formik.handleChange} value={formik.values.kecamatan} />
+            <label htmlFor="kecamatan">Kecamatan</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="kecamatan" name="kecamatan" required onChange={formik.handleChange} value={formik.values.kecamatan} />
 
-            <label htmlFor="religion">Agama:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="religion" name="religion" required onChange={formik.handleChange} value={formik.values.religion} />
+            <label htmlFor="religion">Agama</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="religion" name="religion" required onChange={formik.handleChange} value={formik.values.religion} />
 
-            <label htmlFor="maritalstatus">Status Perkawinan:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="maritalstatus" name="maritalstatus" required onChange={formik.handleChange} value={formik.values.maritalstatus} />
+            <label htmlFor="maritalstatus">Status Perkawinan</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="maritalstatus" name="maritalstatus" required onChange={formik.handleChange} value={formik.values.maritalstatus} />
 
-            <label htmlFor="workfield">Pekerjaan:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="workfield" name="workfield" required onChange={formik.handleChange} value={formik.values.workfield} />
+            <label htmlFor="workfield">Pekerjaan</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="workfield" name="workfield" required onChange={formik.handleChange} value={formik.values.workfield} />
 
-            <label htmlFor="nationality">Kewarganegaraan: {""}</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="nationality" name="nationality" required onChange={formik.handleChange} value={formik.values.nationality} />
+            <label htmlFor="nationality">Kewarganegaraan</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="nationality" name="nationality" required onChange={formik.handleChange} value={formik.values.nationality} />
 
-            <label htmlFor="expiry">Expiry Date: {""}</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="text" id="expiry" name="expiry" required onChange={formik.handleChange} value={formik.values.expiry} />
+            <label htmlFor="expiry">Expiry Date</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="text" id="expiry" name="expiry" required onChange={formik.handleChange} value={formik.values.expiry} />
 
-            <label htmlFor="email">Email:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 2px black" }} type="email" id="email" name="email" required onChange={formik.handleChange} value={formik.values.email} />
+            <label htmlFor="email">Email</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 2px black" }} type="email" id="email" name="email" required onChange={formik.handleChange} value={formik.values.email} />
 
-            <label htmlFor="mobile">Mobile:</label>
-            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 0px 3px black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
+            <label htmlFor="mobile">Mobile</label>
+            <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 3px black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
           </div>
         </div>
         <button type="submit" style={{ marginRight: "15px", borderRadius: "5%", marginLeft: "40px" }}>

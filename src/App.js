@@ -82,13 +82,12 @@ function Menu({ joinCode, setJoinCode, setPage }) {
   return (
     <div className="home">
       <div className="create box">
-        <Row>
-          <Col>
-          <p style = {{textAlign: 'center'}}>You can wait for an incoming call pop up</p>
-          </Col>
-          <p style = {{textAlign: 'center'}}>OR</p>    
+        <div className="tulisan">
+          <h4>You can wait for an incoming call pop up</h4>
+          <br/>
+          <h4>OR</h4>
+        </div>
         <button onClick={() => setPage("create")}>Create Call</button>
-        </Row>
       </div>
 
       <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
