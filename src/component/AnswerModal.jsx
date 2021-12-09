@@ -28,7 +28,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode }) {
   useEffect(() => {
     handleOpen();
     setInterval(() => {
-      getId()
+      getId();
     }, 15000);
   }, [joinId]);
 
@@ -39,7 +39,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode }) {
           <Modal.Title>Answer Call</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={loading} alt='' style={{ width: "30rem", height: "20rem" }} />
+          <img src={loading} alt="" style={{ width: "30rem", height: "20rem" }} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

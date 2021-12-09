@@ -15,7 +15,7 @@ function Form() {
     initialValues: {
       name: "",
       nik: "",
-      email: "",
+      user_email: "",
       mobile: "",
       gender: "",
       dob: "",
@@ -63,7 +63,6 @@ function Form() {
       });
     },
   });
-
   const retrieve = () => {
     db.collection("form")
       .doc("user")
