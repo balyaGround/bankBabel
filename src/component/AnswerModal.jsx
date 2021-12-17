@@ -16,8 +16,9 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const getId = () => {
     firebase
       .collection("rooms")
-      .where('agentID', '==', agentID)
-      .orderBy('timestamp', 'desc')
+      .doc('roomAgent' + agentID)
+      .collection('roomIDAgent' + agentID)
+      .orderBy('timestamp', 'asc')
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
