@@ -1,26 +1,32 @@
 import React, {useState} from "react";
 import { Form, Button } from "react-bootstrap";
 import {getDatabase, ref, child, get} from 'firebase/database'
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [userName, setUserName] = useState('')
   const [userPassword, setUserPassword] = useState('')
+  const [agentID, setAgentID] = useState('')
   const rtdb = ref(getDatabase())
+  const Swal = require('sweetalert2')
 
-  const handleSubmit = () => {
-    get(child(rtdb, '/User/' + userName)).then((doc) => {
+  const handleSubmit = async () => {
+   await get(child(rtdb, '/User/' + userName)).then((doc) => {
       if(doc.exists()){
-        console.log(doc.val());
+        // console.log(doc.val());
         const jsonData = doc.val();
         const jsonString = JSON.stringify(jsonData);
         const json = JSON.parse(jsonString);
 
         if(userPassword === json.userPassword){
-          console.log('pass sama');
-          window.open('/home')
+          console.log(json.userPassword);
+          window.location.href = '/home?user=' + userName + '&id=' + json.agentID
         }
         else{
-          console.log("pass ga sama");
+          Swal.fire({
+            icon: 'error',
+            title: 'Username/Password is incorrect'
+          })
         }
       }
       else{
@@ -46,7 +52,7 @@ export default function Login() {
                 <Form.Label className="text-white">Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={(e) => {setUserPassword(e.target.value)}} />
               </Form.Group>
-              <Button variant="primary" type="submmit" onClick={handleSubmit}>
+              <Button onClick={handleSubmit}>
                 Submit
               </Button>
             </Form>

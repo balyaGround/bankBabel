@@ -59,9 +59,15 @@ function VideoCall() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+  const user = new URLSearchParams(window.location.search).get('user')
+  const agentID = new URLSearchParams(window.location.search).get('id')
+
   const getID = () => {
     firestore
       .collection("rooms")
+      .doc('roomAgent' + agentID)
+      .collection('roomIDAgent' + agentID)
+      .orderBy('timestamp', 'asc')
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
@@ -81,29 +87,19 @@ function Menu({ joinCode, setJoinCode, setPage }) {
     <div className="home">
       <div className="create box">
         <div className="tulisan">
+          <h4>Hi! {user}</h4>
           <h4>You can wait for an incoming call pop up</h4>
           <h3>OR</h3>
         </div>
-        <button onClick={() => setPage("create")}>Create Call</button>
+        <button onClick={() => {setPage("create")} }>Create Call</button>
       </div>
 
-      <AnswerModal joinId={joinCode} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
-      {/* <div className="auto connect">
-        <input value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
-        <button
-          onClick={() => {
-            getID();
-            setPage("join");
-          }}
-        >
-          Auto Connect
-        </button>
-      </div> */}
+      <AnswerModal joinId={joinCode} agentID={agentID} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />      
     </div>
   );
 }
 
-function Videos({ mode, callId }) {
+function Videos({ mode, callId, agentID }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
@@ -138,11 +134,16 @@ function Videos({ mode, callId }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      // const roomId = Date.now().toString()
-      const callDoc = firestore.collection("rooms").doc();
-      const offerCandidates = callDoc.collection("callerCandidates");
-      const answerCandidates = callDoc.collection("calleeCandidates");
+      // const callDoc = firestore.collection("rooms").doc();
+      // const offerCandidates = callDoc.collection("callerCandidates");
+      // const answerCandidates = callDoc.collection("calleeCandidates");
+      
       const isActive = firestore.collection("isActive").doc("agentActive");
+      
+      const roomAgent1 = firestore.collection('rooms').doc('roomAgent1')
+      const roomIDAgent1 = roomAgent1.collection('roomIDAgent1').doc()
+      const offerCandidates = roomIDAgent1.collection('callerCandidates')
+      const answerCandidates = roomIDAgent1.collection('calleeCandidates')
 
       isActive.set({
         Agent1: false,
@@ -152,7 +153,8 @@ function Videos({ mode, callId }) {
       //   console.log(doc.id)
       // })
 
-      setRoomId(callDoc.id);
+      // setRoomId(callDoc.id);
+      setRoomId(roomIDAgent1.id)
 
       pc.onicecandidate = (event) => {
         event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -166,13 +168,12 @@ function Videos({ mode, callId }) {
         type: offerDescription.type,
       };
 
-      const time = {
-        time: Date.now(),
-      };
+      const time = Date.now()
 
-      await callDoc.set({ offer, time });
+      // await callDoc.set({ offer, time, agentID });
+      await roomIDAgent1.set({offer, time})
 
-      callDoc.onSnapshot((snapshot) => {
+      roomIDAgent1.onSnapshot((snapshot) => {
         const data = snapshot.data();
         if (!pc.currentRemoteDescription && data?.answer) {
           const answerDescription = new RTCSessionDescription(data.answer);
@@ -188,7 +189,8 @@ function Videos({ mode, callId }) {
           }
         });
       });
-    } else if (mode === "join") {
+    }
+     else if (mode === "join") {
       const callDoc = firestore.collection("rooms").doc(callId);
       const answerCandidates = callDoc.collection("calleeCandidates");
       const offerCandidates = callDoc.collection("callerCandidates");
