@@ -7,19 +7,17 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
-import { getStorage, getDownloadURL, ref } from "firebase/storage";
+import { getStorage, getDownloadURL } from "firebase/storage";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
-
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
-
 import { Container, Col, Row } from "react-bootstrap";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import { getDatabase, child, ref, get } from "firebase/database";
 // Initialize Firebase
 const firebaseConfig = {
   // YOUR FIREBASE CONFIG HERE
@@ -59,6 +57,22 @@ function VideoCall() {
 }
 
 function Menu({ joinCode, setJoinCode, setPage }) {
+  const rtdb = ref(getDatabase());
+  const [userName, setuserName] = useState("");
+  const getUsername = () => {
+    get(child(rtdb, "/User/" + userName)).then((doc) => {
+      if (doc.exists()) {
+        // console.log(doc.val());
+        const jsonData = doc.val();
+        const jsonString = JSON.stringify(jsonData);
+        const json = JSON.parse(jsonString);
+        console.log("user", json.userName);
+      } else {
+        console.log("pass ga sama");
+      }
+    });
+  };
+
   const getID = () => {
     firestore
       .collection("rooms")
@@ -76,6 +90,11 @@ function Menu({ joinCode, setJoinCode, setPage }) {
       getID();
     }, 15000);
   });
+
+  useEffect(() => {
+    getUsername();
+  }, []);
+  console.log(userName);
 
   return (
     <div className="home">
@@ -112,6 +131,7 @@ function Videos({ mode, callId }) {
   const remoteRef = useRef();
   const storage = getStorage();
   init("user_h6uRyZievx8s1s6rPU7mz");
+
   const setupSources = async () => {
     let localStream;
 
