@@ -5,26 +5,30 @@ import { getDatabase, ref, child, get } from "firebase/database";
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const [agentID, setAgentID] = useState("");
   const rtdb = ref(getDatabase());
-  const handleSubmit = () => {
-    console.log("haloooo", userName);
-    get(child(rtdb, "/User/" + userName))
+  const Swal = require("sweetalert2");
+
+  const handleSubmit = async () => {
+    await get(child(rtdb, "/User/" + userName))
       .then((doc) => {
         if (doc.exists()) {
           // console.log(doc.val());
           const jsonData = doc.val();
           const jsonString = JSON.stringify(jsonData);
           const json = JSON.parse(jsonString);
-          console.log("user password", json);
+
           if (userPassword === json.userPassword) {
-            console.log("pass sama");
-            window.location.href = "/home";
+            console.log(json.userPassword);
+            window.location.href = "/home?user=" + userName + "&id=" + json.agentID;
           } else {
-            console.log("pass ga sama");
+            Swal.fire({
+              icon: "error",
+              title: "Username/Password is incorrect",
+            });
           }
         } else {
-          console.log("No data");
-          alert("no user found");
+          console.log("no data");
         }
       })
       .catch((e) => {
@@ -59,9 +63,7 @@ export default function Login() {
                   }}
                 />
               </Form.Group>
-              <Button variant="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
+              <Button onClick={handleSubmit}>Submit</Button>
             </Form>
           </div>
         </div>
