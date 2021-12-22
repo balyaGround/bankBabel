@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import loading from "../img/loadingbaBel.gif";
 import { Modal, Button } from "react-bootstrap";
 
-function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
+function AnswerModal({ joinId, setHalaman, firebase, setjoinCode, agentID }) {
   const [show, setshow] = useState(false);
+
   const handleOpen = () => {
     if (joinId !== "") {
       setshow(true);
@@ -18,12 +19,12 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
       .collection("rooms")
       .doc("roomAgent" + agentID)
       .collection("roomIDAgent" + agentID)
-      .orderBy("timestamp", "asc")
+      .orderBy("time", "asc")
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
           console.log(doc.id);
-          setJoinCode(doc.id.toString());
+          setjoinCode(doc.id.toString());
         });
       });
   };
@@ -34,7 +35,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
       getId();
     }, 15000);
   }, [joinId]);
-
+  console.log("join code ", joinId);
   return (
     <div>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
