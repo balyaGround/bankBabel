@@ -54,13 +54,13 @@ const servers = {
 function VideoCall() {
   const [currentPage, setCurrentPage] = useState("home");
   const [joinCode, setJoinCode] = useState("");
-
-  return <div className="app">{currentPage === "home" ? <Menu joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} /> : <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} />}</div>;
-}
-
-function Menu({ joinCode, setJoinCode, setPage }) {
   const user = new URLSearchParams(window.location.search).get('user')
   const agentID = new URLSearchParams(window.location.search).get('id')
+
+  return <div className="app">{currentPage === "home" ? <Menu joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} user={user} agentID={agentID} /> : <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} />}</div>;
+}
+
+function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
 
   const getID = () => {
     firestore
@@ -140,10 +140,10 @@ function Videos({ mode, callId, agentID }) {
       
       const isActive = firestore.collection("isActive").doc("agentActive");
       
-      const roomAgent1 = firestore.collection('rooms').doc('roomAgent1')
-      const roomIDAgent1 = roomAgent1.collection('roomIDAgent1').doc()
-      const offerCandidates = roomIDAgent1.collection('callerCandidates')
-      const answerCandidates = roomIDAgent1.collection('calleeCandidates')
+      const roomAgent = firestore.collection('rooms').doc('roomAgent' + agentID)
+      const roomIDAgent = roomAgent.collection('roomIDAgent' + agentID).doc()
+      const offerCandidates = roomIDAgent.collection('callerCandidates')
+      const answerCandidates = roomIDAgent.collection('calleeCandidates')
 
       isActive.set({
         Agent1: false,
@@ -154,7 +154,7 @@ function Videos({ mode, callId, agentID }) {
       // })
 
       // setRoomId(callDoc.id);
-      setRoomId(roomIDAgent1.id)
+      setRoomId(roomIDAgent.id)
 
       pc.onicecandidate = (event) => {
         event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -171,9 +171,9 @@ function Videos({ mode, callId, agentID }) {
       const time = Date.now()
 
       // await callDoc.set({ offer, time, agentID });
-      await roomIDAgent1.set({offer, time})
+      await roomIDAgent.set({offer, time})
 
-      roomIDAgent1.onSnapshot((snapshot) => {
+      roomIDAgent.onSnapshot((snapshot) => {
         const data = snapshot.data();
         if (!pc.currentRemoteDescription && data?.answer) {
           const answerDescription = new RTCSessionDescription(data.answer);
@@ -191,9 +191,13 @@ function Videos({ mode, callId, agentID }) {
       });
     }
      else if (mode === "join") {
-      const callDoc = firestore.collection("rooms").doc(callId);
-      const answerCandidates = callDoc.collection("calleeCandidates");
-      const offerCandidates = callDoc.collection("callerCandidates");
+      // const callDoc = firestore.collection("rooms").doc(callId);
+      // const answerCandidates = callDoc.collection("calleeCandidates");
+      // const offerCandidates = callDoc.collection("callerCandidates");
+      const roomAgent = firestore.collection('rooms').doc('roomAgent' + agentID)
+      const roomIDAgent = roomAgent.collection('roomIDAgent' + agentID).doc(callId)
+      const offerCandidates = roomIDAgent.collection('callerCandidates')
+      const answerCandidates = roomIDAgent.collection('calleeCandidates')
       const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
@@ -204,7 +208,7 @@ function Videos({ mode, callId, agentID }) {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
       };
 
-      const callData = (await callDoc.get()).data();
+      const callData = (await roomIDAgent.get()).data();
 
       const offerDescription = callData.offer;
       await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
@@ -217,7 +221,7 @@ function Videos({ mode, callId, agentID }) {
         sdp: answerDescription.sdp,
       };
 
-      await callDoc.update({ answer });
+      await roomIDAgent.update({ answer });
 
       offerCandidates.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
@@ -275,9 +279,9 @@ function Videos({ mode, callId, agentID }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await sendEmail();
+        // await sendEmail();
         if (roomId) {
-          let roomRef = firestore.collection("rooms").doc(roomId);
+          let roomRef = firestore.collection("rooms").doc('roomAgent' + agentID).collection('roomIDAgent' + agentID).doc(roomId);
           await roomRef
             .collection("calleeCandidates")
             .get()

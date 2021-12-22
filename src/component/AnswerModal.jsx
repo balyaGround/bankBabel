@@ -5,6 +5,7 @@ import { Modal, Button } from "react-bootstrap";
 
 function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const [show, setshow] = useState(false);
+
   const handleOpen = () => {
     if (joinId !== "") {
       setshow(true);
@@ -18,7 +19,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
       .collection("rooms")
       .doc('roomAgent' + agentID)
       .collection('roomIDAgent' + agentID)
-      .orderBy('timestamp', 'asc')
+      .orderBy('time', 'asc')
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
