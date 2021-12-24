@@ -15,7 +15,7 @@ import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getDatabase, child, ref, get } from "firebase/database";
 // Initialize Firebase
@@ -52,20 +52,23 @@ const servers = {
 function VideoCall() {
   const [currentPage, setCurrentPage] = useState("home");
   const [joinCode, setJoinCode] = useState("");
-
-  return <div className="app">{currentPage === "home" ? <Menu joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} /> : <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} />}</div>;
-}
-
-function Menu({ joinCode, setJoinCode, setPage }) {
   const user = new URLSearchParams(window.location.search).get("user");
   const agentID = new URLSearchParams(window.location.search).get("id");
 
+  return (
+    <div className="app">
+      {currentPage === "home" ? <Menu joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} user={user} agentID={agentID} /> : <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} />}
+    </div>
+  );
+}
+
+function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   const getID = () => {
     firestore
       .collection("rooms")
       .doc("roomAgent" + agentID)
       .collection("roomIDAgent" + agentID)
-      .orderBy("timestamp", "asc")
+      .orderBy("time", "asc")
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
@@ -81,25 +84,48 @@ function Menu({ joinCode, setJoinCode, setPage }) {
     }, 15000);
   });
 
+  const [status, setStatus] = useState("Available");
+  console.log("status=>>>>>", status);
   return (
-    <div className="home">
-      <div className="create box">
-        <div className="tulisan">
-          <h4>Hi! {user}</h4>
-          <h4>You can wait for an incoming call pop up</h4>
-          <h3>OR</h3>
-        </div>
-        <button
-          onClick={() => {
-            setPage("create");
-          }}
-        >
-          Create Call
-        </button>
-      </div>
+    <>
+      <div className="dropdown-status">
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            Status : {status}
+          </Dropdown.Toggle>
 
-      <AnswerModal joinId={joinCode} agentID={agentID} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
-    </div>
+          <Dropdown.Menu className="dropdown-menus">
+            <Dropdown.Item onClick={(e) => setStatus(e.target.name)} name="Available">
+              Available
+            </Dropdown.Item>
+            <Dropdown.Item onClick={(e) => setStatus(e.target.name)} name="Toilet Break">
+              Toilet Break
+            </Dropdown.Item>
+            <Dropdown.Item onClick={(e) => setStatus(e.target.name)} name="Lunch Break">
+              Lunch Break
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+      <div className="home">
+        <div className="create box">
+          <div className="tulisan">
+            <h4>Hi! {user}</h4>
+            <h4>You can wait for an incoming call pop up</h4>
+            <h3>OR</h3>
+          </div>
+          <button
+            onClick={() => {
+              setPage("create");
+            }}
+          >
+            Create Call
+          </button>
+        </div>
+
+        <AnswerModal joinId={joinCode} agentID={agentID} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
+      </div>
+    </>
   );
 }
 
@@ -145,10 +171,10 @@ function Videos({ mode, callId, agentID }) {
 
       const isActive = firestore.collection("isActive").doc("agentActive");
 
-      const roomAgent1 = firestore.collection("rooms").doc("roomAgent1");
-      const roomIDAgent1 = roomAgent1.collection("roomIDAgent1").doc();
-      const offerCandidates = roomIDAgent1.collection("callerCandidates");
-      const answerCandidates = roomIDAgent1.collection("calleeCandidates");
+      const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
+      const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
+      const offerCandidates = roomIDAgent.collection("callerCandidates");
+      const answerCandidates = roomIDAgent.collection("calleeCandidates");
 
       isActive.set({
         Agent1: false,
@@ -159,7 +185,7 @@ function Videos({ mode, callId, agentID }) {
       // })
 
       // setRoomId(callDoc.id);
-      setRoomId(roomIDAgent1.id);
+      setRoomId(roomIDAgent.id);
 
       pc.onicecandidate = (event) => {
         event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -176,9 +202,9 @@ function Videos({ mode, callId, agentID }) {
       const time = Date.now();
 
       // await callDoc.set({ offer, time, agentID });
-      await roomIDAgent1.set({ offer, time });
+      await roomIDAgent.set({ offer, time });
 
-      roomIDAgent1.onSnapshot((snapshot) => {
+      roomIDAgent.onSnapshot((snapshot) => {
         const data = snapshot.data();
         if (!pc.currentRemoteDescription && data?.answer) {
           const answerDescription = new RTCSessionDescription(data.answer);
@@ -195,9 +221,13 @@ function Videos({ mode, callId, agentID }) {
         });
       });
     } else if (mode === "join") {
-      const callDoc = firestore.collection("rooms").doc(callId);
-      const answerCandidates = callDoc.collection("calleeCandidates");
-      const offerCandidates = callDoc.collection("callerCandidates");
+      // const callDoc = firestore.collection("rooms").doc(callId);
+      // const answerCandidates = callDoc.collection("calleeCandidates");
+      // const offerCandidates = callDoc.collection("callerCandidates");
+      const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
+      const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc(callId);
+      const offerCandidates = roomIDAgent.collection("callerCandidates");
+      const answerCandidates = roomIDAgent.collection("calleeCandidates");
       const isActive = firestore.collection("isActive").doc("agentActive");
 
       isActive.set({
@@ -208,7 +238,7 @@ function Videos({ mode, callId, agentID }) {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
       };
 
-      const callData = (await callDoc.get()).data();
+      const callData = (await roomIDAgent.get()).data();
 
       const offerDescription = callData.offer;
       await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
@@ -221,7 +251,7 @@ function Videos({ mode, callId, agentID }) {
         sdp: answerDescription.sdp,
       };
 
-      await callDoc.update({ answer });
+      await roomIDAgent.update({ answer });
 
       offerCandidates.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
@@ -279,9 +309,13 @@ function Videos({ mode, callId, agentID }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await sendEmail();
+        // await sendEmail();
         if (roomId) {
-          let roomRef = firestore.collection("rooms").doc(roomId);
+          let roomRef = firestore
+            .collection("rooms")
+            .doc("roomAgent" + agentID)
+            .collection("roomIDAgent" + agentID)
+            .doc(roomId);
           await roomRef
             .collection("calleeCandidates")
             .get()

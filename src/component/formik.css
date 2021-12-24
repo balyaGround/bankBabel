@@ -22,7 +22,18 @@ form label {
   padding: 5rem 15rem;
   box-shadow: 0px 0px 5px 5px rgba(255 255 255 / 60%);
 }
-
+.dropdown-status {
+  position: absolute;
+  z-index: 999;
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+.dropdown-menus.dropdown-menu.show {
+  background-color: rgba(0, 0, 255, 0.192);
+}
+a.dropdown-item {
+  color: white;
+}
 form input {
   margin-bottom: 2rem;
   align-content: right;

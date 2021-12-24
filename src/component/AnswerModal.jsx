@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import loading from "../img/loadingbaBel.gif";
 import { Modal, Button } from "react-bootstrap";
 
-function AnswerModal({ joinId, setHalaman, firebase, setjoinCode, agentID }) {
+function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const [show, setshow] = useState(false);
 
   const handleOpen = () => {
@@ -24,7 +24,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setjoinCode, agentID }) {
       .then((doc) => {
         doc.forEach((doc) => {
           console.log(doc.id);
-          setjoinCode(doc.id.toString());
+          setJoinCode(doc.id.toString());
         });
       });
   };
@@ -33,7 +33,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setjoinCode, agentID }) {
     handleOpen();
     setInterval(() => {
       getId();
-    }, 15000);
+    }, 1000);
   }, [joinId]);
   console.log("join code ", joinId);
   return (
