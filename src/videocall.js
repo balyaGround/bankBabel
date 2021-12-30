@@ -17,7 +17,8 @@ import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
 import { Container, Col, Row, Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { getDatabase, child, ref, get } from "firebase/database";
+import { ref } from "firebase/database";
+import { Link } from "react-router-dom";
 // Initialize Firebase
 const firebaseConfig = {
   // YOUR FIREBASE CONFIG HERE
@@ -106,6 +107,9 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        <Link to="/scheduleRequest">
+          <button>Schedulling Request</button>
+        </Link>
       </div>
       <div className="home">
         <div className="create box">

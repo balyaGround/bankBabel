@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-function Scheduling({ firebase }) {
+function Schedulling({ firebase }) {
   const firebaseConfig = {
     // YOUR FIREBASE CONFIG HERE
     apiKey: "AIzaSyBK4_ckiJfuDrGH2naN07SmruemW2EjRPM",
@@ -13,25 +13,25 @@ function Scheduling({ firebase }) {
     measurementId: "G-XV6LN18P27",
   };
 
-  const [timeReq, setTimeReq] = useState("");
-  const getTime = () => {
-    firebase
-      .collection("schedule")
-      .doc()
-      .orderBy("timeReq", "asc")
-      .get()
-      .then((doc) => {
-        doc.forEach((doc) => {
-          console.log(doc.id);
-          setTimeReq(doc.id.toString());
-        });
-      });
-  };
+  // const [timeReq, setTimeReq] = useState("");
+  // const getTime = () => {
+  //   firebase
+  //     .collection("schedule")
+  //     .doc()
+  //     .orderBy("timeReq", "asc")
+  //     .get()
+  //     .then((doc) => {
+  //       doc.forEach((doc) => {
+  //         console.log(doc.id);
+  //         setTimeReq(doc.id.toString());
+  //       });
+  //     });
+  // };
 
-  useEffect(() => {
-    getTime();
-  }, []);
-  console.log("time", timeReq);
+  // useEffect(() => {
+  //   getTime();
+  // }, []);
+  // console.log("time", timeReq);
   return (
     <>
       <div className="schedule">
@@ -69,4 +69,4 @@ function Scheduling({ firebase }) {
   );
 }
 
-export default Scheduling;
+export default Schedulling;
