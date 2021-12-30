@@ -38,6 +38,10 @@ a.dropdown-item {
 #dropdown-basic {
   box-shadow: 0px 0px 2px 2px rgba(255 255 255 / 60%);
 }
+
+.button-schedule {
+  box-shadow: 0px 0px 2px 2px rgba(255 255 255 / 60%);
+}
 form input {
   margin-bottom: 2rem;
   align-content: right;

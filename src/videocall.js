@@ -15,7 +15,7 @@ import FormModal from "./component/FormModal.jsx";
 import AnswerModal from "./component/AnswerModal";
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
-import { Container, Col, Row, Dropdown } from "react-bootstrap";
+import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ref } from "firebase/database";
 import { Link } from "react-router-dom";
@@ -89,7 +89,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   console.log("status=>>>>>", status);
   return (
     <>
-      <div className="dropdown-status">
+      <div className="dropdown-status d-flex">
         <Dropdown>
           <Dropdown.Toggle variant="primary" id="dropdown-basic">
             Status : {status}
@@ -108,7 +108,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
           </Dropdown.Menu>
         </Dropdown>
         <Link to="/scheduleRequest">
-          <button>Schedulling Request</button>
+          <Button className="button-schedule ms-5">Schedulling Request</Button>
         </Link>
       </div>
       <div className="home">
