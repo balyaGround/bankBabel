@@ -5,7 +5,6 @@ import { Modal, Button } from "react-bootstrap";
 
 function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const [show, setshow] = useState(false);
-
   const handleOpen = () => {
     if (joinId !== "") {
       setshow(true);
@@ -14,6 +13,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const handleClose = () => {
     setshow(false);
   };
+
   const getId = () => {
     firebase
       .collection("rooms")
@@ -28,7 +28,6 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
         });
       });
   };
-
   useEffect(() => {
     handleOpen();
     setInterval(() => {

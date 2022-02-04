@@ -86,6 +86,21 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   });
 
   const [status, setStatus] = useState("Available");
+  if (status == "Available") {
+    firestore
+      .collection("isActive")
+      .doc("agent" + agentID)
+      .update({
+        loggedIn: true,
+      });
+  } else {
+    firestore
+      .collection("isActive")
+      .doc("agent" + agentID)
+      .update({
+        loggedIn: false,
+      });
+  }
   console.log("status=>>>>>", status);
   return (
     <>
@@ -124,6 +139,21 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
             }}
           >
             Create Call
+          </button>
+          <button
+            className="mt-5"
+            onClick={() => {
+              firestore
+                .collection("isActive")
+                .doc("agent" + agentID)
+                .update({
+                  loggedIn: false,
+                  VCHandled: 0,
+                });
+              window.location.href = "/";
+            }}
+          >
+            Log Out
           </button>
         </div>
 
@@ -266,7 +296,7 @@ function Videos({ mode, callId, agentID }) {
         });
       });
     }
-
+    const increment = firebase.firestore.FieldValue.increment(1);
     pc.onconnectionstatechange = async () => {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
@@ -294,6 +324,14 @@ function Videos({ mode, callId, agentID }) {
             clearInterval(timerInterval);
           },
         });
+        firestore
+          .collection("isActive")
+          .doc("agent" + agentID)
+          .update({
+            loggedIn: true,
+            inCall: true,
+            VCHandled: increment,
+          });
       }
     };
   };
@@ -337,6 +375,12 @@ function Videos({ mode, callId, agentID }) {
               });
             });
           await roomRef.delete();
+          await firestore
+            .collection("isActive")
+            .doc("agent" + agentID)
+            .update({
+              inCall: false,
+            });
         }
 
         const isActive = firestore.collection("isActive").doc("agentActive");
