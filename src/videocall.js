@@ -67,7 +67,8 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
       .collection("rooms")
       .doc('roomAgent' + agentID)
       .collection('roomIDAgent' + agentID)
-      .orderBy('timestamp', 'asc')
+      .orderBy('time', 'asc')
+      .limit(1)
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
@@ -80,7 +81,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   useEffect(() => {
     setInterval(() => {
       getID();
-    }, 15000);
+    }, 10000);
   });
 
   return (
@@ -108,6 +109,8 @@ function Videos({ mode, callId, agentID }) {
   const remoteRef = useRef();
   const storage = getStorage();
   init("user_h6uRyZievx8s1s6rPU7mz");
+
+
   const setupSources = async () => {
     let localStream;
 
@@ -145,9 +148,18 @@ function Videos({ mode, callId, agentID }) {
       const offerCandidates = roomIDAgent.collection('callerCandidates')
       const answerCandidates = roomIDAgent.collection('calleeCandidates')
 
-      isActive.set({
-        Agent1: false,
-      });
+
+      if(agentID === '1'){
+        isActive.set({
+          Agent1: false,
+        });
+      }
+      else if(agentID === '2'){
+        isActive.set({
+          Agent2: false,
+        });
+      }
+      
 
       // firebaseid.forEach(doc => {
       //   console.log(doc.id)
@@ -200,9 +212,16 @@ function Videos({ mode, callId, agentID }) {
       const answerCandidates = roomIDAgent.collection('calleeCandidates')
       const isActive = firestore.collection("isActive").doc("agentActive");
 
-      isActive.set({
-        Agent1: false,
-      });
+      if(agentID === '1'){
+        isActive.set({
+          Agent1: false,
+        });
+      }
+      else if(agentID === '2'){
+        isActive.set({
+          Agent2: false,
+        });
+      }
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -263,6 +282,15 @@ function Videos({ mode, callId, agentID }) {
       }
     };
   };
+
+  const VCHandled = () => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    const d = new Date()
+
+    const date = d.getDate()
+    const month = d.getMonth() + 1
+    const year = d.getFullYear()
+  }
 
   useEffect(() => {
     setupSources();

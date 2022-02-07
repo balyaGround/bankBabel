@@ -14,12 +14,25 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const handleClose = () => {
     setshow(false);
   };
+
+  const agent = () => {
+    firebase
+    .collection('isActive')
+    .doc('agent1')
+    .get()
+    .then((doc) => {
+      const jsonData = doc.data()
+      console.log(jsonData);
+    })
+  }
+
   const getId = () => {
     firebase
       .collection("rooms")
       .doc('roomAgent' + agentID)
       .collection('roomIDAgent' + agentID)
       .orderBy('time', 'asc')
+      .limit(1)
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
@@ -34,7 +47,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
     handleOpen();
     setInterval(() => {
       getId();
-    }, 15000);
+    }, 10000);
   }, [joinId]);
 
   return (
