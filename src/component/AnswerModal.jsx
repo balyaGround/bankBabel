@@ -5,7 +5,6 @@ import { Modal, Button } from "react-bootstrap";
 
 function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
   const [show, setshow] = useState(false);
-
   const handleOpen = () => {
     if (joinId !== "") {
       setshow(true);
@@ -15,24 +14,12 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
     setshow(false);
   };
 
-  const agent = () => {
-    firebase
-    .collection('isActive')
-    .doc('agent1')
-    .get()
-    .then((doc) => {
-      const jsonData = doc.data()
-      console.log(jsonData);
-    })
-  }
-
   const getId = () => {
     firebase
       .collection("rooms")
-      .doc('roomAgent' + agentID)
-      .collection('roomIDAgent' + agentID)
-      .orderBy('time', 'asc')
-      .limit(1)
+      .doc("roomAgent" + agentID)
+      .collection("roomIDAgent" + agentID)
+      .orderBy("time", "asc")
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
@@ -41,15 +28,13 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
         });
       });
   };
-  
-
   useEffect(() => {
     handleOpen();
     setInterval(() => {
       getId();
-    }, 10000);
+    }, 1000);
   }, [joinId]);
-
+  console.log("join code ", joinId);
   return (
     <div>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
