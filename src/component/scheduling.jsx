@@ -4,9 +4,29 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import config from "../config";
+import emailjs from "emailjs-com";
+import { init } from "emailjs-com";
 function Schedulling() {
   firebase.initializeApp(config);
+  init("user_h6uRyZievx8s1s6rPU7mz");
   const [data, setData] = useState([]);
+  const sendEmail = async () => {
+    const param = {
+      name: data[0].name,
+      email: data[0].email,
+      date: data[0].date,
+      time: data[0].time,
+    };
+
+    emailjs.send("service_2nlsg79", "template_edrznh9", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+      (res) => {
+        console.log(res.status, res.text);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+  };
   const getSchedule = () => {
     const events = firebase.firestore().collection("schedule").orderBy("date", "asc");
     events.get().then((querySnapshot) => {
@@ -56,7 +76,7 @@ function Schedulling() {
                         <p class="card-text">{item.time}</p>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick={sendEmail}>
                               Confirm
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">
