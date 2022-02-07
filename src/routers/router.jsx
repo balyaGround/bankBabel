@@ -5,6 +5,7 @@ import VideoCall from "../videocall";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Schedulling from "../component/scheduling";
 import PortalParameter from "../component/portal";
+import Schedulevideo from "../component/shedulevideo";
 function Routers() {
   return (
     <div>
@@ -18,6 +19,9 @@ function Routers() {
           </Route>
           <Route exact path="/scheduleRequest">
             <Schedulling />
+          </Route>
+          <Route exact path="/scheduleVideo">
+            <Schedulevideo />
           </Route>
           <Route exact path="/portal">
             <PortalParameter />

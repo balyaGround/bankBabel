@@ -6,6 +6,8 @@ import "firebase/compat/firestore";
 import config from "../config";
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
+import Schedulevideo from "./shedulevideo";
+import { Link } from "react-router-dom";
 function Schedulling() {
   firebase.initializeApp(config);
   init("user_h6uRyZievx8s1s6rPU7mz");
@@ -40,129 +42,127 @@ function Schedulling() {
   const localRef = useRef();
   const remoteRef = useRef();
 
-  const setupSources = async () => {
-    let localStream;
+  // const setupSources = async () => {
+  //   let localStream;
 
-    localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
+  //   localStream = await navigator.mediaDevices.getUserMedia({
+  //     video: true,
+  //     audio: true,
+  //   });
 
-    localStream.getTracks().forEach((track) => {
-      pc.addTrack(track, localStream);
-    });
+  //   localStream.getTracks().forEach((track) => {
+  //     pc.addTrack(track, localStream);
+  //   });
 
-    const remoteStream = new MediaStream();
+  //   const remoteStream = new MediaStream();
 
-    pc.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track);
-      });
-    };
+  //   pc.ontrack = (event) => {
+  //     event.streams[0].getTracks().forEach((track) => {
+  //       remoteStream.addTrack(track);
+  //     });
+  //   };
 
-    localRef.current.srcObject = localStream;
-    remoteRef.current.srcObject = remoteStream;
+  //   localRef.current.srcObject = localStream;
+  //   remoteRef.current.srcObject = remoteStream;
 
-    setWebcamActive(true);
-    // const callDoc = firestore.collection("rooms").doc();
-    // const offerCandidates = callDoc.collection("callerCandidates");
-    // const answerCandidates = callDoc.collection("calleeCandidates");
+  //   setWebcamActive(true);
+  //   // const callDoc = firestore.collection("rooms").doc();
+  //   // const offerCandidates = callDoc.collection("callerCandidates");
+  //   // const answerCandidates = callDoc.collection("calleeCandidates");
 
-    const isActive = firestore.collection("isActive").doc("agentActive");
+  //   const scheduledRoom = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc();
+  //   const offerCandidates = scheduledRoom.collection("callerCandidates");
+  //   const answerCandidates = scheduledRoom.collection("calleeCandidates");
 
-    const scheduledRoom = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc();
-    const offerCandidates = scheduledRoom.collection("callerCandidates");
-    const answerCandidates = scheduledRoom.collection("calleeCandidates");
+  //   setRoomId(roomId);
 
-    setRoomId(scheduledRoom.data[0].nik);
+  //   pc.onicecandidate = (event) => {
+  //     event.candidate && offerCandidates.add(event.candidate.toJSON());
+  //   };
 
-    pc.onicecandidate = (event) => {
-      event.candidate && offerCandidates.add(event.candidate.toJSON());
-    };
+  //   const offerDescription = await pc.createOffer();
+  //   await pc.setLocalDescription(offerDescription);
 
-    const offerDescription = await pc.createOffer();
-    await pc.setLocalDescription(offerDescription);
+  //   const offer = {
+  //     sdp: offerDescription.sdp,
+  //     type: offerDescription.type,
+  //   };
 
-    const offer = {
-      sdp: offerDescription.sdp,
-      type: offerDescription.type,
-    };
+  //   const time = Date.now();
 
-    const time = Date.now();
+  //   // await callDoc.set({ offer, time, agentID });
+  //   await scheduledRoom.set({ offer, time });
 
-    // await callDoc.set({ offer, time, agentID });
-    await scheduledRoom.set({ offer, time });
+  //   scheduledRoom.onSnapshot((snapshot) => {
+  //     const data = snapshot.data();
+  //     if (!pc.currentRemoteDescription && data?.answer) {
+  //       const answerDescription = new RTCSessionDescription(data.answer);
+  //       pc.setRemoteDescription(answerDescription);
+  //     }
+  //   });
 
-    scheduledRoom.onSnapshot((snapshot) => {
-      const data = snapshot.data();
-      if (!pc.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer);
-        pc.setRemoteDescription(answerDescription);
-      }
-    });
+  //   answerCandidates.onSnapshot((snapshot) => {
+  //     snapshot.docChanges().forEach((change) => {
+  //       if (change.type === "added") {
+  //         const candidate = new RTCIceCandidate(change.doc.data());
+  //         pc.addIceCandidate(candidate);
+  //       }
+  //     });
+  //   });
 
-    answerCandidates.onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          const candidate = new RTCIceCandidate(change.doc.data());
-          pc.addIceCandidate(candidate);
-        }
-      });
-    });
+  //   // const increment = firebase.firestore.FieldValue.increment(1);
+  //   // pc.onconnectionstatechange = async () => {
+  //   //   console.log(pc.connectionState);
+  //   //   if (pc.connectionState === "disconnected") {
+  //   //     hangUp();
+  //   //     await firestore
+  //   //       .collection("rooms")
+  //   //       .doc("roomAgent" + agentID)
+  //   //       .collection("roomIDAgent" + agentID)
+  //   //       .doc(callId)
+  //   //       .delete();
+  //   //   } else if (pc.connectionState === "failed") {
+  //   //     hangUpFail();
+  //   //     pc.restartIce();
+  //   //     await firestore
+  //   //       .collection("rooms")
+  //   //       .doc("roomAgent" + agentID)
+  //   //       .collection("roomIDAgent" + agentID)
+  //   //       .doc(callId)
+  //   //       .delete();
+  //   //   } else if (pc.connectionState === "connected") {
+  //   //     let timerInterval;
+  //   //     Swal.fire({
+  //   //       icon: "info",
+  //   //       title: pc.connectionState,
+  //   //       text: "You are currently connecting to a customer, please wait",
+  //   //       timerProgressBar: true,
+  //   //       timer: 1500,
+  //   //       didOpen: () => {
+  //   //         Swal.showLoading();
+  //   //         timerInterval = setInterval(() => {
+  //   //           Swal.getTimerLeft();
+  //   //         }, 1500);
+  //   //       },
+  //   //       willClose: () => {
+  //   //         clearInterval(timerInterval);
+  //   //       },
+  //   //     });
+  //   //     firestore
+  //   //       .collection("isActive")
+  //   //       .doc("agent" + agentID)
+  //   //       .update({
+  //   //         loggedIn: true,
+  //   //         inCall: true,
+  //   //         VCHandled: increment,
+  //   //       });
+  //   //   }
+  //   // };
+  // };
 
-    // const increment = firebase.firestore.FieldValue.increment(1);
-    // pc.onconnectionstatechange = async () => {
-    //   console.log(pc.connectionState);
-    //   if (pc.connectionState === "disconnected") {
-    //     hangUp();
-    //     await firestore
-    //       .collection("rooms")
-    //       .doc("roomAgent" + agentID)
-    //       .collection("roomIDAgent" + agentID)
-    //       .doc(callId)
-    //       .delete();
-    //   } else if (pc.connectionState === "failed") {
-    //     hangUpFail();
-    //     pc.restartIce();
-    //     await firestore
-    //       .collection("rooms")
-    //       .doc("roomAgent" + agentID)
-    //       .collection("roomIDAgent" + agentID)
-    //       .doc(callId)
-    //       .delete();
-    //   } else if (pc.connectionState === "connected") {
-    //     let timerInterval;
-    //     Swal.fire({
-    //       icon: "info",
-    //       title: pc.connectionState,
-    //       text: "You are currently connecting to a customer, please wait",
-    //       timerProgressBar: true,
-    //       timer: 1500,
-    //       didOpen: () => {
-    //         Swal.showLoading();
-    //         timerInterval = setInterval(() => {
-    //           Swal.getTimerLeft();
-    //         }, 1500);
-    //       },
-    //       willClose: () => {
-    //         clearInterval(timerInterval);
-    //       },
-    //     });
-    //     firestore
-    //       .collection("isActive")
-    //       .doc("agent" + agentID)
-    //       .update({
-    //         loggedIn: true,
-    //         inCall: true,
-    //         VCHandled: increment,
-    //       });
-    //   }
-    // };
-  };
-
-  useEffect(() => {
-    setupSources();
-  }, []);
+  // useEffect(() => {
+  //   setupSources();
+  // }, []);
 
   const sendEmail = async () => {
     const param = {
@@ -209,9 +209,19 @@ function Schedulling() {
                             <button type="button" class="btn btn-sm btn-outline-secondary">
                               Decline
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick={setupSources}>
-                              Make room
-                            </button>
+                            <Link to href="/scheduleVideo">
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-outline-secondary"
+                                onClick={() => {
+                                  // setupSources();
+                                  <Schedulevideo callid={roomId} />;
+                                  console.log("aloooooo");
+                                }}
+                              >
+                                Make rooms
+                              </button>
+                            </Link>
                           </div>
                           <small class="text-muted">{item.date}</small>
                         </div>
