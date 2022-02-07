@@ -301,11 +301,21 @@ function Videos({ mode, callId, agentID }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        await firestore.collection("rooms").doc(roomId).delete();
+        await firestore
+          .collection("rooms")
+          .doc("roomAgent" + agentID)
+          .collection("roomIDAgent" + agentID)
+          .doc(callId)
+          .delete();
       } else if (pc.connectionState === "failed") {
         hangUpFail();
         pc.restartIce();
-        await firestore.collection("rooms").doc(roomId).delete();
+        await firestore
+          .collection("rooms")
+          .doc("roomAgent" + agentID)
+          .collection("roomIDAgent" + agentID)
+          .doc(callId)
+          .delete();
       } else if (pc.connectionState === "connected") {
         let timerInterval;
         Swal.fire({
