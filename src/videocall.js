@@ -19,6 +19,7 @@ import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ref } from "firebase/database";
 import { Link } from "react-router-dom";
+
 // Initialize Firebase
 const firebaseConfig = {
   // YOUR FIREBASE CONFIG HERE
@@ -86,7 +87,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   });
 
   const [status, setStatus] = useState("Available");
-  if (status == "Available") {
+  if (status === "Available") {
     firestore
       .collection("isActive")
       .doc("agent" + agentID)
@@ -199,35 +200,11 @@ function Videos({ mode, callId, agentID }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      // const callDoc = firestore.collection("rooms").doc();
-      // const offerCandidates = callDoc.collection("callerCandidates");
-      // const answerCandidates = callDoc.collection("calleeCandidates");
-
-      const isActive = firestore.collection("isActive").doc("agentActive");
-
       const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-
-
-      if(agentID === '1'){
-        isActive.set({
-          Agent1: false,
-        });
-      }
-      else if(agentID === '2'){
-        isActive.set({
-          Agent2: false,
-        });
-      }
       
-
-      // firebaseid.forEach(doc => {
-      //   console.log(doc.id)
-      // })
-
-      // setRoomId(callDoc.id);
       setRoomId(roomIDAgent.id);
 
       pc.onicecandidate = (event) => {
