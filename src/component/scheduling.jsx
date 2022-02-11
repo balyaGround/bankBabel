@@ -12,7 +12,6 @@ import "../index.css";
 function Schedulling() {
   const [data, setData] = useState([]);
   const [parameter, setParameter] = useState({
-    name: "",
     email: "",
     date: "",
     time: "",
@@ -39,10 +38,9 @@ function Schedulling() {
 
   const sendEmail = async () => {
     const param = {
-      name: data.name,
-      email: data.email,
-      date: data.date,
-      time: data.time,
+      email: parameter.email,
+      date: parameter.date,
+      time: parameter.time,
     };
 
     emailjs.send("service_2nlsg79", "template_edrznh9", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
@@ -54,7 +52,7 @@ function Schedulling() {
       }
     );
   };
-
+  console.log("parameter emailjs", parameter);
   return (
     <>
       <div className="schedule">
@@ -80,6 +78,7 @@ function Schedulling() {
                               className="btn btn-sm btn-outline-success"
                               onClick={() => {
                                 sendEmail();
+                                setParameter({ ...parameter, email: item.email, date: item.date, time: item.time });
                               }}
                             >
                               Confirm
