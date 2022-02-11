@@ -8,15 +8,9 @@ import noimage from "../img/noimage.jpg";
 import { getStorage, getDownloadURL } from "firebase/storage";
 import { ref } from "firebase/database";
 import firebase from "firebase/compat/app";
+import { useParams } from "react-router-dom";
 
-function Schedulevideo({ callid }) {
-  const pc = new RTCPeerConnection(servers);
-  const Swal = require("sweetalert2");
-  const [roomId, setRoomId] = useState(callid);
-  const [webcamActive, setWebcamActive] = useState(false);
-  const localRef = useRef();
-  const remoteRef = useRef();
-  const storage = getStorage();
+function Schedulevideo() {
   const servers = {
     iceServers: [
       {
@@ -25,6 +19,18 @@ function Schedulevideo({ callid }) {
     ],
     iceCandidatePoolSize: 2,
   };
+  const pc = new RTCPeerConnection(servers);
+  const Swal = require("sweetalert2");
+  const [roomId, setRoomId] = useState();
+  const [webcamActive, setWebcamActive] = useState(false);
+  const localRef = useRef();
+  const remoteRef = useRef();
+  const storage = getStorage();
+  const { id } = useParams();
+  const { agent } = useParams();
+  const { user } = useParams();
+  const agentID = agent;
+  const userName = user;
   const firestore = firebase.firestore();
   const setupSources = async () => {
     let localStream;
@@ -54,11 +60,11 @@ function Schedulevideo({ callid }) {
     // const offerCandidates = callDoc.collection("callerCandidates");
     // const answerCandidates = callDoc.collection("calleeCandidates");
 
-    const scheduledRoom = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc();
+    const scheduledRoom = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id);
     const offerCandidates = scheduledRoom.collection("callerCandidates");
     const answerCandidates = scheduledRoom.collection("calleeCandidates");
 
-    setRoomId(callid);
+    setRoomId(id);
 
     pc.onicecandidate = (event) => {
       event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -93,176 +99,201 @@ function Schedulevideo({ callid }) {
         }
       });
     });
+    const hangUpFail = async () => {
+      pc.close();
+      Swal.fire({
+        icon: "error",
+        title: "Video Call Connection Failed",
+        text: "Your connection to the customer has failed, please try again.",
+        confirmButtonText: "Complete",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          if (roomId) {
+            let roomRef = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id);
+            await roomRef
+              .collection("calleeCandidates")
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  doc.ref.delete();
+                });
+              });
+            await roomRef
+              .collection("callerCandidates")
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  doc.ref.delete();
+                });
+              });
 
-    // const increment = firebase.firestore.FieldValue.increment(1);
-    // pc.onconnectionstatechange = async () => {
-    //   console.log(pc.connectionState);
-    //   if (pc.connectionState === "disconnected") {
-    //     hangUp();
-    //     await firestore
-    //       .collection("rooms")
-    //       .doc("roomAgent" + agentID)
-    //       .collection("roomIDAgent" + agentID)
-    //       .doc(callId)
-    //       .delete();
-    //   } else if (pc.connectionState === "failed") {
-    //     hangUpFail();
-    //     pc.restartIce();
-    //     await firestore
-    //       .collection("rooms")
-    //       .doc("roomAgent" + agentID)
-    //       .collection("roomIDAgent" + agentID)
-    //       .doc(callId)
-    //       .delete();
-    //   } else if (pc.connectionState === "connected") {
-    //     let timerInterval;
-    //     Swal.fire({
-    //       icon: "info",
-    //       title: pc.connectionState,
-    //       text: "You are currently connecting to a customer, please wait",
-    //       timerProgressBar: true,
-    //       timer: 1500,
-    //       didOpen: () => {
-    //         Swal.showLoading();
-    //         timerInterval = setInterval(() => {
-    //           Swal.getTimerLeft();
-    //         }, 1500);
-    //       },
-    //       willClose: () => {
-    //         clearInterval(timerInterval);
-    //       },
-    //     });
-    //     firestore
-    //       .collection("isActive")
-    //       .doc("agent" + agentID)
-    //       .update({
-    //         loggedIn: true,
-    //         inCall: true,
-    //         VCHandled: increment,
-    //       });
-    //   }
-    // };
+            await roomRef.delete();
+          }
+
+          const isActive = firestore.collection("isActive").doc("agentActive");
+
+          isActive.set({
+            Agent1: true,
+          });
+          window.location.href = "/home?user=" + userName + "&id=" + agentID;
+        }
+      });
+    };
+
+    const increment = firebase.firestore.FieldValue.increment(1);
+    pc.onconnectionstatechange = async () => {
+      console.log(pc.connectionState);
+      if (pc.connectionState === "disconnected") {
+        hangUp();
+        await firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id).delete();
+      } else if (pc.connectionState === "failed") {
+        hangUpFail();
+        pc.restartIce();
+        await firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id).delete();
+      } else if (pc.connectionState === "connected") {
+        let timerInterval;
+        Swal.fire({
+          icon: "info",
+          title: pc.connectionState,
+          text: "You are currently connecting to a customer, please wait",
+          timerProgressBar: true,
+          timer: 1500,
+          didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft();
+            }, 1500);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        });
+        firestore
+          .collection("isActive")
+          .doc("agent" + agentID)
+          .update({
+            loggedIn: true,
+            inCall: true,
+            VCHandled: increment,
+          });
+      }
+    };
   };
 
-  useEffect(() => {
-    setupSources();
-  }, []);
+  const hangUp = async () => {
+    const increment = firebase.firestore.FieldValue.increment(1);
+    pc.close();
+    Swal.fire({
+      icon: "info",
+      title: "Video Call Complete",
+      text: "Make sure you have done the mandatory procedures and gave your best services",
+      confirmButtonText: "Complete",
+      cancelButtonText: "Back to call",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // await sendEmail();
+        if (id) {
+          let roomRef = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef.delete();
+          await firestore
+            .collection("isActive")
+            .doc("agent" + agentID)
+            .update({
+              inCall: false,
+              loggedIn: true,
+              VCHandled: increment,
+            });
+        }
 
-  // const hangUp = async () => {
-  //   pc.close();
-  //   Swal.fire({
-  //     icon: "info",
-  //     title: "Video Call Complete",
-  //     text: "Make sure you have done the mandatory procedures and gave your best services",
-  //     confirmButtonText: "Complete",
-  //     cancelButtonText: "Back to call",
-  //     showCancelButton: true,
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       // await sendEmail();
-  //       if (roomId) {
-  //         let roomRef = firestore
-  //           .collection("rooms")
-  //           .doc("roomAgent" + agentID)
-  //           .collection("roomIDAgent" + agentID)
-  //           .doc(roomId);
-  //         await roomRef
-  //           .collection("calleeCandidates")
-  //           .get()
-  //           .then((querySnapshot) => {
-  //             querySnapshot.forEach((doc) => {
-  //               doc.ref.delete();
-  //             });
-  //           });
-  //         await roomRef
-  //           .collection("callerCandidates")
-  //           .get()
-  //           .then((querySnapshot) => {
-  //             querySnapshot.forEach((doc) => {
-  //               doc.ref.delete();
-  //             });
-  //           });
-  //         await roomRef.delete();
-  //         await firestore
-  //           .collection("isActive")
-  //           .doc("agent" + agentID)
-  //           .update({
-  //             inCall: false,
-  //           });
-  //       }
+        window.location.href = "/home?user=" + userName + "&id=" + agentID;
+      }
+    });
+  };
 
-  //       const isActive = firestore.collection("isActive").doc("agentActive");
+  // const popupSelfieKtp = () => {
+  //   const Swal = require("sweetalert2");
 
-  //       isActive.set({
-  //         Agent1: true,
+  //   getDownloadURL(ref(storage, "selfieEktp.jpg")).then((url) => {
+  //     const imgSelfieEktp = document.getElementById("selfieEktp");
+  //     let timerInterval;
+  //     if (imgSelfieEktp.src === url) {
+  //       Swal.fire({
+  //         imageUrl: url,
   //       });
-  //       window.location.reload();
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "No Image Available",
+  //         text: "Please retrieve image first!",
+  //         timerProgressBar: true,
+  //         timer: 1500,
+  //         didOpen: () => {
+  //           Swal.showLoading();
+  //           timerInterval = setInterval(() => {
+  //             Swal.getTimerLeft();
+  //           }, 100);
+  //         },
+  //         willClose: () => {
+  //           clearInterval(timerInterval);
+  //         },
+  //       });
   //     }
   //   });
   // };
 
-  const popupSelfieKtp = () => {
-    const Swal = require("sweetalert2");
+  // const popupImgKtp = () => {
+  //   const Swal = require("sweetalert2");
 
-    getDownloadURL(ref(storage, "selfieEktp.jpg")).then((url) => {
-      const imgSelfieEktp = document.getElementById("selfieEktp");
-      let timerInterval;
-      if (imgSelfieEktp.src === url) {
-        Swal.fire({
-          imageUrl: url,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "No Image Available",
-          text: "Please retrieve image first!",
-          timerProgressBar: true,
-          timer: 1500,
-          didOpen: () => {
-            Swal.showLoading();
-            timerInterval = setInterval(() => {
-              Swal.getTimerLeft();
-            }, 100);
-          },
-          willClose: () => {
-            clearInterval(timerInterval);
-          },
-        });
-      }
-    });
-  };
+  //   getDownloadURL(ref(storage, "ektp.jpg")).then((url) => {
+  //     const imgEktp = document.getElementById("ektp");
+  //     let timerInterval;
+  //     if (imgEktp.src === url) {
+  //       Swal.fire({
+  //         imageUrl: url,
+  //       });
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "No Image Available",
+  //         text: "Please retrieve image first!",
+  //         timerProgressBar: true,
+  //         timer: 1500,
+  //         didOpen: () => {
+  //           Swal.showLoading();
+  //           timerInterval = setInterval(() => {
+  //             Swal.getTimerLeft();
+  //           }, 100);
+  //         },
+  //         willClose: () => {
+  //           clearInterval(timerInterval);
+  //         },
+  //       });
+  //     }
+  //   });
+  // };
+  useEffect(() => {
+    setupSources();
+  }, []);
 
-  const popupImgKtp = () => {
-    const Swal = require("sweetalert2");
-
-    getDownloadURL(ref(storage, "ektp.jpg")).then((url) => {
-      const imgEktp = document.getElementById("ektp");
-      let timerInterval;
-      if (imgEktp.src === url) {
-        Swal.fire({
-          imageUrl: url,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "No Image Available",
-          text: "Please retrieve image first!",
-          timerProgressBar: true,
-          timer: 1500,
-          didOpen: () => {
-            Swal.showLoading();
-            timerInterval = setInterval(() => {
-              Swal.getTimerLeft();
-            }, 100);
-          },
-          willClose: () => {
-            clearInterval(timerInterval);
-          },
-        });
-      }
-    });
-  };
-
+  console.log("nikpasiingan", id);
+  console.log("agentid", agentID);
   return (
     <div>
       <Container fluid>
@@ -288,14 +319,26 @@ function Schedulevideo({ callid }) {
           <Container>
             <Row className="justify-content-center text-white">
               <Col xs lg={4} className="poto-ktp">
-                <img id="ektp" onClick={popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+                <img
+                  id="ektp"
+                  //  onClick={popupImgKtp}
+                  src={noimage}
+                  alt=""
+                  style={{ width: "30rem", height: "20rem" }}
+                />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>e-KTP</h5>
               </Col>
 
               <Col xs lg={2}></Col>
 
               <Col xs lg={4} className="frame-ktp">
-                <img id="selfieEktp" onClick={popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
+                <img
+                  id="selfieEktp"
+                  // onClick={popupSelfieKtp}
+                  src={noimage}
+                  alt=""
+                  style={{ width: "30rem", height: "20rem" }}
+                />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Selfie + e-KTP</h5>
               </Col>
             </Row>
@@ -306,7 +349,7 @@ function Schedulevideo({ callid }) {
               <div className="col">
                 <button
                   onClick={() => {
-                    // hangUp();
+                    hangUp();
                   }}
                   disabled={!webcamActive}
                   className="hangup button"

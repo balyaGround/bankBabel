@@ -122,7 +122,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <Link to="/scheduleRequest">
+        <Link to={`/scheduleRequest/${agentID}/${user}`}>
           <Button className="button-schedule ms-5">Schedulling Request</Button>
         </Link>
       </div>
