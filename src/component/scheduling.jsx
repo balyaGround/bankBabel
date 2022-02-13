@@ -15,6 +15,7 @@ function Schedulling() {
     email: "",
     date: "",
     time: "",
+    name: "",
   });
   const { id } = useParams();
   const { user } = useParams();
@@ -38,11 +39,11 @@ function Schedulling() {
 
   const sendEmail = async () => {
     const param = {
+      name: parameter.name,
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
     };
-
     emailjs.send("service_2nlsg79", "template_edrznh9", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
       (res) => {
         console.log(res.status, res.text);
@@ -69,6 +70,7 @@ function Schedulling() {
                       <div class="card-body">
                         <p class="card-text">New Request !!</p>
                         <p class="card-text">{item.email}</p>
+                        <p class="card-text">{item.name}</p>
                         <p class="card-text">{item.nik}</p>
                         <p class="card-text">{item.time}</p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -76,9 +78,9 @@ function Schedulling() {
                             <button
                               type="button"
                               className="btn btn-sm btn-outline-success"
-                              onClick={() => {
+                              onClick={async () => {
+                                setParameter({ ...parameter, email: item.email, date: item.date, time: item.time, name: item.name });
                                 sendEmail();
-                                setParameter({ ...parameter, email: item.email, date: item.date, time: item.time });
                               }}
                             >
                               Confirm
