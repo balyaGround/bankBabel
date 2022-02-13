@@ -17,10 +17,10 @@ function Routers() {
           <Route exact path="/home">
             <VideoCall />
           </Route>
-          <Route exact path="/scheduleRequest">
+          <Route exact path="/scheduleRequest/:id/:user">
             <Schedulling />
           </Route>
-          <Route exact path="/scheduleVideo">
+          <Route exact path="/scheduleVideo/:id/:agent/:user">
             <Schedulevideo />
           </Route>
           <Route exact path="/portal">
