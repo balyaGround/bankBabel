@@ -7,7 +7,7 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
-import { getStorage, getDownloadURL } from "firebase/storage";
+import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -17,8 +17,9 @@ import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
 import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ref } from "firebase/database";
+
 import { Link } from "react-router-dom";
+
 // Initialize Firebase
 const firebaseConfig = {
   // YOUR FIREBASE CONFIG HERE
@@ -130,16 +131,8 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
         <div className="create box">
           <div className="tulisan">
             <h4>Hi! {user}</h4>
-            <h4>You can wait for an incoming call pop up</h4>
-            <h3>OR</h3>
+            <h4>Please wait for an incoming call pop up</h4>
           </div>
-          <button
-            onClick={() => {
-              setPage("create");
-            }}
-          >
-            Create Call
-          </button>
           <button
             className="mt-5"
             onClick={() => {
@@ -417,7 +410,7 @@ function Videos({ mode, callId, agentID }) {
           email: json.email,
         };
 
-        emailjs.send("service_2nlsg79", "template_czaa0or", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+        emailjs.send("service_8wp3jqi", "template_nxl6t5s", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
           (res) => {
             console.log(res.status, res.text);
           },

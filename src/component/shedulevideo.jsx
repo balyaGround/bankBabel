@@ -5,10 +5,10 @@ import { ReactComponent as MoreIcon } from "../icons/more-vertical.svg";
 import { useState, useRef, useEffect } from "react";
 import ScreenRecording from "../screenRecording";
 import noimage from "../img/noimage.jpg";
-import { getStorage, getDownloadURL } from "firebase/storage";
-import { ref } from "firebase/database";
+import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import firebase from "firebase/compat/app";
 import { useParams } from "react-router-dom";
+import FormModal from "./FormModal";
 
 function Schedulevideo() {
   const servers = {
@@ -227,67 +227,67 @@ function Schedulevideo() {
     });
   };
 
-  // const popupSelfieKtp = () => {
-  //   const Swal = require("sweetalert2");
+  const popupSelfieKtp = () => {
+    const Swal = require("sweetalert2");
 
-  //   getDownloadURL(ref(storage, "selfieEktp.jpg")).then((url) => {
-  //     const imgSelfieEktp = document.getElementById("selfieEktp");
-  //     let timerInterval;
-  //     if (imgSelfieEktp.src === url) {
-  //       Swal.fire({
-  //         imageUrl: url,
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "No Image Available",
-  //         text: "Please retrieve image first!",
-  //         timerProgressBar: true,
-  //         timer: 1500,
-  //         didOpen: () => {
-  //           Swal.showLoading();
-  //           timerInterval = setInterval(() => {
-  //             Swal.getTimerLeft();
-  //           }, 100);
-  //         },
-  //         willClose: () => {
-  //           clearInterval(timerInterval);
-  //         },
-  //       });
-  //     }
-  //   });
-  // };
+    getDownloadURL(ref(storage, "selfieEktp.jpg")).then((url) => {
+      const imgSelfieEktp = document.getElementById("selfieEktp");
+      let timerInterval;
+      if (imgSelfieEktp.src === url) {
+        Swal.fire({
+          imageUrl: url,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "No Image Available",
+          text: "Please retrieve image first!",
+          timerProgressBar: true,
+          timer: 1500,
+          didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft();
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        });
+      }
+    });
+  };
 
-  // const popupImgKtp = () => {
-  //   const Swal = require("sweetalert2");
+  const popupImgKtp = () => {
+    const Swal = require("sweetalert2");
 
-  //   getDownloadURL(ref(storage, "ektp.jpg")).then((url) => {
-  //     const imgEktp = document.getElementById("ektp");
-  //     let timerInterval;
-  //     if (imgEktp.src === url) {
-  //       Swal.fire({
-  //         imageUrl: url,
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "No Image Available",
-  //         text: "Please retrieve image first!",
-  //         timerProgressBar: true,
-  //         timer: 1500,
-  //         didOpen: () => {
-  //           Swal.showLoading();
-  //           timerInterval = setInterval(() => {
-  //             Swal.getTimerLeft();
-  //           }, 100);
-  //         },
-  //         willClose: () => {
-  //           clearInterval(timerInterval);
-  //         },
-  //       });
-  //     }
-  //   });
-  // };
+    getDownloadURL(ref(storage, "ektp.jpg")).then((url) => {
+      const imgEktp = document.getElementById("ektp");
+      let timerInterval;
+      if (imgEktp.src === url) {
+        Swal.fire({
+          imageUrl: url,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "No Image Available",
+          text: "Please retrieve image first!",
+          timerProgressBar: true,
+          timer: 1500,
+          didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+              Swal.getTimerLeft();
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        });
+      }
+    });
+  };
   useEffect(() => {
     setupSources();
   }, []);
@@ -319,26 +319,14 @@ function Schedulevideo() {
           <Container>
             <Row className="justify-content-center text-white">
               <Col xs lg={4} className="poto-ktp">
-                <img
-                  id="ektp"
-                  //  onClick={popupImgKtp}
-                  src={noimage}
-                  alt=""
-                  style={{ width: "30rem", height: "20rem" }}
-                />
+                <img id="ektp" onClick={popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>e-KTP</h5>
               </Col>
 
               <Col xs lg={2}></Col>
 
               <Col xs lg={4} className="frame-ktp">
-                <img
-                  id="selfieEktp"
-                  // onClick={popupSelfieKtp}
-                  src={noimage}
-                  alt=""
-                  style={{ width: "30rem", height: "20rem" }}
-                />
+                <img id="selfieEktp" onClick={popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Selfie + e-KTP</h5>
               </Col>
             </Row>
@@ -362,7 +350,9 @@ function Schedulevideo() {
                 <MoreIcon />
                 <div className="popoverAwal">
                   <button>
-                    <div>{/* <FormModal /> */}</div>
+                    <div>
+                      <FormModal />
+                    </div>
                   </button>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -11,12 +11,7 @@ import { useParams } from "react-router-dom";
 import "../index.css";
 function Schedulling() {
   const [data, setData] = useState([]);
-  const [parameter, setParameter] = useState({
-    email: "",
-    date: "",
-    time: "",
-    name: "",
-  });
+  const [disable, setDisable] = React.useState(false);
   const { id } = useParams();
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
@@ -37,14 +32,14 @@ function Schedulling() {
     getSchedule();
   }, []);
 
-  const sendEmail = async () => {
+  const sendEmail = async (parameter) => {
     const param = {
       name: parameter.name,
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
     };
-    emailjs.send("service_2nlsg79", "template_edrznh9", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+    await emailjs.send("service_8wp3jqi", "template_xo34yaw", param, "user_h6uRyZievx8s1s6rPU7mz").then(
       (res) => {
         console.log(res.status, res.text);
       },
@@ -53,7 +48,7 @@ function Schedulling() {
       }
     );
   };
-  console.log("parameter emailjs", parameter);
+
   return (
     <>
       <div className="schedule">
@@ -65,22 +60,25 @@ function Schedulling() {
             <div class="container album-card">
               <div class="row">
                 <div class="col">
-                  {data.map((item) => (
+                  {data?.map((item) => (
                     <div class="card shadow-sm">
                       <div class="card-body">
                         <p class="card-text">New Request !!</p>
-                        <p class="card-text">{item.email}</p>
-                        <p class="card-text">{item.name}</p>
-                        <p class="card-text">{item.nik}</p>
-                        <p class="card-text">{item.time}</p>
+                        <p class="card-text">{item?.email}</p>
+                        <p class="card-text">{item?.name}</p>
+                        <p class="card-text">{item?.nik}</p>
+                        <p class="card-text">{item?.time}</p>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
                             <button
+                              disabled={disable}
                               type="button"
                               className="btn btn-sm btn-outline-success"
-                              onClick={async () => {
-                                setParameter({ ...parameter, email: item.email, date: item.date, time: item.time, name: item.name });
-                                sendEmail();
+                              onClick={() => {
+                                console.log("ready", item);
+
+                                // sendEmail(item);
+                                setDisable(true);
                               }}
                             >
                               Confirm
