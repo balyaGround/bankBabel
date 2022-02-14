@@ -7,7 +7,7 @@ import "firebase/compat/firestore";
 import "./index.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
-import { getStorage, getDownloadURL } from "firebase/storage";
+import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import noimage from "./img/noimage.jpg";
 import ScreenRecording from "./screenRecording";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -17,7 +17,6 @@ import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
 import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ref } from "firebase/database";
 import { Link } from "react-router-dom";
 
 // Initialize Firebase

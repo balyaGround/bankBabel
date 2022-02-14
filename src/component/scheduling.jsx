@@ -9,20 +9,23 @@ import { init } from "emailjs-com";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "../index.css";
+import { useStateWithCallbackLazy } from "use-state-with-callback";
+
 function Schedulling() {
   const [data, setData] = useState([]);
-  const [parameter, setParameter] = useState({
+  const [parameter, setParameter] = useStateWithCallbackLazy({
     email: "",
     date: "",
     time: "",
     name: "",
+    nik: ""
   });
   const { id } = useParams();
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
   const [userName, setuserName] = useState(user);
   firebase.initializeApp(config);
-  init("user_h6uRyZievx8s1s6rPU7mz");
+  // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
     const events = firebase.firestore().collection("schedule").orderBy("date", "asc");
     events.get().then((querySnapshot) => {
@@ -33,8 +36,15 @@ function Schedulling() {
       setData(tempDoc);
     });
   };
+
   useEffect(() => {
     getSchedule();
+    
+    console.log('param use effect:', parameter);
+    if(parameter.email !== ''){
+      // sendEmail()
+      console.log('ada isinya')
+    }
   }, []);
 
   const sendEmail = async () => {
@@ -43,8 +53,9 @@ function Schedulling() {
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
+      nik: parameter.nik
     };
-    emailjs.send("service_2nlsg79", "template_edrznh9", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+    emailjs.send("service_8wp3jqi", "template_xo34yaw", param, "user_h6uRyZievx8s1s6rPU7mz").then(
       (res) => {
         console.log(res.status, res.text);
       },
@@ -53,7 +64,7 @@ function Schedulling() {
       }
     );
   };
-  console.log("parameter emailjs", parameter);
+
   return (
     <>
       <div className="schedule">
@@ -78,9 +89,21 @@ function Schedulling() {
                             <button
                               type="button"
                               className="btn btn-sm btn-outline-success"
-                              onClick={async () => {
-                                setParameter({ ...parameter, email: item.email, date: item.date, time: item.time, name: item.name });
-                                sendEmail();
+                              onClick={(e) => {
+                                // setParameter({parameter, email: item.email, date: item.date, time: item.time, name: item.name, nik: item.nik }, () =>{
+                                //   console.log(parameter);
+                                //   if(parameter.email === ''){
+                                //     console.log('kosong');
+                                //     setParameter({parameter, email: item.email, date: item.date, time: item.time, name: item.name, nik: item.nik })
+                                //     console.log(parameter);
+                                //   }
+                                //   else{
+                                //     sendEmail();
+                                //   }
+                                // })
+                                setParameter({email: item.email, date: item.date, time: item.time, name: item.name, nik: item.nik}, () => {
+                                  console.log('isi param', parameter);
+                                })
                               }}
                             >
                               Confirm
