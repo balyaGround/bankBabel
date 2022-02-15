@@ -5,19 +5,20 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import config from "../config";
 import emailjs from "emailjs-com";
-import { init } from "emailjs-com";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "../index.css";
+
 function Schedulling() {
   const [data, setData] = useState([]);
-  const [disable, setDisable] = React.useState(false);
+  const [disable, setDisable] = useState(false);
   const { id } = useParams();
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
   const [userName, setuserName] = useState(user);
+
   firebase.initializeApp(config);
-  init("user_h6uRyZievx8s1s6rPU7mz");
+  // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
     const events = firebase.firestore().collection("schedule").orderBy("date", "asc");
     events.get().then((querySnapshot) => {
@@ -28,8 +29,11 @@ function Schedulling() {
       setData(tempDoc);
     });
   };
+
   useEffect(() => {
     getSchedule();
+
+    setingStatus(data);
   }, []);
 
   const sendEmail = async (parameter) => {
@@ -38,6 +42,7 @@ function Schedulling() {
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
+      nik: parameter.nik,
     };
     await emailjs.send("service_8wp3jqi", "template_xo34yaw", param, "user_h6uRyZievx8s1s6rPU7mz").then(
       (res) => {
@@ -47,6 +52,19 @@ function Schedulling() {
         console.log(e);
       }
     );
+  };
+  const setingStatus = (data) => {
+    data?.map((item) => {
+      if (item?.status == "Pending") {
+        setDisable(true);
+      } else if (item?.status == "in Call") {
+        setDisable(true);
+      } else if (item?.status == "Confirmed") {
+        setDisable(false);
+      }
+      console.log("aloooooooooo");
+      console.log("first", item.status);
+    });
   };
 
   return (
@@ -64,21 +82,27 @@ function Schedulling() {
                     <div class="card shadow-sm">
                       <div class="card-body">
                         <p class="card-text">New Request !!</p>
-                        <p class="card-text">{item?.email}</p>
-                        <p class="card-text">{item?.name}</p>
-                        <p class="card-text">{item?.nik}</p>
-                        <p class="card-text">{item?.time}</p>
+                        <p class="card-text">Email: {item?.email}</p>
+                        <p class="card-text">Name: {item?.name}</p>
+                        <p class="card-text">NIK: {item?.nik}</p>
+                        <p class="card-text">Time: {item?.time}</p>
+                        <p class="card-text">Date: {item?.date}</p>
+                        <p class="card-text">Confirmed: {item?.status}</p>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
                             <button
-                              disabled={disable}
+                              // onLoad={setingStatus(item)}
+                              disabled={item.status}
                               type="button"
                               className="btn btn-sm btn-outline-success"
                               onClick={() => {
                                 console.log("ready", item);
 
+                                // firebase.firestore().collection('schedule').doc(item.id).update({
+                                //   disable: true,
+                                // })
+
                                 // sendEmail(item);
-                                setDisable(true);
                               }}
                             >
                               Confirm
@@ -90,20 +114,15 @@ function Schedulling() {
                               <button
                                 type="button"
                                 className="btn btn-outline-primary"
-                                onClick={firestore
-                                  .collection("isActive")
-                                  .doc("agent" + agentID)
-                                  .update({
-                                    loggedIn: true,
-                                    inCall: true,
-                                    VCHandled: increment,
-                                  })}
+                                onClick={() => {
+                                  // firebase.firestore().collection('schedule').doc(item.id).delete()
+                                }}
                               >
                                 Make rooms
                               </button>
                             </Link>
                           </div>
-                          <small class="text-muted">{item.date}</small>
+                          {/* <small class="text-muted">{item.date}</small> */}
                         </div>
                       </div>
                     </div>

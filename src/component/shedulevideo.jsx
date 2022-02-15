@@ -32,6 +32,7 @@ function Schedulevideo() {
   const agentID = agent;
   const userName = user;
   const firestore = firebase.firestore();
+
   const setupSources = async () => {
     let localStream;
 
@@ -294,6 +295,7 @@ function Schedulevideo() {
 
   console.log("nikpasiingan", id);
   console.log("agentid", agentID);
+
   return (
     <div>
       <Container fluid>
@@ -343,7 +345,6 @@ function Schedulevideo() {
                   className="hangup button"
                 >
                   <HangupIcon />
-                  {/* <HangupModal open={openModal} /> */}
                 </button>
               </div>
               <div className="col more button" tabIndex={0} role="button">

@@ -17,7 +17,6 @@ import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
 import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import { Link } from "react-router-dom";
 
 // Initialize Firebase
@@ -83,11 +82,11 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
   useEffect(() => {
     setInterval(() => {
       getID();
-    }, 15000);
+    }, 10000);
   });
 
   const [status, setStatus] = useState("Available");
-  if (status == "Available") {
+  if (status === "Available") {
     firestore
       .collection("isActive")
       .doc("agent" + agentID)
@@ -192,26 +191,11 @@ function Videos({ mode, callId, agentID }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      // const callDoc = firestore.collection("rooms").doc();
-      // const offerCandidates = callDoc.collection("callerCandidates");
-      // const answerCandidates = callDoc.collection("calleeCandidates");
-
-      const isActive = firestore.collection("isActive").doc("agentActive");
-
       const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-
-      isActive.set({
-        Agent1: false,
-      });
-
-      // firebaseid.forEach(doc => {
-      //   console.log(doc.id)
-      // })
-
-      // setRoomId(callDoc.id);
+      
       setRoomId(roomIDAgent.id);
 
       pc.onicecandidate = (event) => {
@@ -257,9 +241,16 @@ function Videos({ mode, callId, agentID }) {
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
       const isActive = firestore.collection("isActive").doc("agentActive");
 
-      isActive.set({
-        Agent1: false,
-      });
+      if(agentID === '1'){
+        isActive.set({
+          Agent1: false,
+        });
+      }
+      else if(agentID === '2'){
+        isActive.set({
+          Agent2: false,
+        });
+      }
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -294,21 +285,11 @@ function Videos({ mode, callId, agentID }) {
       console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
-        await firestore
-          .collection("rooms")
-          .doc("roomAgent" + agentID)
-          .collection("roomIDAgent" + agentID)
-          .doc(callId)
-          .delete();
+        await firestore.collection("rooms").doc(roomId).delete();
       } else if (pc.connectionState === "failed") {
         hangUpFail();
         pc.restartIce();
-        await firestore
-          .collection("rooms")
-          .doc("roomAgent" + agentID)
-          .collection("roomIDAgent" + agentID)
-          .doc(callId)
-          .delete();
+        await firestore.collection("rooms").doc(roomId).delete();
       } else if (pc.connectionState === "connected") {
         let timerInterval;
         Swal.fire({
