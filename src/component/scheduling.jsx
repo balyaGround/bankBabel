@@ -12,6 +12,8 @@ import "../index.css";
 function Schedulling() {
   const [data, setData] = useState([]);
   const [disable, setDisable] = React.useState(false);
+  const [status, setStatus] = useState('')
+  const disableVar = false
   const { id } = useParams();
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
@@ -20,7 +22,7 @@ function Schedulling() {
   // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
     const events = firebase.firestore().collection("schedule").orderBy("date", "asc");
-    events.get().then((querySnapshot) => {
+    events.onSnapshot((querySnapshot) => {
       const tempDoc = querySnapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
@@ -29,8 +31,24 @@ function Schedulling() {
     });
   };
 
+  const buttonStatus = () => {
+    data?.map((item) => {
+      if(item?.status === 'Pending'){
+        setDisable(false)
+      }
+      else{
+        setDisable(true)
+      }
+      // console.log('disable', item?.status)
+    })
+    console.log('diluar map', disable)
+  }
+
   useEffect(() => {
     getSchedule();
+    // setInterval(() => {
+    //   buttonStatus()
+    // }, 3000)
   }, []);
 
   const sendEmail = async (parameter) => {
@@ -71,19 +89,20 @@ function Schedulling() {
                         <p class="card-text">NIK: {item?.nik}</p>
                         <p class="card-text">Time: {item?.time}</p>
                         <p class="card-text">Date: {item?.date}</p>
-                        <p class="card-text">Confirmed: {item?.disable}</p>
+                        <p class="card-text">Status: {item?.status}</p>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
                             <button
-                              disabled={item.disable}
+                              disabled = {item?.disable}
                               type="button"
                               className="btn btn-sm btn-outline-success"
                               onClick={() => {
                                 console.log("ready", item);
 
-                                // firebase.firestore().collection('schedule').doc(item.id).update({
-                                //   disable: true,
-                                // })
+                                firebase.firestore().collection('schedule').doc(item?.id).update({
+                                  disable: true,
+                                  status: 'Confirmed'
+                                })
 
                                 // sendEmail(item);
                               }}
@@ -96,7 +115,7 @@ function Schedulling() {
                             <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}>
                               <button type="button" className="btn btn-outline-primary"
                               onClick={() => {
-                                // firebase.firestore().collection('schedule').doc(item.id).delete()
+                                firebase.firestore().collection('schedule').doc(item?.id).delete()
                               }}>
                                 Make rooms
                               </button>
