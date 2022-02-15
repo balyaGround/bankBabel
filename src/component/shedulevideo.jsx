@@ -289,7 +289,6 @@ function Schedulevideo() {
       }
     });
   };
-
   useEffect(() => {
     setupSources();
   }, []);
@@ -322,26 +321,14 @@ function Schedulevideo() {
           <Container>
             <Row className="justify-content-center text-white">
               <Col xs lg={4} className="poto-ktp">
-                <img
-                  id="ektp"
-                   onClick={popupImgKtp}
-                  src={noimage}
-                  alt=""
-                  style={{ width: "30rem", height: "20rem" }}
-                />
+                <img id="ektp" onClick={popupImgKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>e-KTP</h5>
               </Col>
 
               <Col xs lg={2}></Col>
 
               <Col xs lg={4} className="frame-ktp">
-                <img
-                  id="selfieEktp"
-                  onClick={popupSelfieKtp}
-                  src={noimage}
-                  alt=""
-                  style={{ width: "30rem", height: "20rem" }}
-                />
+                <img id="selfieEktp" onClick={popupSelfieKtp} src={noimage} alt="" style={{ width: "30rem", height: "20rem" }} />
                 <h5 style={{ textAlign: "center", marginTop: "1rem" }}>Selfie + e-KTP</h5>
               </Col>
             </Row>
@@ -364,7 +351,9 @@ function Schedulevideo() {
                 <MoreIcon />
                 <div className="popoverAwal">
                   <button>
-                    <FormModal />
+                    <div>
+                      <FormModal />
+                    </div>
                   </button>
                 </div>
               </div>
