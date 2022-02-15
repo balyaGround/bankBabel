@@ -87,7 +87,18 @@ function Schedulling() {
                               Decline
                             </button>
                             <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}>
-                              <button type="button" className="btn btn-outline-primary">
+                              <button
+                                type="button"
+                                className="btn btn-outline-primary"
+                                onClick={firestore
+                                  .collection("isActive")
+                                  .doc("agent" + agentID)
+                                  .update({
+                                    loggedIn: true,
+                                    inCall: true,
+                                    VCHandled: increment,
+                                  })}
+                              >
                                 Make rooms
                               </button>
                             </Link>
