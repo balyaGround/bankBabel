@@ -12,12 +12,13 @@ import "../index.css";
 function Schedulling() {
   const [data, setData] = useState([]);
   const [disable, setDisable] = React.useState(false);
-  const [status, setStatus] = useState('')
-  const disableVar = false
   const { id } = useParams();
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
   const [userName, setuserName] = useState(user);
+  const [loaded, setLoaded] = useState(false)
+  const Swal = require("sweetalert2");
+
   firebase.initializeApp(config);
   // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
@@ -28,27 +29,12 @@ function Schedulling() {
       });
       console.log(tempDoc);
       setData(tempDoc);
+      setLoaded(true)
     });
   };
 
-  const buttonStatus = () => {
-    data?.map((item) => {
-      if(item?.status === 'Pending'){
-        setDisable(false)
-      }
-      else{
-        setDisable(true)
-      }
-      // console.log('disable', item?.status)
-    })
-    console.log('diluar map', disable)
-  }
-
   useEffect(() => {
     getSchedule();
-    // setInterval(() => {
-    //   buttonStatus()
-    // }, 3000)
   }, []);
 
   const sendEmail = async (parameter) => {
@@ -69,17 +55,56 @@ function Schedulling() {
     );
   };
 
+  const handleDelete = (parameter) =>{
+    const param = {
+      name: parameter.name,
+      email: parameter.email,
+      date: parameter.date,
+      time: parameter.time,
+    }
+    const newList = data.filter((item) => item.id !== id)
+    setData(newList)
+    firebase.firestore().collection('schedule').doc(parameter.id).delete()
+    console.log(parameter.id);
+
+    emailjs.send("service_r2ihqx6", 'template_cbpp97c', param, "user_BonVmAcN6fy0YqPTciWNC").then(
+      (res) => {
+        console.log(res.status, res.text);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+  }
+
+  const handleNullSchedule = (data) => {
+    if(loaded){
+      if(data.length === 0){
+      Swal.fire({
+        icon: "info",
+        title: "No schedule request received",
+        confirmButtonText: "Back",
+      }).then((result) => {
+        if(result.isConfirmed){
+          window.location.href = "/home?user=" + userName + "&id=" + agentID;
+        }
+      })
+      }
+    }
+  }
+
   return (
     <>
       <div className="schedule">
         <div className="title text-white" style={{ marginBottom: "2rem" }}>
           <h2>Schedule Request</h2>
+          {handleNullSchedule(data)}
         </div>
         <div className="create-box">
           <div class="album py-5">
             <div class="container album-card">
               <div class="row">
-                <div class="col">
+                <div class="col" >
                   {data?.map((item) => (
                     <div class="card shadow-sm">
                       <div class="card-body">
@@ -101,27 +126,36 @@ function Schedulling() {
 
                                 firebase.firestore().collection('schedule').doc(item?.id).update({
                                   disable: true,
-                                  status: 'Confirmed'
+                                  status: 'Confirmed',
+                                  disableRoom: false,
+                                  disableDecline: true
                                 })
 
-                                // sendEmail(item);
+                                sendEmail(item);
                               }}
                             >
                               Confirm
                             </button>
-                            <button type="button" className="btn btn-sm btn-outline-danger">
+                            <button type="button" className="btn btn-sm btn-outline-danger"
+                            onClick={() => {
+                              handleDelete(item)
+                            }}
+                            disabled = {item?.disableDecline}
+                            >
                               Decline
                             </button>
-                            <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}>
+                            {/* <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}> */}
                               <button type="button" className="btn btn-outline-primary"
                               onClick={() => {
                                 firebase.firestore().collection('schedule').doc(item?.id).delete()
-                              }}>
+                                window.location.href = `/scheduleVideo/${item?.nik}/${agentID}/${userName}`
+                              }}
+                              disabled = {item?.disableRoom}
+                              >
                                 Make rooms
                               </button>
-                            </Link>
+                            {/* </Link> */}
                           </div>
-                          {/* <small class="text-muted">{item.date}</small> */}
                         </div>
                       </div>
                     </div>
