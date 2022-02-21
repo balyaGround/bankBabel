@@ -133,6 +133,13 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
             <h4>Please wait for an incoming call pop up</h4>
           </div>
           <button
+            onClick={() => {
+              setPage("create");
+            }}
+          >
+            Create
+          </button>
+          <button
             className="mt-5"
             onClick={() => {
               firestore
@@ -335,7 +342,7 @@ function Videos({ mode, callId, agentID }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // await sendEmail();
+        await sendEmail();
         if (roomId) {
           let roomRef = firestore
             .collection("rooms")
@@ -391,7 +398,7 @@ function Videos({ mode, callId, agentID }) {
           email: json.email,
         };
 
-        emailjs.send("service_8wp3jqi", "template_nxl6t5s", param, "user_S1Gy8CUainTQVoLPA5vxr").then(
+        emailjs.send("service_8wp3jqi", "template_nxl6t5s", param, "user_h6uRyZievx8s1s6rPU7mz").then(
           (res) => {
             console.log(res.status, res.text);
           },
@@ -411,7 +418,10 @@ function Videos({ mode, callId, agentID }) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (roomId) {
-          let roomRef = firestore.collection("rooms").doc(roomId);
+          let roomRef = firestore.collection("rooms").collection("rooms")
+          .doc("roomAgent" + agentID)
+          .collection("roomIDAgent" + agentID)
+          .doc(roomId);
           await roomRef
             .collection("calleeCandidates")
             .get()
