@@ -5,7 +5,6 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import config from "../config";
 import emailjs from "emailjs-com";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "../index.css";
 
@@ -16,7 +15,7 @@ function Schedulling() {
   const { user } = useParams();
   const [agentID, setagentID] = useState(id);
   const [userName, setuserName] = useState(user);
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
   const Swal = require("sweetalert2");
 
   firebase.initializeApp(config);
@@ -29,7 +28,7 @@ function Schedulling() {
       });
       console.log(tempDoc);
       setData(tempDoc);
-      setLoaded(true)
+      setLoaded(true);
     });
   };
 
@@ -43,7 +42,7 @@ function Schedulling() {
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
-      nik: parameter.nik
+      nik: parameter.nik,
     };
     await emailjs.send("service_8wp3jqi", "template_xo34yaw", param, "user_h6uRyZievx8s1s6rPU7mz").then(
       (res) => {
@@ -55,19 +54,19 @@ function Schedulling() {
     );
   };
 
-  const handleDelete = (parameter) =>{
+  const handleDelete = (parameter) => {
     const param = {
       name: parameter.name,
       email: parameter.email,
       date: parameter.date,
       time: parameter.time,
-    }
-    const newList = data.filter((item) => item.id !== id)
-    setData(newList)
-    firebase.firestore().collection('schedule').doc(parameter.id).delete()
+    };
+    const newList = data.filter((item) => item.id !== id);
+    setData(newList);
+    firebase.firestore().collection("schedule").doc(parameter.id).delete();
     console.log(parameter.id);
 
-    emailjs.send("service_r2ihqx6", 'template_cbpp97c', param, "user_BonVmAcN6fy0YqPTciWNC").then(
+    emailjs.send("service_r2ihqx6", "template_cbpp97c", param, "user_BonVmAcN6fy0YqPTciWNC").then(
       (res) => {
         console.log(res.status, res.text);
       },
@@ -75,27 +74,32 @@ function Schedulling() {
         console.log(e);
       }
     );
-  }
+  };
 
   const handleNullSchedule = (data) => {
-    if(loaded){
-      if(data.length === 0){
-      Swal.fire({
-        icon: "info",
-        title: "No schedule request received",
-        confirmButtonText: "Back",
-      }).then((result) => {
-        if(result.isConfirmed){
-          window.location.href = "/home?user=" + userName + "&id=" + agentID;
-        }
-      })
+    if (loaded) {
+      if (data.length === 0) {
+        Swal.fire({
+          icon: "info",
+          title: "No schedule request received",
+          confirmButtonText: "Back",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/home?user=" + userName + "&id=" + agentID;
+          }
+        });
       }
     }
-  }
-
+  };
+  const backHome = () => {
+    window.location.href = "/home?user=" + userName + "&id=" + agentID;
+  };
   return (
     <>
-      <div className="schedule">
+      <div className="schedule ">
+        <div className="backbutton">
+          <button onClick={backHome}>Back to Home</button>
+        </div>
         <div className="title text-white" style={{ marginBottom: "2rem" }}>
           <h2>Schedule Request</h2>
           {handleNullSchedule(data)}
@@ -104,7 +108,7 @@ function Schedulling() {
           <div class="album py-5">
             <div class="container album-card">
               <div class="row">
-                <div class="col" >
+                <div class="col">
                   {data?.map((item) => (
                     <div class="card shadow-sm">
                       <div class="card-body">
@@ -118,42 +122,46 @@ function Schedulling() {
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
                             <button
-                              disabled = {item?.disable}
+                              disabled={item?.disable}
                               type="button"
                               className="btn btn-sm btn-outline-success"
                               onClick={() => {
                                 console.log("ready", item);
 
-                                firebase.firestore().collection('schedule').doc(item?.id).update({
+                                firebase.firestore().collection("schedule").doc(item?.id).update({
                                   disable: true,
-                                  status: 'Confirmed',
+                                  status: "Confirmed",
                                   disableRoom: false,
-                                  disableDecline: true
-                                })
+                                  disableDecline: true,
+                                });
 
                                 sendEmail(item);
                               }}
                             >
                               Confirm
                             </button>
-                            <button type="button" className="btn btn-sm btn-outline-danger"
-                            onClick={() => {
-                              handleDelete(item)
-                            }}
-                            disabled = {item?.disableDecline}
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => {
+                                handleDelete(item);
+                              }}
+                              disabled={item?.disableDecline}
                             >
                               Decline
                             </button>
                             {/* <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}> */}
-                              <button type="button" className="btn btn-outline-primary"
+                            <button
+                              type="button"
+                              className="btn btn-outline-primary"
                               onClick={() => {
-                                firebase.firestore().collection('schedule').doc(item?.id).delete()
-                                window.location.href = `/scheduleVideo/${item?.nik}/${agentID}/${userName}`
+                                firebase.firestore().collection("schedule").doc(item?.id).delete();
+                                window.location.href = `/scheduleVideo/${item?.nik}/${agentID}/${userName}`;
                               }}
-                              disabled = {item?.disableRoom}
-                              >
-                                Make rooms
-                              </button>
+                              disabled={item?.disableRoom}
+                            >
+                              Make rooms
+                            </button>
                             {/* </Link> */}
                           </div>
                         </div>

@@ -63,7 +63,13 @@ video {
   flex-direction: column;
   align-items: center;
 }
-
+.backbutton {
+  display: flex;
+  flex-direction: column;
+  width: 30rem;
+  margin-top: 0;
+  margin-bottom: 5rem;
+}
 .home .box {
   display: flex;
   align-items: center;

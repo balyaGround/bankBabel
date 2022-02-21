@@ -202,7 +202,7 @@ function Videos({ mode, callId, agentID }) {
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-      
+
       setRoomId(roomIDAgent.id);
 
       pc.onicecandidate = (event) => {
@@ -248,12 +248,11 @@ function Videos({ mode, callId, agentID }) {
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
       const isActive = firestore.collection("isActive").doc("agentActive");
 
-      if(agentID === '1'){
+      if (agentID === "1") {
         isActive.set({
           Agent1: false,
         });
-      }
-      else if(agentID === '2'){
+      } else if (agentID === "2") {
         isActive.set({
           Agent2: false,
         });
