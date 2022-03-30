@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form } from "react-bootstrap";
 import { getDatabase, ref, child, get } from "firebase/database";
-
+import axios from "axios";
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [agentID, setAgentID] = useState("");
   const rtdb = ref(getDatabase());
   const Swal = require("sweetalert2");
 
@@ -36,10 +35,22 @@ export default function Login() {
       });
   };
 
+  const [dataPortal, setdataPortal] = useState([]);
+  const getDataParameter = async () => {
+    await axios
+      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
+      .then((result) => setdataPortal(result.data.data[0]))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getDataParameter();
+  }, []);
+
+  console.log("dataPortal", dataPortal);
   return (
     <>
-      <div className="home">
-        <div className="create box">
+      <div className="home" style={{ background: `${dataPortal.background}` }}>
+        <div className="create box" style={{ background: `${dataPortal.box}` }}>
           <div className="tulisan">
             <Form>
               <Form.Group className="mb-3 " controlId="formBasicEmail">
@@ -63,7 +74,9 @@ export default function Login() {
                   }}
                 />
               </Form.Group>
-              <Button onClick={handleSubmit}>Submit</Button>
+              <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 15'px" }} onClick={handleSubmit}>
+                Submit
+              </button>
             </Form>
           </div>
         </div>
