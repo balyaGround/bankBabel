@@ -7,6 +7,7 @@ import config from "../config";
 import emailjs from "emailjs-com";
 import { useParams } from "react-router-dom";
 import "../index.css";
+import axios from "axios";
 
 function Schedulling() {
   const [data, setData] = useState([]);
@@ -94,23 +95,36 @@ function Schedulling() {
   const backHome = () => {
     window.location.href = "/home?user=" + userName + "&id=" + agentID;
   };
+
+  const [dataPortal, setdataPortal] = useState([]);
+  const getDataParameter = async () => {
+    await axios
+      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
+      .then((result) => setdataPortal(result.data.data[0]))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getDataParameter();
+  }, []);
   return (
     <>
-      <div className="schedule ">
+      <div className="schedule " style={{ background: `${dataPortal.background}` }}>
         <div className="backbutton">
-          <button onClick={backHome}>Back to Home</button>
+          <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px" }} onClick={backHome}>
+            Back to Home
+          </button>
         </div>
         <div className="title text-white" style={{ marginBottom: "2rem" }}>
           <h2>Schedule Request</h2>
           {handleNullSchedule(data)}
         </div>
-        <div className="create-box">
+        <div className="create-box" style={{ background: `${dataPortal.box}` }}>
           <div class="album py-5">
             <div class="container album-card">
               <div class="row">
                 <div class="col">
                   {data?.map((item) => (
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm mb-3" style={{ background: "white" }}>
                       <div class="card-body">
                         <p class="card-text">New Request !!</p>
                         <p class="card-text">Email: {item?.email}</p>
