@@ -144,28 +144,38 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
           </Button>
         </Link>
       </div>
-      <div className="home" style={{ background: `${dataPortal.background}` }}>
-        <div className="create box" style={{ background: `${dataPortal.box}` }}>
-          <div className="tulisan">
-            <h4>Hi! {user}</h4>
-            <h4>Please wait for an incoming call pop up</h4>
+      <div className="home flex-column align-items-center" style={{ background: `${dataPortal.background}` }}>
+        <div className="row mb-4">
+          <div className="col">
+            <h3>{dataPortal.title}</h3>
           </div>
-          <button
-            style={{ background: `${dataPortal.button}` }}
-            className="mt-5"
-            onClick={() => {
-              firestore
-                .collection("isActive")
-                .doc("agent" + agentID)
-                .update({
-                  loggedIn: false,
-                  VCHandled: 0,
-                });
-              window.location.href = "/";
-            }}
-          >
-            Log Out
-          </button>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <div className="create box" style={{ background: `${dataPortal.box}` }}>
+              <div className="tulisan">
+                <h4>Hi! {user}</h4>
+                <h4>Please wait for an incoming call pop up</h4>
+              </div>
+              <button
+                style={{ background: `${dataPortal.button}` }}
+                className="mt-5"
+                onClick={() => {
+                  firestore
+                    .collection("isActive")
+                    .doc("agent" + agentID)
+                    .update({
+                      loggedIn: false,
+                      VCHandled: 0,
+                    });
+                  window.location.href = "/";
+                }}
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
         </div>
 
         <AnswerModal joinId={joinCode} agentID={agentID} setHalaman={setPage} firebase={firestore} setJoinCode={setJoinCode} />
