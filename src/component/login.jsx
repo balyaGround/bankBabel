@@ -52,7 +52,7 @@ export default function Login() {
       <div className="home" style={{ background: `${dataPortal.background}` }}>
         <div className="create box" style={{ background: `${dataPortal.box}` }}>
           <div className="tulisan">
-            <Form>
+            <Form className="d-flex flex-column align-items-center">
               <Form.Group className="mb-3 " controlId="formBasicEmail">
                 <Form.Label className="text-white">User Name</Form.Label>
                 <Form.Control
@@ -74,7 +74,7 @@ export default function Login() {
                   }}
                 />
               </Form.Group>
-              <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 15'px" }} onClick={handleSubmit}>
+              <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px" }} onClick={handleSubmit}>
                 Submit
               </button>
             </Form>

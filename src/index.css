@@ -20,7 +20,6 @@ body {
 button {
   display: inline-block;
   border: none;
-  font: inherit;
   padding: 0.8rem 2rem;
   border-radius: 6px;
   color: white;
