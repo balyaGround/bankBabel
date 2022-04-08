@@ -42,7 +42,10 @@ const firestore = firebase.firestore();
 const servers = {
   iceServers: [
     {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+      urls: [
+      "stun:stun1.l.google.com:19302",
+      // "stun:stun2.l.google.com:19302"
+      ],
     },
   ],
   iceCandidatePoolSize: 2,
@@ -79,11 +82,11 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID }) {
       });
   };
 
-  useEffect(() => {
-    setInterval(() => {
-      getID();
-    }, 10000);
-  });
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     getID();
+  //   }, 10000);
+  // });
 
   const [status, setStatus] = useState("Available");
   if (status === "Available") {
@@ -196,7 +199,7 @@ function Videos({ mode, callId, agentID }) {
     remoteRef.current.srcObject = remoteStream;
 
     setWebcamActive(true);
-
+    
     if (mode === "create") {
       const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
@@ -341,7 +344,7 @@ function Videos({ mode, callId, agentID }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await sendEmail();
+        // await sendEmail();
         if (roomId) {
           let roomRef = firestore
             .collection("rooms")
