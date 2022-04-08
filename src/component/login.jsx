@@ -74,7 +74,7 @@ export default function Login() {
                   }}
                 />
               </Form.Group>
-              <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px" }} onClick={handleSubmit}>
+              <button type="button" style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px" }} onClick={handleSubmit}>
                 Submit
               </button>
             </Form>

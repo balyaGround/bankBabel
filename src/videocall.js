@@ -73,7 +73,7 @@ function VideoCall() {
       {currentPage === "home" ? (
         <Menu dataPortal={dataPortal} joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} user={user} agentID={agentID} />
       ) : (
-        <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} />
+        <Videos dataPortals={dataPortal} mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} dataPortal={dataPortal} />
       )}
     </div>
   );
@@ -160,6 +160,15 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
               </div>
               <button
                 style={{ background: `${dataPortal.button}` }}
+                disabled={dataPortal.operationalButton}
+                onClick={() => {
+                  setPage("create");
+                }}
+              >
+                Create Call
+              </button>
+              <button
+                style={{ background: `${dataPortal.button}` }}
                 className="mt-5"
                 onClick={() => {
                   firestore
@@ -184,7 +193,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
   );
 }
 
-function Videos({ mode, callId, agentID }) {
+function Videos({ mode, callId, agentID, dataPortals }) {
   const pc = new RTCPeerConnection(servers);
   const [webcamActive, setWebcamActive] = useState(false);
   const [roomId, setRoomId] = useState(callId);
@@ -268,17 +277,17 @@ function Videos({ mode, callId, agentID }) {
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc(callId);
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-      const isActive = firestore.collection("isActive").doc("agentActive");
+      // const isActive = firestore.collection("isActive").doc("agentActive");
 
-      if (agentID === "1") {
-        isActive.set({
-          Agent1: false,
-        });
-      } else if (agentID === "2") {
-        isActive.set({
-          Agent2: false,
-        });
-      }
+      // if (agentID === "1") {
+      //   isActive.set({
+      //     Agent1: false,
+      //   });
+      // } else if (agentID === "2") {
+      //   isActive.set({
+      //     Agent2: false,
+      //   });
+      // }
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -540,7 +549,7 @@ function Videos({ mode, callId, agentID }) {
         <div className="videos">
           {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
           {/* <div className="row "> */}
-          <Container>
+          <Container style={{ background: `${dataPortals.background}` }}>
             <Row className="justify-content-center text-white">
               <Col xs lg={4}>
                 <video ref={localRef} autoPlay playsInline className="local" muted />
