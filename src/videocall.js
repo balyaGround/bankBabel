@@ -543,13 +543,16 @@ function Videos({ mode, callId, agentID, dataPortals }) {
 
   return (
     <div>
-      <Container fluid>
-        <ScreenRecording style={{ marginTop: "10rem" }} screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
-
-        <div className="videos">
+      <Container fluid style={{ background: `${dataPortals.background}`, height: "100vh" }}>
+        <Row className="justify-content-center text-white">
+          <Col>
+            <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
+          </Col>
+        </Row>
+        <div className="videos ">
           {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
           {/* <div className="row "> */}
-          <Container style={{ background: `${dataPortals.background}` }}>
+          <Container className="mb-3">
             <Row className="justify-content-center text-white">
               <Col xs lg={4}>
                 <video ref={localRef} autoPlay playsInline className="local" muted />
