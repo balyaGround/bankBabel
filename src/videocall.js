@@ -232,8 +232,8 @@ function Videos({ mode, callId, agentID, dataPortals }) {
     setWebcamActive(true);
     
     if (mode === "create") {
-      const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
-      const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
+      const roomAgent = firestore.collection("rooms").doc("roomAgent1");
+      const roomIDAgent = roomAgent.collection("roomIDAgent1").doc();
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
 
@@ -280,17 +280,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc(callId);
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-      // const isActive = firestore.collection("isActive").doc("agentActive");
-
-      // if (agentID === "1") {
-      //   isActive.set({
-      //     Agent1: false,
-      //   });
-      // } else if (agentID === "2") {
-      //   isActive.set({
-      //     Agent2: false,
-      //   });
-      // }
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -406,12 +395,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
               inCall: false,
             });
         }
-
-        const isActive = firestore.collection("isActive").doc("agentActive");
-
-        isActive.set({
-          Agent1: true,
-        });
         window.location.reload();
       }
     });
@@ -474,12 +457,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
 
           await roomRef.delete();
         }
-
-        const isActive = firestore.collection("isActive").doc("agentActive");
-
-        isActive.set({
-          Agent1: true,
-        });
         window.location.reload();
       }
     });
@@ -549,13 +526,16 @@ function Videos({ mode, callId, agentID, dataPortals }) {
 
   return (
     <div>
-      <Container fluid style={{ background: `${dataPortals.background}` }}>
-        <ScreenRecording style={{ marginTop: "10rem" }} screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
-
-        <div className="videos">
+      <Container fluid style={{ background: `${dataPortals.background}`, height: "100vh" }}>
+        <Row className="justify-content-center text-white">
+          <Col>
+            <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
+          </Col>
+        </Row>
+        <div className="videos ">
           {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
           {/* <div className="row "> */}
-          <Container>
+          <Container className="mb-3">
             <Row className="justify-content-center text-white">
               <Col xs lg={4}>
                 <video ref={localRef} autoPlay playsInline className="local" muted />

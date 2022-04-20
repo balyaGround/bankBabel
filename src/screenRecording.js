@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import { Row, Col, Button, Badge } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import Text from "antd/lib/typography/Text";
-// import 'antd/dist/antd.css'
-// import firebase from 'firebase/compat/app'
-// import 'firebase/compat/auth'
-// import 'firebase/compat/firestore'
-// import { getStorage, ref, uploadBytes } from "firebase/storage"
+import axios from "axios";
 
 const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, downloadRecordingType, uploadToServer }) => {
   const [recordingNumber, setRecordingNumber] = useState(0);
+
   const RecordView = () => {
     const { status, startRecording: startRecord, stopRecording: stopRecord, mediaBlobUrl } = useReactMediaRecorder({ screen, audio, video });
+
     const startRecording = () => {
       return startRecord();
     };
     const stopRecording = () => {
-      const currentTimeSatmp = new Date().getTime();
-      setRecordingNumber(currentTimeSatmp);
+      const currentTimeStamp = new Date().getTime();
+      setRecordingNumber(currentTimeStamp);
+      // uploadRecording()
       return stopRecord();
     };
     const viewRecording = () => {
@@ -41,35 +40,29 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
       } catch (err) {
         console.error(err);
       }
-    };
-    // const uploadRecording = () => {
-    //       const storage = getStorage()
-    //       const fileName = `${downloadRecordingPath}_${recordingNumber}`;
-    //       const storageRef = ref(storage, fileName)
-    //       const metadata = {contentType: 'video/mp4'}
+    }
 
-    //       try{
-    //       const blob = new Promise((resolve, reject) => {
-    //         const xhr = new XMLHttpRequest();
-    //         xhr.onload = function () {
-    //           resolve(xhr.response);
-    //         };
-    //         xhr.onerror = function (e) {
-    //           console.log(e);
-    //           reject(new TypeError("Network request failed"));
-    //         };
-    //         xhr.responseType = "blob";
-    //         xhr.open("GET", mediaBlobUrl, true);
-    //         xhr.send(null);
-    //       });
-    //       uploadBytes(storageRef, mediaBlobUrl, metadata).then((snapshot) => {
-    //         console.log('Upload Success');
-    //       })
-    //       }
-    //       catch(e){
-    //         console.log(e);
-    //       }
-    //     };
+    const uploadRecording = async () => {
+      const url = 'https://api-portal.herokuapp.com/api/v1/video'
+      const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      const mediaBlob = await fetch(mediaBlobUrl)
+        .then(response => response.blob());
+
+      const myFile = new File(
+          [mediaBlob],
+          fileName,
+          {type: 'video/mp4'}
+      );
+
+      console.log(mediaBlob)
+      console.log(myFile)
+
+
+      
+      axios.post(url, {file: myFile}).then((res)=>{
+        console.log(res.data)
+      }).catch((e)=>console.log(e))
+    }
     return (
       <Row>
         <Col span="6" style={{ lineHeight: "24px", marginBottom: "-2rem" }} className="text-white">
@@ -103,7 +96,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
           {status && status === "recording" && (
             <Button
               size="small"
-              onClick={stopRecording}
+              onClick={() => {stopRecording(); uploadRecording()}}
               type="danger"
               // icon="stop"
               className="margin-left-sm"
