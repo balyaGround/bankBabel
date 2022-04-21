@@ -43,25 +43,32 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     }
 
     const uploadRecording = async () => {
+      var axios = require('axios');
+      var FormData = require('form-data');
+      var fs = require('fs');
+      var data = new FormData();
       const url = 'https://api-portal.herokuapp.com/api/v1/video'
       const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
       const mediaBlob = await fetch(mediaBlobUrl)
         .then(response => response.blob());
 
-      const myFile = new File(
+      const video = new File(
           [mediaBlob],
           fileName,
           {type: 'video/mp4'}
       );
 
-      console.log(mediaBlob)
-      console.log(myFile)
+      data.append('file', video)
 
-
+      var config = {
+        method: 'post',
+        url: 'https://api-portal.herokuapp.com/api/v1/video',
+        data : data
+      };
       
-      axios.post(url, {file: myFile}).then((res)=>{
-        console.log(res.data)
-      }).catch((e)=>console.log(e))
+      axios(config).then((res) => {
+        console.log(JSON.stringify(res.data))
+      }).catch((e) => console.log(e))
     }
     return (
       <Row>
