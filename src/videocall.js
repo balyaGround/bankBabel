@@ -404,11 +404,11 @@ function Videos({ mode, callId, agentID, dataPortals }) {
             });
         }
 
-        const isActive = firestore.collection("isActive").doc("agentActive");
+        //       const isActive = firestore.collection("isActive").doc("agentActive");
 
-        isActive.set({
-          Agent1: true,
-        });
+        //       isActive.set({
+        //         Agent1: true,
+        //       });
         window.location.reload();
       }
     });
@@ -469,11 +469,11 @@ function Videos({ mode, callId, agentID, dataPortals }) {
           await roomRef.delete();
         }
 
-        const isActive = firestore.collection("isActive").doc("agentActive");
+        //       const isActive = firestore.collection("isActive").doc("agentActive");
 
-        isActive.set({
-          Agent1: true,
-        });
+        //       isActive.set({
+        //         Agent1: true,
+        //       });
         window.location.reload();
       }
     });

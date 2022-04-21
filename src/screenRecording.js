@@ -25,6 +25,8 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     };
     const downloadRecording = () => {
       const pathName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+
+      alert("ini pathname >>>>", pathName);
       try {
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
           // for IE
