@@ -43,7 +43,10 @@ const firestore = firebase.firestore();
 const servers = {
   iceServers: [
     {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+      urls: [
+        "stun:stun1.l.google.com:19302",
+        // "stun:stun2.l.google.com:19302"
+      ],
     },
   ],
   iceCandidatePoolSize: 2,
@@ -95,11 +98,11 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
       });
   };
 
-  useEffect(() => {
-    setInterval(() => {
-      getID();
-    }, 10000);
-  });
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     getID();
+  //   }, 10000);
+  // });
 
   const [status, setStatus] = useState("Available");
   if (status === "Available") {
@@ -147,7 +150,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
       <div className="home flex-column align-items-center" style={{ background: `${dataPortal.background}` }}>
         <div className="row mb-4">
           <div className="col">
-            <h3>{dataPortal.title}</h3>
+            <h3 style={{ color: dataPortal.textColor }}>{dataPortal.title}</h3>
           </div>
         </div>
 
@@ -229,8 +232,8 @@ function Videos({ mode, callId, agentID, dataPortals }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const roomAgent = firestore.collection("rooms").doc("roomAgent" + agentID);
-      const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc();
+      const roomAgent = firestore.collection("rooms").doc("roomAgent1");
+      const roomIDAgent = roomAgent.collection("roomIDAgent1").doc();
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
 
@@ -277,17 +280,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
       const roomIDAgent = roomAgent.collection("roomIDAgent" + agentID).doc(callId);
       const offerCandidates = roomIDAgent.collection("callerCandidates");
       const answerCandidates = roomIDAgent.collection("calleeCandidates");
-      // const isActive = firestore.collection("isActive").doc("agentActive");
-
-      // if (agentID === "1") {
-      //   isActive.set({
-      //     Agent1: false,
-      //   });
-      // } else if (agentID === "2") {
-      //   isActive.set({
-      //     Agent2: false,
-      //   });
-      // }
 
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -372,7 +364,7 @@ function Videos({ mode, callId, agentID, dataPortals }) {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await sendEmail();
+        // await sendEmail();
         if (roomId) {
           let roomRef = firestore
             .collection("rooms")
@@ -403,12 +395,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
               inCall: false,
             });
         }
-
-        //       const isActive = firestore.collection("isActive").doc("agentActive");
-
-        //       isActive.set({
-        //         Agent1: true,
-        //       });
         window.location.reload();
       }
     });
@@ -448,7 +434,12 @@ function Videos({ mode, callId, agentID, dataPortals }) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (roomId) {
-          let roomRef = firestore.collection("rooms").doc(roomId);
+          let roomRef = firestore
+            .collection("rooms")
+            .collection("rooms")
+            .doc("roomAgent" + agentID)
+            .collection("roomIDAgent" + agentID)
+            .doc(roomId);
           await roomRef
             .collection("calleeCandidates")
             .get()
@@ -468,12 +459,6 @@ function Videos({ mode, callId, agentID, dataPortals }) {
 
           await roomRef.delete();
         }
-
-        //       const isActive = firestore.collection("isActive").doc("agentActive");
-
-        //       isActive.set({
-        //         Agent1: true,
-        //       });
         window.location.reload();
       }
     });

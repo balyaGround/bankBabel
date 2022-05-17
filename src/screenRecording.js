@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import { Row, Col, Button, Badge } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import Text from "antd/lib/typography/Text";
-// import 'antd/dist/antd.css'
-// import firebase from 'firebase/compat/app'
-// import 'firebase/compat/auth'
-// import 'firebase/compat/firestore'
-// import { getStorage, ref, uploadBytes } from "firebase/storage"
+import PublitioAPI from "publitio_js_sdk";
+import { readFileSync } from "fs";
 
 const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, downloadRecordingType, uploadToServer }) => {
   const [recordingNumber, setRecordingNumber] = useState(0);
+
   const RecordView = () => {
     const { status, startRecording: startRecord, stopRecording: stopRecord, mediaBlobUrl } = useReactMediaRecorder({ screen, audio, video });
+
     const startRecording = () => {
       return startRecord();
     };
     const stopRecording = () => {
-      const currentTimeSatmp = new Date().getTime();
-      setRecordingNumber(currentTimeSatmp);
+      const currentTimeStamp = new Date().getTime();
+      setRecordingNumber(currentTimeStamp);
+      // uploadRecording()
       return stopRecord();
     };
     const viewRecording = () => {
@@ -44,34 +44,50 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
         console.error(err);
       }
     };
-    // const uploadRecording = () => {
-    //       const storage = getStorage()
-    //       const fileName = `${downloadRecordingPath}_${recordingNumber}`;
-    //       const storageRef = ref(storage, fileName)
-    //       const metadata = {contentType: 'video/mp4'}
 
-    //       try{
-    //       const blob = new Promise((resolve, reject) => {
-    //         const xhr = new XMLHttpRequest();
-    //         xhr.onload = function () {
-    //           resolve(xhr.response);
-    //         };
-    //         xhr.onerror = function (e) {
-    //           console.log(e);
-    //           reject(new TypeError("Network request failed"));
-    //         };
-    //         xhr.responseType = "blob";
-    //         xhr.open("GET", mediaBlobUrl, true);
-    //         xhr.send(null);
-    //       });
-    //       uploadBytes(storageRef, mediaBlobUrl, metadata).then((snapshot) => {
-    //         console.log('Upload Success');
-    //       })
-    //       }
-    //       catch(e){
-    //         console.log(e);
-    //       }
-    //     };
+    const uploadRecording = async () => {
+      //   var axios = require("axios");
+      //   var FormData = require("form-data");
+      //   var fs = require("fs");
+      //   var data = new FormData();
+      //   const url = "https://api-portal.herokuapp.com/api/v1/video";
+      //   const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      //   const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
+
+      //   const video = new File([mediaBlob], fileName, { type: "video/mp4" });
+
+      //   data.append("file", video);
+
+      //   var config = {
+      //     method: "post",
+      //     url: "https://api-portal.herokuapp.com/api/v1/video",
+      //     data: data,
+      //   };
+
+      //   axios(config)
+      //     .then((res) => {
+      //       console.log(JSON.stringify(res.data));
+      //     })
+      //     .catch((e) => console.log(e));
+      //
+
+      var fs = require("fs");
+      const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
+
+      const video = new File([mediaBlob], fileName, { type: "video/mp4" });
+
+      const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd");
+      publitio
+        .uploadFile(video, "file")
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     return (
       <Row>
         <Col span="6" style={{ lineHeight: "24px", marginBottom: "-2rem" }} className="text-white">
@@ -105,7 +121,10 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
           {status && status === "recording" && (
             <Button
               size="small"
-              onClick={stopRecording}
+              onClick={() => {
+                stopRecording();
+                uploadRecording();
+              }}
               type="danger"
               // icon="stop"
               className="margin-left-sm"

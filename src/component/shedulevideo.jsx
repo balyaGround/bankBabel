@@ -14,7 +14,9 @@ function Schedulevideo() {
   const servers = {
     iceServers: [
       {
-        urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+        urls: ["stun:stun1.l.google.com:19302",
+        //  "stun:stun2.l.google.com:19302"
+        ],
       },
     ],
     iceCandidatePoolSize: 2,
@@ -37,7 +39,10 @@ function Schedulevideo() {
     let localStream;
 
     localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: {
+        width: 720,
+        height: 576
+      },
       audio: true,
     });
 
