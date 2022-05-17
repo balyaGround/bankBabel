@@ -77,9 +77,9 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
 
       const video = new File([mediaBlob], fileName, { type: "video/mp4" });
 
-      const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd");
+      const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
       publitio
-        .uploadFile(video, "file")
+        .uploadFile(video, "file", { option_hls: 1 })
         .then((data) => {
           console.log(data);
         })
