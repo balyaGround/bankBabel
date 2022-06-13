@@ -9,13 +9,15 @@ import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import firebase from "firebase/compat/app";
 import { useParams } from "react-router-dom";
 import FormModal from "./FormModal";
-
+import axios from "axios";
+import { getMessaging } from "firebase/messaging";
 function Schedulevideo() {
   const servers = {
     iceServers: [
       {
-        urls: ["stun:stun1.l.google.com:19302",
-        //  "stun:stun2.l.google.com:19302"
+        urls: [
+          "stun:stun1.l.google.com:19302",
+          //  "stun:stun2.l.google.com:19302"
         ],
       },
     ],
@@ -34,6 +36,46 @@ function Schedulevideo() {
   const agentID = agent;
   const userName = user;
   const firestore = firebase.firestore();
+  const [dataPortals, setdataPortals] = useState([]);
+
+  const getDataParameter = async () => {
+    await axios
+      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
+      .then((result) => setdataPortals(result.data.data[0]))
+      .catch((err) => console.log(err));
+  };
+  const pushNotif = async () => {
+    let data = JSON.stringify({
+      data: {
+        score: "5x1",
+        time: "15:10",
+      },
+      to: "eNU4SKz8Sea93IjqbuNSKN:APA91bF_CsgZryL1TekWyCT30Vus-ToK1neS3ylzFYSSdXM-vh4gp50FfzLGD4ceSrDZGUqKOCBk0nsUVad9Dh_WMSx8fWALvZrQe2-V5usWT749ShurWUW_KiYxfJveYhYHKbqigmek",
+      direct_boot_ok: true,
+    });
+
+    let config = {
+      method: "post",
+      url: "https://fcm.googleapis.com/fcm/send",
+      headers: {
+        Authorization: "key=AAAAIVSy4tk:APA91bGvAXcE3WrbsLf1kcnNDrtbDMMHIzz09B2XKqN4VfFkLati-h6SgP0BtSbpB_FnNK9NIR9WkrYyP8AFB8tpuBBMWyWBzeevGT9G0MaTC0jHlJ1-wL6wS8cEdFAJv56dIJmQaCD_",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getDataParameter();
+    pushNotif();
+  }, []);
 
   const setupSources = async () => {
     let localStream;
@@ -41,7 +83,7 @@ function Schedulevideo() {
     localStream = await navigator.mediaDevices.getUserMedia({
       video: {
         width: 720,
-        height: 576
+        height: 576,
       },
       audio: true,
     });
@@ -223,7 +265,6 @@ function Schedulevideo() {
             .doc("agent" + agentID)
             .update({
               inCall: false,
-              loggedIn: true,
               VCHandled: increment,
             });
         }
@@ -303,13 +344,16 @@ function Schedulevideo() {
 
   return (
     <div>
-      <Container fluid>
-        <ScreenRecording style={{ marginTop: "10rem" }} screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
-
-        <div className="videos">
+      <Container fluid style={{ background: `${dataPortals.background}`, height: "100vh" }}>
+        <Row className="justify-content-center text-white">
+          <Col>
+            <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" style={{ backgroundColor: "blue" }} />
+          </Col>
+        </Row>
+        <div className="videos ">
           {/* <div className="container " style={{ marginBottom: "5rem" }}> */}
           {/* <div className="row "> */}
-          <Container>
+          <Container className="mb-3">
             <Row className="justify-content-center text-white">
               <Col xs lg={4}>
                 <video ref={localRef} autoPlay playsInline className="local" muted />
@@ -350,6 +394,7 @@ function Schedulevideo() {
                   className="hangup button"
                 >
                   <HangupIcon />
+                  {/* <HangupModal open={openModal} /> */}
                 </button>
               </div>
               <div className="col more button" tabIndex={0} role="button">
@@ -357,7 +402,7 @@ function Schedulevideo() {
                 <div className="popoverAwal">
                   <button>
                     <div>
-                      <FormModal />
+                      <FormModal dataportal={dataPortals} />
                     </div>
                   </button>
                 </div>
@@ -365,6 +410,19 @@ function Schedulevideo() {
             </div>
           </div>
         </div>
+        {/* {!webcamActive && (
+      <div className="modalContainerBawaan">
+        <div className="modalBawaan">
+          <h3>Turn on your camera and microphone and start the call</h3>
+          <div className="container">
+            <button onClick={() => setPage("home")} className="secondary">
+              Cancel
+            </button>
+            <button onClick={setupSources}>Start</button>
+          </div>
+        </div>
+      </div>
+    )} */}
       </Container>
     </div>
   );

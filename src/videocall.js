@@ -70,7 +70,7 @@ function VideoCall() {
     getDataParameter();
   }, []);
 
-  console.log("dataPortal", dataPortal);
+  // console.log("dataPortal", dataPortal);
   return (
     <div className="app">
       {currentPage === "home" ? (
@@ -92,7 +92,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
-          console.log(doc.id);
+          // console.log(doc.id);
           setJoinCode(doc.id.toString());
         });
       });
@@ -120,7 +120,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
         loggedIn: false,
       });
   }
-  console.log("status=>>>>>", status);
+  // console.log("status=>>>>>", status);
   return (
     <>
       <div className="dropdown-status d-flex">
@@ -173,15 +173,16 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
               <button
                 style={{ background: `${dataPortal.button}` }}
                 className="mt-5"
-                onClick={() => {
-                  firestore
+                onClick={async () => {
+                  await firestore
                     .collection("isActive")
                     .doc("agent" + agentID)
                     .update({
                       loggedIn: false,
                       VCHandled: 0,
-                    });
-                  window.location.href = "/";
+                      inCall: false,
+                    })
+                    .then((window.location.href = "/"));
                 }}
               >
                 Log Out
@@ -311,7 +312,7 @@ function Videos({ mode, callId, agentID, dataPortals }) {
     }
     const increment = firebase.firestore.FieldValue.increment(1);
     pc.onconnectionstatechange = async () => {
-      console.log(pc.connectionState);
+      // console.log(pc.connectionState);
       if (pc.connectionState === "disconnected") {
         hangUp();
         await firestore.collection("rooms").doc(roomId).delete();
@@ -407,7 +408,7 @@ function Videos({ mode, callId, agentID, dataPortals }) {
       .then((doc) => {
         const jsonData = doc.data();
         const jsonString = JSON.stringify(jsonData);
-        console.log(jsonString);
+        // console.log(jsonString);
         const json = JSON.parse(jsonString);
         const param = {
           name: json.name,

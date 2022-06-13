@@ -3,11 +3,11 @@ import { Row, Col, Button, Badge } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import Text from "antd/lib/typography/Text";
 import PublitioAPI from "publitio_js_sdk";
-import { readFileSync } from "fs";
+import * as fs from "fs";
 
 const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, downloadRecordingType, uploadToServer }) => {
   const [recordingNumber, setRecordingNumber] = useState(0);
-
+  const [credential, setcredential] = useState([]);
   const RecordView = () => {
     const { status, startRecording: startRecord, stopRecording: stopRecord, mediaBlobUrl } = useReactMediaRecorder({ screen, audio, video });
 
@@ -46,47 +46,112 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     };
 
     const uploadRecording = async () => {
-      //   var axios = require("axios");
-      //   var FormData = require("form-data");
-      //   var fs = require("fs");
-      //   var data = new FormData();
-      //   const url = "https://api-portal.herokuapp.com/api/v1/video";
-      //   const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
-      //   const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
-
-      //   const video = new File([mediaBlob], fileName, { type: "video/mp4" });
-
-      //   data.append("file", video);
-
-      //   var config = {
-      //     method: "post",
-      //     url: "https://api-portal.herokuapp.com/api/v1/video",
-      //     data: data,
-      //   };
-
-      //   axios(config)
-      //     .then((res) => {
-      //       console.log(JSON.stringify(res.data));
-      //     })
-      //     .catch((e) => console.log(e));
-      //
-
+      var axios = require("axios");
+      var FormData = require("form-data");
       var fs = require("fs");
-      const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      var data = new FormData();
+
+      const fileName = `${downloadRecordingPath}_${recordingNumber}.mp4`;
       const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
 
       const video = new File([mediaBlob], fileName, { type: "video/mp4" });
 
-      const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
-      publitio
-        .uploadFile(video, "file", { option_hls: 1 })
-        .then((data) => {
-          console.log(data);
+      data.append("policy", "");
+      data.append("key", "");
+      data.append("x-amz-algorithm", "");
+      data.append("x-amz-date", "");
+      data.append("x-amz-credential", "");
+
+      var config = {
+        method: "put",
+        url: "https://dev.vdocipher.com/api/videos?title=upload",
+        data: data,
+        headers: "Authorization:Apisecret Raeef2tp0AD09KamzBqD2PEpTVZ9KpDYfF5EJqnKGTIcKpkeNfvTCTvxzmWPUB3W",
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log("jolaaaa", JSON.stringify(res.data));
+        })
+        .catch((e) => console.log(e));
+
+      // var fs = require("fs");
+      // const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      // const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
+
+      // const video = new File([mediaBlob], fileName, { type: "video/mp4" });
+
+      // const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
+      // publitio
+      //   .uploadFile(video, "file", { option_hls: 1 })
+      //   .then((data) => {
+      //     console.log(data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+      // Encrypt file.c
+      console.log("get credential", credential);
+    };
+    const getCredential = async () => {
+      var axios = require("axios");
+      var FormData = require("form-data");
+      var data = new FormData();
+
+      data.append("policy", "{{policy}}");
+      data.append("key", "{{key}}");
+      data.append("x-amz-algorithm", "{{x-amz-signature}}");
+      data.append("x-amz-date", "{{x-amz-date}}");
+      data.append("x-amz-credential", "{{x-amz-credential}}");
+
+      let config = {
+        method: "put",
+        url: "https://dev.vdocipher.com/api/videos?title=tst",
+        headers: {
+          Authorization: "Apisecret Raeef2tp0AD09KamzBqD2PEpTVZ9KpDYfF5EJqnKGTIcKpkeNfvTCTvxzmWPUB3W",
+          "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryl5qAhT2sJlZ16tWT",
+          Accept: "*/*",
+          Referer: "http://localhost:3001/",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
         })
         .catch((error) => {
           console.log(error);
         });
+
+      // var fs = require("fs");
+      // const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      // const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
+
+      // const video = new File([mediaBlob], fileName, { type: "video/mp4" });
+
+      // const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
+      // publitio
+      //   .uploadFile(video, "file", { option_hls: 1 })
+      //   .then((data) => {
+      //     console.log(data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+      // Encrypt file.c
+      console.log("get credential", credential);
+      console.log("first", data);
     };
+
+    // // Decrypt file.
+    // encryptor.decryptFile("encrypted.dat", "output_file.txt", key, function (err) {
+    //   // Decryption complete.
+    // });
+
+    // console.log("ini encript decrypt >>", file);
 
     return (
       <Row>
@@ -108,12 +173,15 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
           {status && status !== "recording" && (
             <Button
               size="small"
-              onClick={startRecording}
               color="rgba(0, 0, 255, 0.192"
               // icon="play-circle"
               className="margin-left-sm"
               ghost
               tea
+              onClick={() => {
+                getCredential();
+                startRecording();
+              }}
             >
               {mediaBlobUrl ? "Start Recording" : "Start Recording"}
             </Button>
@@ -123,7 +191,8 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
               size="small"
               onClick={() => {
                 stopRecording();
-                uploadRecording();
+
+                // enkripsi();
               }}
               type="danger"
               // icon="stop"

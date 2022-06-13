@@ -8,7 +8,7 @@ import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import FormIcon from "../icons/form-icon.jpg";
 import { CgImage } from "react-icons/cg";
 
-function FormModal() {
+function FormModal({ dataportal }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -45,7 +45,7 @@ function FormModal() {
         Retrieve Image
       </button>
       <Draggable>
-        <Modal show={show} onHide = {handleClose} className="bungkus modal" id="wrapper">
+        <Modal show={show} onHide={handleClose} className="bungkus modal" id="wrapper">
           <Modal.Body>
             <Modal.Title className="mb-3">
               Form Data Nasabah

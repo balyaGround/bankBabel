@@ -18,7 +18,8 @@ function Schedulling() {
   const [userName, setuserName] = useState(user);
   const [loaded, setLoaded] = useState(false);
   const Swal = require("sweetalert2");
-
+  // const [dataToken, setDataToken] = useState([]);
+  const firestore = firebase.firestore();
   firebase.initializeApp(config);
   // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
@@ -33,8 +34,19 @@ function Schedulling() {
     });
   };
 
+  // const getToken = () => {
+  //   firestore.collection("schedule").onSnapshot((doc) => {
+  //     const userToken = doc.docs.map((doc) => {
+  //       return { id: doc.id, ...doc.data() };
+  //     });
+  //     console.log("user Token", userToken);
+  //     setDataToken(userToken);
+  //   });
+  // };
+
   useEffect(() => {
     getSchedule();
+    // getToken();
   }, []);
 
   const sendEmail = async (parameter) => {
@@ -149,7 +161,7 @@ function Schedulling() {
                                   disableDecline: true,
                                 });
 
-                                sendEmail(item);
+                                // sendEmail(item);
                               }}
                             >
                               Confirm

@@ -167,13 +167,13 @@ function Form() {
             <input style={{ border: "1px solid #F0F8FF", boxShadow: "0px 2px 3px black" }} type="tel" id="mobile" name="mobile" required onChange={formik.handleChange} value={formik.values.mobile} />
           </div>
         </div>
-        <button type="submit" style={{ marginRight: "15px", borderRadius: "5%", marginLeft: "40px" }}>
+        <button type="submit" style={{ marginRight: "15px", borderRadius: "5%", marginLeft: "40px", backgroundColor: "green" }}>
           Submit
         </button>
-        <button type="button" onClick={retrieve} style={{ marginRight: "15px", borderRadius: "5%" }}>
+        <button type="button" onClick={retrieve} style={{ marginRight: "15px", borderRadius: "5%", backgroundColor: "blue" }}>
           Retrieve
         </button>
-        <button type="reset" style={{ borderRadius: "5%" }}>
+        <button type="reset" style={{ borderRadius: "5%", backgroundColor: "grey" }}>
           Reset
         </button>
       </form>

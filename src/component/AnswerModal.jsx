@@ -23,7 +23,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
       .get()
       .then((doc) => {
         doc.forEach((doc) => {
-          console.log(doc.id);
+          // console.log(doc.id);
           setJoinCode(doc.id.toString());
         });
       });
@@ -34,7 +34,7 @@ function AnswerModal({ joinId, setHalaman, firebase, setJoinCode, agentID }) {
       getId();
     }, 1000);
   }, [joinId]);
-  console.log("join code ", joinId);
+  // console.log("join code ", joinId);
   return (
     <div>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
