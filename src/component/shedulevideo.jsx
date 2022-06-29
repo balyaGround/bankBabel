@@ -10,7 +10,6 @@ import firebase from "firebase/compat/app";
 import { useParams } from "react-router-dom";
 import FormModal from "./FormModal";
 import axios from "axios";
-import { getMessaging } from "firebase/messaging";
 function Schedulevideo() {
   const servers = {
     iceServers: [
@@ -33,8 +32,11 @@ function Schedulevideo() {
   const { id } = useParams();
   const { agent } = useParams();
   const { user } = useParams();
+  const { token } = useParams();
   const agentID = agent;
   const userName = user;
+  const Token = token;
+  console.log("tokenHP", Token);
   const firestore = firebase.firestore();
   const [dataPortals, setdataPortals] = useState([]);
 
@@ -44,13 +46,14 @@ function Schedulevideo() {
       .then((result) => setdataPortals(result.data.data[0]))
       .catch((err) => console.log(err));
   };
+
   const pushNotif = async () => {
     let data = JSON.stringify({
       data: {
         score: "5x1",
         time: "15:10",
       },
-      to: "eNU4SKz8Sea93IjqbuNSKN:APA91bF_CsgZryL1TekWyCT30Vus-ToK1neS3ylzFYSSdXM-vh4gp50FfzLGD4ceSrDZGUqKOCBk0nsUVad9Dh_WMSx8fWALvZrQe2-V5usWT749ShurWUW_KiYxfJveYhYHKbqigmek",
+      to: `${token}`,
       direct_boot_ok: true,
     });
 

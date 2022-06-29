@@ -10,6 +10,8 @@ import "../index.css";
 import axios from "axios";
 
 function Schedulling() {
+  const [dataToken, setdataToken] = useState([]);
+  console.log("data token", dataToken);
   const [data, setData] = useState([]);
   const [disable, setDisable] = React.useState(false);
   const { id } = useParams();
@@ -18,8 +20,7 @@ function Schedulling() {
   const [userName, setuserName] = useState(user);
   const [loaded, setLoaded] = useState(false);
   const Swal = require("sweetalert2");
-  // const [dataToken, setDataToken] = useState([]);
-  const firestore = firebase.firestore();
+
   firebase.initializeApp(config);
   // init("user_h6uRyZievx8s1s6rPU7mz");
   const getSchedule = () => {
@@ -33,16 +34,6 @@ function Schedulling() {
       setLoaded(true);
     });
   };
-
-  // const getToken = () => {
-  //   firestore.collection("schedule").onSnapshot((doc) => {
-  //     const userToken = doc.docs.map((doc) => {
-  //       return { id: doc.id, ...doc.data() };
-  //     });
-  //     console.log("user Token", userToken);
-  //     setDataToken(userToken);
-  //   });
-  // };
 
   useEffect(() => {
     getSchedule();
@@ -152,8 +143,7 @@ function Schedulling() {
                               type="button"
                               className="btn btn-sm btn-outline-success"
                               onClick={() => {
-                                console.log("ready", item);
-
+                                setdataToken(item?.token);
                                 firebase.firestore().collection("schedule").doc(item?.id).update({
                                   disable: true,
                                   status: "Confirmed",
@@ -182,7 +172,8 @@ function Schedulling() {
                               className="btn btn-outline-primary"
                               onClick={() => {
                                 firebase.firestore().collection("schedule").doc(item?.id).delete();
-                                window.location.href = `/scheduleVideo/${item?.nik}/${agentID}/${userName}`;
+
+                                window.location.href = `/scheduleVideo/{${item?.token}/${item?.nik}/${agentID}/${userName}`;
                               }}
                               disabled={item?.disableRoom}
                             >

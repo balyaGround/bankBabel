@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import Login from "../component/login";
 import VideoCall from "../videocall";
@@ -20,7 +20,7 @@ function Routers() {
           <Route exact path="/scheduleRequest/:id/:user">
             <Schedulling />
           </Route>
-          <Route exact path="/scheduleVideo/:id/:agent/:user">
+          <Route exact path="/scheduleVideo/:token/:id/:agent/:user">
             <Schedulevideo />
           </Route>
           <Route exact path="/portal">
