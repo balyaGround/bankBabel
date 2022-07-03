@@ -137,23 +137,24 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
               >
                 Create Call
               </button>
-              <button
-                style={{ background: `${dataPortal?.dataPortal?.button}` }}
-                className="mt-5"
-                onClick={async () => {
-                  await firestore
-                    .collection("isActive")
-                    .doc("agent" + agentID)
-                    .update({
-                      loggedIn: false,
-                      VCHandled: 0,
-                      inCall: false,
-                    })
-                    .then((window.location.href = "/"));
-                }}
-              >
-                Log Out
-              </button>
+              <Link to="/">
+                <button
+                  style={{ background: `${dataPortal?.dataPortal?.button}` }}
+                  className="mt-5"
+                  onClick={async () => {
+                    await firestore
+                      .collection("isActive")
+                      .doc("agent" + agentID)
+                      .update({
+                        loggedIn: false,
+                        VCHandled: 0,
+                        inCall: false,
+                      });
+                  }}
+                >
+                  Log Out
+                </button>
+              </Link>
             </div>
           </div>
         </div>
