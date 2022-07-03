@@ -10,7 +10,7 @@ import firebase from "firebase/compat/app";
 import { useParams } from "react-router-dom";
 import FormModal from "./FormModal";
 import axios from "axios";
-function Schedulevideo() {
+function Schedulevideo(dataPortal) {
   const servers = {
     iceServers: [
       {
@@ -38,14 +38,6 @@ function Schedulevideo() {
   const Token = token;
   console.log("tokenHP", Token);
   const firestore = firebase.firestore();
-  const [dataPortals, setdataPortals] = useState([]);
-
-  const getDataParameter = async () => {
-    await axios
-      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
-      .then((result) => setdataPortals(result.data.data[0]))
-      .catch((err) => console.log(err));
-  };
 
   const pushNotif = async () => {
     let data = JSON.stringify({
@@ -77,7 +69,6 @@ function Schedulevideo() {
     }, 1500);
   };
   useEffect(() => {
-    getDataParameter();
     pushNotif();
   }, []);
 
@@ -348,7 +339,7 @@ function Schedulevideo() {
 
   return (
     <div>
-      <Container fluid style={{ background: `${dataPortals.background}`, height: "100vh" }}>
+      <Container fluid style={{ background: `${dataPortal?.dataPortal?.background}`, height: "100vh" }}>
         <Row className="justify-content-center text-white">
           <Col>
             <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" style={{ backgroundColor: "blue" }} />
@@ -406,7 +397,7 @@ function Schedulevideo() {
                 <div className="popoverAwal">
                   <button>
                     <div>
-                      <FormModal dataportal={dataPortals} />
+                      <FormModal dataportal={dataPortal} />
                     </div>
                   </button>
                 </div>

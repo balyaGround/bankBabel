@@ -7,9 +7,10 @@ import config from "../config";
 import emailjs from "emailjs-com";
 import { useParams } from "react-router-dom";
 import "../index.css";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import { margin } from "@mui/system";
 
-function Schedulling() {
+function Schedulling(dataPortal) {
   const [dataToken, setdataToken] = useState([]);
   console.log("data token", dataToken);
   const [data, setData] = useState([]);
@@ -37,7 +38,6 @@ function Schedulling() {
 
   useEffect(() => {
     getSchedule();
-    // getToken();
   }, []);
 
   const sendEmail = async (parameter) => {
@@ -99,29 +99,19 @@ function Schedulling() {
     window.location.href = "/home?user=" + userName + "&id=" + agentID;
   };
 
-  const [dataPortal, setdataPortal] = useState([]);
-  const getDataParameter = async () => {
-    await axios
-      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
-      .then((result) => setdataPortal(result.data.data[0]))
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getDataParameter();
-  }, []);
   return (
     <>
-      <div className="schedule " style={{ background: `${dataPortal.background}` }}>
+      <div className="schedule " style={{ background: `${dataPortal?.dataPortal?.background}` }}>
         <div className="backbutton">
-          <button style={{ background: `${dataPortal.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px" }} onClick={backHome}>
-            Back to Home
-          </button>
+          <Link to={`/home?user=${userName}&id=${agentID}`}>
+            <button style={{ background: `${dataPortal?.dataPortal?.button}`, boxShadow: " 0px 0px 5px 5px rgba(255 255 255 / 60%)", fontSize: " 20px", marginLeft: "8rem" }}>Back to Home</button>
+          </Link>
         </div>
         <div className="title text-white" style={{ marginBottom: "2rem" }}>
           <h2>Schedule Request</h2>
           {handleNullSchedule(data)}
         </div>
-        <div className="create-box" style={{ background: `${dataPortal.box}` }}>
+        <div className="create-box" style={{ background: `${dataPortal?.dataPortal?.box}` }}>
           <div class="album py-5">
             <div class="container album-card">
               <div class="row">
@@ -166,20 +156,18 @@ function Schedulling() {
                             >
                               Decline
                             </button>
-                            {/* <Link to={`/scheduleVideo/${item.nik}/${agentID}/${userName}`}> */}
-                            <button
-                              type="button"
-                              className="btn btn-outline-primary"
-                              onClick={() => {
-                                firebase.firestore().collection("schedule").doc(item?.id).delete();
-
-                                window.location.href = `/scheduleVideo/{${item?.token}/${item?.nik}/${agentID}/${userName}`;
-                              }}
-                              disabled={item?.disableRoom}
-                            >
-                              Make rooms
-                            </button>
-                            {/* </Link> */}
+                            <Link to={`/scheduleVideo/${item.token}/${item.nik}/${agentID}/${userName}`}>
+                              <button
+                                type="button"
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  firebase.firestore().collection("schedule").doc(item?.id).delete();
+                                }}
+                                disabled={item?.disableRoom}
+                              >
+                                Make rooms
+                              </button>
+                            </Link>
                           </div>
                         </div>
                       </div>

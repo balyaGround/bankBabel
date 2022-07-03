@@ -18,7 +18,6 @@ import { init } from "emailjs-com";
 import { Container, Col, Row, Dropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -54,56 +53,24 @@ const servers = {
 
 // const pc = new RTCPeerConnection(servers);
 
-function VideoCall() {
+function VideoCall(dataPortal) {
   const [currentPage, setCurrentPage] = useState("home");
   const [joinCode, setJoinCode] = useState("");
   const user = new URLSearchParams(window.location.search).get("user");
   const agentID = new URLSearchParams(window.location.search).get("id");
-  const [dataPortal, setdataPortal] = useState([]);
-  const getDataParameter = async () => {
-    await axios
-      .get(`https://api-portal.herokuapp.com/api/v1/supervisor/parameter`)
-      .then((result) => setdataPortal(result.data.data[0]))
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getDataParameter();
-  }, []);
-
-  // console.log("dataPortal", dataPortal);
+  console.log("dataPortal", dataPortal);
   return (
     <div className="app">
       {currentPage === "home" ? (
         <Menu dataPortal={dataPortal} joinCode={joinCode} setJoinCode={setJoinCode} setPage={setCurrentPage} user={user} agentID={agentID} />
       ) : (
-        <Videos dataPortals={dataPortal} mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} dataPortal={dataPortal} />
+        <Videos dataPortals={dataPortal} mode={currentPage} callId={joinCode} setPage={setCurrentPage} agentID={agentID} />
       )}
     </div>
   );
 }
 
 function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
-  const getID = () => {
-    firestore
-      .collection("rooms")
-      .doc("roomAgent" + agentID)
-      .collection("roomIDAgent" + agentID)
-      .orderBy("time", "asc")
-      .get()
-      .then((doc) => {
-        doc.forEach((doc) => {
-          // console.log(doc.id);
-          setJoinCode(doc.id.toString());
-        });
-      });
-  };
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     getID();
-  //   }, 10000);
-  // });
-
   const [status, setStatus] = useState("Available");
   if (status === "Available") {
     firestore
@@ -125,11 +92,11 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
     <>
       <div className="dropdown-status d-flex">
         <Dropdown>
-          <Dropdown.Toggle style={{ background: `${dataPortal.button}` }} id="dropdown-basic">
+          <Dropdown.Toggle style={{ background: `${dataPortal?.dataPortal?.button}` }} id="dropdown-basic">
             Status : {status}
           </Dropdown.Toggle>
 
-          <Dropdown.Menu className="dropdown-menus" style={{ background: `${dataPortal.button}` }}>
+          <Dropdown.Menu className="dropdown-menus" style={{ background: `${dataPortal?.dataPortal?.button}` }}>
             <Dropdown.Item onClick={(e) => setStatus(e.target.name)} name="Available">
               Available
             </Dropdown.Item>
@@ -142,28 +109,28 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
           </Dropdown.Menu>
         </Dropdown>
         <Link to={`/scheduleRequest/${agentID}/${user}`}>
-          <Button style={{ background: `${dataPortal.button}` }} className="button-schedule ms-5">
+          <Button style={{ background: `${dataPortal?.dataPortal?.button}` }} className="button-schedule ms-5">
             Schedulling Request
           </Button>
         </Link>
       </div>
-      <div className="home flex-column align-items-center" style={{ background: `${dataPortal.background}` }}>
+      <div className="home flex-column align-items-center" style={{ background: `${dataPortal?.dataPortal?.background}` }}>
         <div className="row mb-4">
           <div className="col">
-            <h3 style={{ color: dataPortal.textColor }}>{dataPortal.title}</h3>
+            <h3 style={{ color: dataPortal?.dataPortal?.textColor }}>{dataPortal?.dataPortal?.title}</h3>
           </div>
         </div>
 
         <div className="row">
           <div className="col">
-            <div className="create box" style={{ background: `${dataPortal.box}` }}>
+            <div className="create box" style={{ background: `${dataPortal?.dataPortal?.box}` }}>
               <div className="tulisan">
                 <h4>Hi! {user}</h4>
                 <h4>Please wait for an incoming call pop up</h4>
               </div>
               <button
-                style={{ background: `${dataPortal.button}` }}
-                disabled={dataPortal.operationalButton}
+                style={{ background: `${dataPortal?.dataPortal?.button}` }}
+                disabled={dataPortal?.dataPortal?.operationalButton}
                 onClick={() => {
                   setPage("create");
                 }}
@@ -171,7 +138,7 @@ function Menu({ joinCode, setJoinCode, setPage, user, agentID, dataPortal }) {
                 Create Call
               </button>
               <button
-                style={{ background: `${dataPortal.button}` }}
+                style={{ background: `${dataPortal?.dataPortal?.button}` }}
                 className="mt-5"
                 onClick={async () => {
                   await firestore
@@ -529,7 +496,7 @@ function Videos({ mode, callId, agentID, dataPortals }) {
 
   return (
     <div>
-      <Container fluid style={{ background: `${dataPortals.background}`, height: "100vh" }}>
+      <Container fluid style={{ background: `${dataPortals?.dataPortal?.background}`, height: "100vh" }}>
         <Row className="justify-content-center text-white">
           <Col>
             <ScreenRecording screen={true} audio={true} downloadRecordingPath="Screen_Recording_Demo" downloadRecordingType="mp4" uploadToServer="upload" />
