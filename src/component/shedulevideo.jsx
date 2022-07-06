@@ -14,10 +14,7 @@ function Schedulevideo(dataPortal) {
   const servers = {
     iceServers: [
       {
-        urls: [
-          "stun:stun1.l.google.com:19302",
-          //  "stun:stun2.l.google.com:19302"
-        ],
+        urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
       },
     ],
     iceCandidatePoolSize: 2,
@@ -67,6 +64,40 @@ function Schedulevideo(dataPortal) {
           console.log(error);
         });
     }, 1500);
+  };
+
+  const uploadRecordFlowplayer = () => {
+    var axios = require("axios");
+    var data = JSON.stringify({
+      name: "tes upload rabu",
+      unpublish: false,
+      published: true,
+      remote: false,
+      input: "https://api-portal.herokuapp.com/public/cd53d55d1ee8c7c65d0cc994dd37762f.mp4",
+      user_id: "3a0fea13-4e34-4c51-ae2d-17dc333264ab",
+      workspace: {
+        id: "e64c186b-c0b9-4331-862a-ee5d9f026bc6",
+        name: "IST ProductProject",
+      },
+    });
+
+    var config = {
+      method: "post",
+      url: "https://api.flowplayer.com/platform/v3/videos",
+      headers: {
+        "x-flowplayer-api-key": "90ee5c9c-0032-4c1b-a9d3-81cba010a53b",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   useEffect(() => {
     pushNotif();
@@ -236,6 +267,8 @@ function Schedulevideo(dataPortal) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         // await sendEmail();
+        uploadRecordFlowplayer();
+
         if (id) {
           let roomRef = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id);
           await roomRef

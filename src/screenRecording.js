@@ -51,22 +51,16 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
       var fs = require("fs");
       var data = new FormData();
 
-      const fileName = `${downloadRecordingPath}_${recordingNumber}.mp4`;
+      const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
       const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
 
       const video = new File([mediaBlob], fileName, { type: "video/mp4" });
-
-      data.append("policy", "");
-      data.append("key", "");
-      data.append("x-amz-algorithm", "");
-      data.append("x-amz-date", "");
-      data.append("x-amz-credential", "");
+      data.append("file", video);
 
       var config = {
-        method: "put",
-        url: "https://dev.vdocipher.com/api/videos?title=upload",
+        method: "post",
+        url: "https://api-portal.herokuapp.com/api/v1/video",
         data: data,
-        headers: "Authorization:Apisecret Raeef2tp0AD09KamzBqD2PEpTVZ9KpDYfF5EJqnKGTIcKpkeNfvTCTvxzmWPUB3W",
       };
 
       axios(config)
@@ -74,84 +68,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
           console.log("jolaaaa", JSON.stringify(res.data));
         })
         .catch((e) => console.log(e));
-
-      // var fs = require("fs");
-      // const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
-      // const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
-
-      // const video = new File([mediaBlob], fileName, { type: "video/mp4" });
-
-      // const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
-      // publitio
-      //   .uploadFile(video, "file", { option_hls: 1 })
-      //   .then((data) => {
-      //     console.log(data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-
-      // Encrypt file.c
-      console.log("get credential", credential);
     };
-    const getCredential = async () => {
-      var axios = require("axios");
-      var FormData = require("form-data");
-      var data = new FormData();
-
-      data.append("policy", "{{policy}}");
-      data.append("key", "{{key}}");
-      data.append("x-amz-algorithm", "{{x-amz-signature}}");
-      data.append("x-amz-date", "{{x-amz-date}}");
-      data.append("x-amz-credential", "{{x-amz-credential}}");
-
-      let config = {
-        method: "put",
-        url: "https://dev.vdocipher.com/api/videos?title=tst",
-        headers: {
-          Authorization: "Apisecret Raeef2tp0AD09KamzBqD2PEpTVZ9KpDYfF5EJqnKGTIcKpkeNfvTCTvxzmWPUB3W",
-          "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryl5qAhT2sJlZ16tWT",
-          Accept: "*/*",
-          Referer: "http://localhost:3001/",
-        },
-        data: data,
-      };
-
-      axios(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      // var fs = require("fs");
-      // const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
-      // const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
-
-      // const video = new File([mediaBlob], fileName, { type: "video/mp4" });
-
-      // const publitio = new PublitioAPI("QafGSwwsN3vdXcAzSMff", "2qJZ4SSXqyg6pGWhQB3neGWxVQQ48ksd", "option_download", "option_hls", "option_transform");
-      // publitio
-      //   .uploadFile(video, "file", { option_hls: 1 })
-      //   .then((data) => {
-      //     console.log(data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-
-      // Encrypt file.c
-      console.log("get credential", credential);
-      console.log("first", data);
-    };
-
-    // // Decrypt file.
-    // encryptor.decryptFile("encrypted.dat", "output_file.txt", key, function (err) {
-    //   // Decryption complete.
-    // });
-
-    // console.log("ini encript decrypt >>", file);
 
     return (
       <Row>
@@ -179,7 +96,6 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
               ghost
               tea
               onClick={() => {
-                getCredential();
                 startRecording();
               }}
             >
@@ -191,11 +107,9 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
               size="small"
               onClick={() => {
                 stopRecording();
-
-                // enkripsi();
+                uploadRecording();
               }}
               type="danger"
-              // icon="stop"
               className="margin-left-sm"
               ghost
             >
@@ -225,7 +139,6 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
   return (
     <div className="Scren-Record-Wrapper" style={{ padding: "5px 20px" }}>
       {RecordView()}
-      {/* <App/> */}
     </div>
   );
 };
