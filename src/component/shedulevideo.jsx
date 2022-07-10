@@ -35,6 +35,7 @@ function Schedulevideo(dataPortal) {
   const Token = token;
   console.log("tokenHP", Token);
   const firestore = firebase.firestore();
+  const [dataInputPost, setDataInputPost] = useState([]);
 
   const pushNotif = async () => {
     let data = JSON.stringify({
@@ -65,7 +66,24 @@ function Schedulevideo(dataPortal) {
         });
     }, 1500);
   };
+  const getInputPost = () => {
+    var axios = require("axios");
+    var config = {
+      method: "get",
+      url: "https://api-portal.herokuapp.com/api/v1/video",
+    };
 
+    axios(config)
+      .then(function (response) {
+        setDataInputPost(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const found = dataInputPost?.findLast((element) => element);
+  const input = found?.file;
+  console.log("last", input);
   const uploadRecordFlowplayer = () => {
     var axios = require("axios");
     var data = JSON.stringify({
@@ -73,7 +91,7 @@ function Schedulevideo(dataPortal) {
       unpublish: false,
       published: true,
       remote: false,
-      input: "https://api-portal.herokuapp.com/public/cd53d55d1ee8c7c65d0cc994dd37762f.mp4",
+      input: `${input}`,
       user_id: "3a0fea13-4e34-4c51-ae2d-17dc333264ab",
       workspace: {
         id: "e64c186b-c0b9-4331-862a-ee5d9f026bc6",
@@ -102,7 +120,10 @@ function Schedulevideo(dataPortal) {
   useEffect(() => {
     pushNotif();
   }, []);
-
+  useEffect(() => {
+    getInputPost();
+  }, []);
+  console.log("data input post", dataInputPost);
   const setupSources = async () => {
     let localStream;
 

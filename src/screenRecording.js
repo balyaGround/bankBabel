@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Row, Col, Button, Badge } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import Text from "antd/lib/typography/Text";
-import PublitioAPI from "publitio_js_sdk";
-import * as fs from "fs";
 
 const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, downloadRecordingType, uploadToServer }) => {
   const [recordingNumber, setRecordingNumber] = useState(0);
-  const [credential, setcredential] = useState([]);
   const RecordView = () => {
     const { status, startRecording: startRecord, stopRecording: stopRecord, mediaBlobUrl } = useReactMediaRecorder({ screen, audio, video });
 
@@ -24,7 +21,7 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
       window.open(mediaBlobUrl, "_blank").focus();
     };
     const downloadRecording = () => {
-      const pathName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      const pathName = `${downloadRecordingPath}_${recordingNumber}.mp4`;
 
       alert("ini pathname >>>>", pathName);
       try {
@@ -48,13 +45,13 @@ const ScreenRecording = ({ screen, audio, video, downloadRecordingPath, download
     const uploadRecording = async () => {
       var axios = require("axios");
       var FormData = require("form-data");
-      var fs = require("fs");
+      // var fs = require("fs");
       var data = new FormData();
-
-      const fileName = `${downloadRecordingPath}_${recordingNumber}.${downloadRecordingType}`;
+      const fileName = `${downloadRecordingPath}_${recordingNumber}.mp4`;
       const mediaBlob = await fetch(mediaBlobUrl).then((response) => response.blob());
+      const files = mediaBlob;
+      const video = new File([files], fileName, { type: "video/mp4" });
 
-      const video = new File([mediaBlob], fileName, { type: "video/mp4" });
       data.append("file", video);
 
       var config = {
