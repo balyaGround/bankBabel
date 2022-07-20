@@ -173,8 +173,172 @@ function Videos({ mode, callId, agentID, dataPortals }) {
   const localRef = useRef();
   const remoteRef = useRef();
   const storage = getStorage();
+  const [dataInputPost, setDataInputPost] = useState("");
   init("user_h6uRyZievx8s1s6rPU7mz");
 
+  const getInputPost = () => {
+    var axios = require("axios");
+    var config = {
+      method: "get",
+      url: "https://api-portal.herokuapp.com/api/v1/video",
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response, "ini kig");
+        if (response.status == 201) {
+          const datas = response.data?.data?.findLast((element) => element).file;
+          var axios = require("axios");
+          var data = JSON.stringify({
+            name: "tes upload rabu",
+            unpublish: false,
+            published: true,
+            remote: false,
+            input: datas,
+            user_id: "3a0fea13-4e34-4c51-ae2d-17dc333264ab",
+            workspace: {
+              id: "e64c186b-c0b9-4331-862a-ee5d9f026bc6",
+              name: "IST ProductProject",
+            },
+          });
+
+          var config = {
+            method: "post",
+            url: "https://api.flowplayer.com/platform/v3/videos",
+            headers: {
+              "x-flowplayer-api-key": "90ee5c9c-0032-4c1b-a9d3-81cba010a53b",
+              "Content-Type": "application/json",
+            },
+            data: data,
+          };
+
+          axios(config)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+        // setDataInputPost(response.data?.data?.findLast((element) => element).file);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const hangUp = async () => {
+    pc.close();
+    Swal.fire({
+      icon: "info",
+      title: "Video Call Complete",
+      text: "Make sure you have done the mandatory procedures and gave your best services",
+      confirmButtonText: "Complete",
+      cancelButtonText: "Back to call",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // await sendEmail();
+        if (roomId) {
+          let roomRef = firestore
+            .collection("rooms")
+            .doc("roomAgent" + agentID)
+            .collection("roomIDAgent" + agentID)
+            .doc(roomId);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef.delete();
+          await firestore
+            .collection("isActive")
+            .doc("agent" + agentID)
+            .update({
+              inCall: false,
+            });
+        }
+        // window.location.reload();
+      }
+    });
+  };
+  const sendEmail = async () => {
+    await firestore
+      .collection("form")
+      .doc("user")
+      .get()
+      .then((doc) => {
+        const jsonData = doc.data();
+        const jsonString = JSON.stringify(jsonData);
+        // console.log(jsonString);
+        const json = JSON.parse(jsonString);
+        const param = {
+          name: json.name,
+          email: json.email,
+        };
+
+        emailjs.send("service_8wp3jqi", "template_nxl6t5s", param, "user_h6uRyZievx8s1s6rPU7mz").then(
+          (res) => {
+            console.log(res.status, res.text);
+          },
+          (e) => {
+            console.log(e);
+          }
+        );
+      });
+  };
+  const hangUpFail = async () => {
+    pc.close();
+    Swal.fire({
+      icon: "error",
+      title: "Video Call Connection Failed",
+      text: "Your connection to the customer has failed, please try again.",
+      confirmButtonText: "Complete",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (roomId) {
+          let roomRef = firestore
+            .collection("rooms")
+            .collection("rooms")
+            .doc("roomAgent" + agentID)
+            .collection("roomIDAgent" + agentID)
+            .doc(roomId);
+          await roomRef
+            .collection("calleeCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+          await roomRef
+            .collection("callerCandidates")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+              });
+            });
+
+          await roomRef.delete();
+        }
+        window.location.reload();
+      }
+    });
+  };
+
+  console.log("dataGet", dataInputPost);
   const setupSources = async () => {
     let localStream;
 
@@ -317,121 +481,9 @@ function Videos({ mode, callId, agentID, dataPortals }) {
       }
     };
   };
-
   useEffect(() => {
     setupSources();
   }, []);
-
-  const hangUp = async () => {
-    pc.close();
-    Swal.fire({
-      icon: "info",
-      title: "Video Call Complete",
-      text: "Make sure you have done the mandatory procedures and gave your best services",
-      confirmButtonText: "Complete",
-      cancelButtonText: "Back to call",
-      showCancelButton: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // await sendEmail();
-        if (roomId) {
-          let roomRef = firestore
-            .collection("rooms")
-            .doc("roomAgent" + agentID)
-            .collection("roomIDAgent" + agentID)
-            .doc(roomId);
-          await roomRef
-            .collection("calleeCandidates")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                doc.ref.delete();
-              });
-            });
-          await roomRef
-            .collection("callerCandidates")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                doc.ref.delete();
-              });
-            });
-          await roomRef.delete();
-          await firestore
-            .collection("isActive")
-            .doc("agent" + agentID)
-            .update({
-              inCall: false,
-            });
-        }
-        window.location.reload();
-      }
-    });
-  };
-  const sendEmail = async () => {
-    await firestore
-      .collection("form")
-      .doc("user")
-      .get()
-      .then((doc) => {
-        const jsonData = doc.data();
-        const jsonString = JSON.stringify(jsonData);
-        // console.log(jsonString);
-        const json = JSON.parse(jsonString);
-        const param = {
-          name: json.name,
-          email: json.email,
-        };
-
-        emailjs.send("service_8wp3jqi", "template_nxl6t5s", param, "user_h6uRyZievx8s1s6rPU7mz").then(
-          (res) => {
-            console.log(res.status, res.text);
-          },
-          (e) => {
-            console.log(e);
-          }
-        );
-      });
-  };
-  const hangUpFail = async () => {
-    pc.close();
-    Swal.fire({
-      icon: "error",
-      title: "Video Call Connection Failed",
-      text: "Your connection to the customer has failed, please try again.",
-      confirmButtonText: "Complete",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        if (roomId) {
-          let roomRef = firestore
-            .collection("rooms")
-            .collection("rooms")
-            .doc("roomAgent" + agentID)
-            .collection("roomIDAgent" + agentID)
-            .doc(roomId);
-          await roomRef
-            .collection("calleeCandidates")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                doc.ref.delete();
-              });
-            });
-          await roomRef
-            .collection("callerCandidates")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                doc.ref.delete();
-              });
-            });
-
-          await roomRef.delete();
-        }
-        window.location.reload();
-      }
-    });
-  };
 
   const popupImgKtp = () => {
     const Swal = require("sweetalert2");
@@ -558,6 +610,7 @@ function Videos({ mode, callId, agentID, dataPortals }) {
               <div className="col">
                 <button
                   onClick={() => {
+                    getInputPost();
                     hangUp();
                   }}
                   disabled={!webcamActive}

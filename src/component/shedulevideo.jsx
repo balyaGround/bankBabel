@@ -17,7 +17,7 @@ function Schedulevideo(dataPortal) {
         urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
       },
     ],
-    iceCandidatePoolSize: 2,
+    iceCandidatePoolSize: 1,
   };
   const pc = new RTCPeerConnection(servers);
   const Swal = require("sweetalert2");
@@ -81,10 +81,12 @@ function Schedulevideo(dataPortal) {
         console.log(error);
       });
   };
-  const found = dataInputPost?.findLast((element) => element);
-  const input = found?.file;
-  console.log("last", input);
+
   const uploadRecordFlowplayer = () => {
+    getInputPost();
+    const found = dataInputPost?.findLast((element) => element);
+    const input = found?.file;
+    console.log("last", input);
     var axios = require("axios");
     var data = JSON.stringify({
       name: "tes upload rabu",
@@ -120,9 +122,7 @@ function Schedulevideo(dataPortal) {
   useEffect(() => {
     pushNotif();
   }, []);
-  useEffect(() => {
-    getInputPost();
-  }, []);
+
   console.log("data input post", dataInputPost);
   const setupSources = async () => {
     let localStream;
@@ -278,6 +278,7 @@ function Schedulevideo(dataPortal) {
   const hangUp = async () => {
     const increment = firebase.firestore.FieldValue.increment(1);
     pc.close();
+    uploadRecordFlowplayer();
     Swal.fire({
       icon: "info",
       title: "Video Call Complete",
@@ -288,7 +289,6 @@ function Schedulevideo(dataPortal) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         // await sendEmail();
-        uploadRecordFlowplayer();
 
         if (id) {
           let roomRef = firestore.collection("rooms").doc("scheduledRoom").collection("scheduledRoomID").doc(id);
